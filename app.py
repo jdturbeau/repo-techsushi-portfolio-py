@@ -18,7 +18,7 @@ def keysset():
    strWebOutput = "begin keysset<br><br>"
    try:
       credential = DefaultAzureCredential()
-      secret_client = SecretClient(vault_url="https://kv-techsushi.vault.azure.net/", credential=credential)
+      secret_client = SecretClient(vault_url="https://kv-techsushi-site.vault.azure.net/", credential=credential)
       secret = secret_client.set_secret("api-reddit-id", "nn-FtOW2w8zz7stJwwojIQ")
       secret = secret_client.set_secret("api-reddit-secret", "YXcEaaKMLVnXEYTF1vSi7TOU1q4Edg")
       secret = secret_client.set_secret("api-reddit-tokentype", "bearer")
@@ -40,7 +40,7 @@ def keysget():
    strWebOutput = "begin keysget<br><br>"
    try:
       credential = DefaultAzureCredential()
-      secret_client = SecretClient(vault_url="https://kv-techsushi.vault.azure.net/", credential=credential)
+      secret_client = SecretClient(vault_url="https://kv-techsushi-site.vault.azure.net/", credential=credential)
       secret = secret_client.get_secret("api-reddit-token")
       strWebOutput += f"{secret.name}<br><br>"
       strWebOutput += f"{secret.value}<br><br>"
@@ -68,7 +68,7 @@ def dupe():
    try:
       strWebOutput = "begin retrieve credentials<br><br>"
       credential = DefaultAzureCredential()
-      secret_client = SecretClient(vault_url="https://kv-techsushi.vault.azure.net/", credential=credential)
+      secret_client = SecretClient(vault_url="https://kv-techsushi-site.vault.azure.net/", credential=credential)
       secret = secret_client.get_secret("api-reddit-id")
       strID = secret.value
       secret = secret_client.get_secret("api-reddit-secret")
@@ -104,15 +104,18 @@ def dupe():
 
 @app.route("/imgdupe", methods=['GET', 'POST']))
 def imgdupe():
+   '''
    if request.method == 'POST':
       strSubReddit = request.form['sub']
    else
       strSubReddit = "p320"
+   '''
+   strSubReddit = "p320"
    
    strWebOutput = f"begin data retrieval of subreddit: {strSubReddit}<br><br>"
    try:
       credential = DefaultAzureCredential()
-      secret_client = SecretClient(vault_url="https://kv-techsushi.vault.azure.net/", credential=credential)
+      secret_client = SecretClient(vault_url="https://kv-techsushi-site.vault.azure.net/", credential=credential)
       strTokenType = secret_client.get_secret("api-reddit-tokentype").value
       strToken = secret_client.get_secret("api-reddit-token").value
       strWebOutput += f"{strTokenType}<br><br>"
@@ -174,4 +177,5 @@ def imgdupe():
    return strWebOutput
 
 if __name__ == '__main__':
+
   app.run(debug=True)
