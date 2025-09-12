@@ -102,9 +102,10 @@ def dupe():
       strWebOutput += f"post json complete"
    return strWebOutput
 
-@app.route("/imgdupe", methods=['GET', 'POST']))
+@app.route("/imgdupe")
 def imgdupe():
    '''
+   , methods=['GET', 'POST']))
    if request.method == 'POST':
       strSubReddit = request.form['sub']
    else
@@ -179,3 +180,4 @@ def imgdupe():
 if __name__ == '__main__':
 
   app.run(debug=True)
+
