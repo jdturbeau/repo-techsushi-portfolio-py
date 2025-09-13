@@ -103,11 +103,17 @@ def refreshtoken():
       strWebOutput += f"post json complete"
    return strWebOutput
 
-@app.route('/use', methods=['GET', 'POST'])
+@app.route('/use')
 def use():
+   '''
+    #, methods=['GET', 'POST'])
    if request.method == 'POST':
       strSubReddit = request.form['sub']
    else
+      strSubReddit = "p320"
+  '''
+   strSubReddit = request.form['sub']
+   if not strSubReddit:
       strSubReddit = "p320"
    
    strWebOutput = f"begin data retrieval of subreddit: {strSubReddit}<br><br>"
@@ -177,6 +183,7 @@ def use():
 if __name__ == '__main__':
 
   app.run(debug=True)
+
 
 
 
