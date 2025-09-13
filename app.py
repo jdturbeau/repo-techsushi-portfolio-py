@@ -64,8 +64,8 @@ def keysget():
    return strWebOutput
 
 
-@app.route("/dupe")
-def dupe():
+@app.route("/refreshtoken")
+def refreshtoken():
    try:
       strWebOutput = "begin retrieve credentials<br><br>"
       credential = DefaultAzureCredential()
@@ -181,6 +181,7 @@ def imgdupe():
 if __name__ == '__main__':
 
   app.run(debug=True)
+
 
 
 
