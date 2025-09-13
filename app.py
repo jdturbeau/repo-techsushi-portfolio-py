@@ -103,16 +103,12 @@ def refreshtoken():
       strWebOutput += f"post json complete"
    return strWebOutput
 
-@app.route("/use")
+@app.route("/use", methods=['GET', 'POST'])
 def use():
-   '''
-   , methods=['GET', 'POST']))
    if request.method == 'POST':
       strSubReddit = request.form['sub']
    else
       strSubReddit = "p320"
-   '''
-   strSubReddit = "p320"
    
    strWebOutput = f"begin data retrieval of subreddit: {strSubReddit}<br><br>"
    try:
@@ -163,7 +159,7 @@ def use():
          strWebOutput += f"<b>{strThreadAuthor}</b> - {strThreadComments} Comment(s) / Post Type - {strThreadType}<br><p>"
          match strThreadType:
             case "image":
-               strWebOutput += f"<img src =\"{strThreadURL}\" width=\"80%\"></img><p>"
+               strWebOutput += f"<img src =\"{strThreadURL}\" width=\"60%\"></img><p>"
             case _:
                strWebOutput += f"<font color=red>Error experienced [ {strThreadType} ]</font><p>"
       strWebOutput += f"<p><a href=\"{strAfterURL}\">Next Posts</a></p>"
@@ -181,6 +177,7 @@ def use():
 if __name__ == '__main__':
 
   app.run(debug=True)
+
 
 
 
