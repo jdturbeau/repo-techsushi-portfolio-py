@@ -103,8 +103,8 @@ def refreshtoken():
       strWebOutput += f"post json complete"
    return strWebOutput
 
-@app.route("/imgdupe")
-def imgdupe():
+@app.route("/use")
+def use():
    '''
    , methods=['GET', 'POST']))
    if request.method == 'POST':
@@ -181,6 +181,7 @@ def imgdupe():
 if __name__ == '__main__':
 
   app.run(debug=True)
+
 
 
 
