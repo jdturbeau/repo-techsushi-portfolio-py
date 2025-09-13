@@ -22,7 +22,8 @@ def keysset():
       secret = secret_client.set_secret("api-reddit-id", "nn-FtOW2w8zz7stJwwojIQ")
       secret = secret_client.set_secret("api-reddit-secret", "YXcEaaKMLVnXEYTF1vSi7TOU1q4Edg")
       secret = secret_client.set_secret("api-reddit-tokentype", "bearer")
-      secret = secret_client.set_secret("api-reddit-token", "eyJhbGciOiJSUzI1NiIsImtpZCI6IlNIQTI1NjpzS3dsMnlsV0VtMjVmcXhwTU40cWY4MXE2OWFFdWFyMnpLMUdhVGxjdWNZIiwidHlwIjoiSldUIn0.eyJzdWIiOiJsb2lkIiwiZXhwIjoxNzU2NzY2MTg3LjA0Mjc3LCJpYXQiOjE3NTY2Nzk3ODcuMDQyNzcsImp0aSI6IkVDM2NSdzYyUllPdWhHS0FtQWRNOTRxTFJNbmZ5USIsImNpZCI6Im5uLUZ0T1cydzh6ejdzdEp3d29qSVEiLCJsaWQiOiJ0Ml8xd3VqZWkybHU5IiwibGNhIjoxNzU2Njc5Nzg3MDI3LCJzY3AiOiJlSnlLVnRKU2lnVUVBQURfX3dOekFTYyIsImZsbyI6Nn0.QKYFkS3OvsU0vSG1LC5-0CFsS-BaprNMISwUCmC9GQVNcUxuQkA5-kxixNWYDwBXfIphmbOaXlMj57qKeszCFYruA1tonfYI0Ac2fOsT8eTyA_MAK_ZGtNLYH_xsO7HCws2-Q0xqeJBPNXnAc7eoiWNiTR1WYH8UFoWnrH1zoDbxHVNo45IlF1XOyJqhCBHUQIVqkL05ASEFnjB3qv3JRcP2pT0reBUjHeU_DSj4XR4YbEiDA5FxrHS5tjYkY-tZjR1IgYI4kmwFwBgrE06wbxamL4ZpM1E5xxJdWpO1VlvwsJuntpYoyg8fXtfFK9duvcGLp0GE3NIm0TptlHqX6Q")
+      #secret = secret_client.set_secret("api-reddit-token", "eyJhbGciOiJSUzI1NiIsImtpZCI6IlNIQTI1NjpzS3dsMnlsV0VtMjVmcXhwTU40cWY4MXE2OWFFdWFyMnpLMUdhVGxjdWNZIiwidHlwIjoiSldUIn0.eyJzdWIiOiJsb2lkIiwiZXhwIjoxNzU2NzY2MTg3LjA0Mjc3LCJpYXQiOjE3NTY2Nzk3ODcuMDQyNzcsImp0aSI6IkVDM2NSdzYyUllPdWhHS0FtQWRNOTRxTFJNbmZ5USIsImNpZCI6Im5uLUZ0T1cydzh6ejdzdEp3d29qSVEiLCJsaWQiOiJ0Ml8xd3VqZWkybHU5IiwibGNhIjoxNzU2Njc5Nzg3MDI3LCJzY3AiOiJlSnlLVnRKU2lnVUVBQURfX3dOekFTYyIsImZsbyI6Nn0.QKYFkS3OvsU0vSG1LC5-0CFsS-BaprNMISwUCmC9GQVNcUxuQkA5-kxixNWYDwBXfIphmbOaXlMj57qKeszCFYruA1tonfYI0Ac2fOsT8eTyA_MAK_ZGtNLYH_xsO7HCws2-Q0xqeJBPNXnAc7eoiWNiTR1WYH8UFoWnrH1zoDbxHVNo45IlF1XOyJqhCBHUQIVqkL05ASEFnjB3qv3JRcP2pT0reBUjHeU_DSj4XR4YbEiDA5FxrHS5tjYkY-tZjR1IgYI4kmwFwBgrE06wbxamL4ZpM1E5xxJdWpO1VlvwsJuntpYoyg8fXtfFK9duvcGLp0GE3NIm0TptlHqX6Q")
+      secret = secret_client.set_secret("api-reddit-token", "abcd")
       strWebOutput += f"{secret.name}<br><br>"
       strWebOutput += f"{secret.value}<br><br>"
       strWebOutput += f"{secret.properties.version}<br><br>"      
@@ -180,6 +181,7 @@ def imgdupe():
 if __name__ == '__main__':
 
   app.run(debug=True)
+
 
 
 
