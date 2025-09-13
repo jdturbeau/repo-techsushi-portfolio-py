@@ -3,3 +3,4 @@ gunicorn
 requests
 azure-keyvault-secrets
 azure-identity
+azure-identity-broker
