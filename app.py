@@ -1,6 +1,6 @@
 from flask import (Flask, redirect, render_template, request, send_from_directory, url_for)
 import requests
-from azure.identity import DefaultAzureCredential
+from azure.identity import (DefaultAzureCredential, broker)
 from azure.keyvault.secrets import SecretClient
 
 app = Flask(__name__)
@@ -180,4 +180,5 @@ def imgdupe():
 if __name__ == '__main__':
 
   app.run(debug=True)
+
 
