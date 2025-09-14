@@ -195,7 +195,8 @@ def testpost():
    finally:
       strWebOutput += "gathering request method completed<br><br>"
    try:
-      strSubReddit = request.form.get['sub']
+      strSubReddit = request.form
+      strSubReddit = strSubReddit.get['sub']
       strWebOutput += f"{strSubReddit}<br><br>"
    except Exception as e:
       strWebOutput += f"Trouble with gathering form entry for 'sub'. See: {e}<br><br>"
@@ -211,6 +212,7 @@ def testpost():
 
 if __name__ == '__main__':
    app.run(debug=True)
+
 
 
 
