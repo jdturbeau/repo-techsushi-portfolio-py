@@ -185,9 +185,11 @@ def getcontent():
 @app.route("/testpost")
 def testpost():
    try:
-      strWebOutput = f"<form action=\"/testpost\" method=\"post\"><!-- Form elements go here --><label for=\"name\">Subreddit:</label><br><input type="text" id="subreddit" name="sub" placeholder="p320"><button type="submit">Browse Media</button></form><br>"
+      strWebOutput = f"<form action=\"/testpost\" method=\"post\"><!-- Form elements go here --><label for=\"name\">Subreddit:</label><br><input type="text" id="subreddit" name="sub" placeholder="p320"><button type="submit">Browse Media</button></form><br><br>"
       strMethod = request.method
-      strWebOutput += f"<br>{strMethod}"
+      strWebOutput += f"{strMethod}<br><br>"
+      strSubReddit = request.form.get['sub']
+      strWebOutput += f"{strSubReddit}<br><br>"
    except Exception as e:
       strWebOutput += f"Trouble with gathering request method.<br><br>"
       return strWebOutput
@@ -200,3 +202,4 @@ def testpost():
 
 if __name__ == '__main__':
    app.run(debug=True)
+
