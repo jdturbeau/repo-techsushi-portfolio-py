@@ -111,10 +111,12 @@ def getcontent():
       strSubReddit = request.form['sub']
    else
       strSubReddit = "p320"
-  '''
+   
    strSubReddit = request.form['sub']
    if not strSubReddit:
-      strSubReddit = "p320"
+  '''
+   
+   strSubReddit = "p320"
    
    strWebOutput = f"begin data retrieval of subreddit: {strSubReddit}<br><br>"
    try:
@@ -183,6 +185,7 @@ def getcontent():
 if __name__ == '__main__':
 
   app.run(debug=True)
+
 
 
 
