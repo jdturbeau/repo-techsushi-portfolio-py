@@ -182,7 +182,7 @@ def getcontent():
 
    return strWebOutput
 
-@app.route('/testpost', methods=['GET', 'POST']))
+@app.route('/testpost', methods=['GET', 'POST'])
 def testpost():
    try:
       strMethod = request.method
@@ -211,6 +211,7 @@ def testpost():
 
 if __name__ == '__main__':
    app.run(debug=True)
+
 
 
 
