@@ -182,9 +182,9 @@ def getcontent():
 
    return strWebOutput
 
-@app.route("/testpost", methods=["POST", "GET"])
+@app.route("/testpost", methods=['POST', 'GET'])
 def testpost():
-   strWebOutput = f"<form action="/getcontent" method="post"><!-- Form elements go here --><label for="name">Subreddit:</label><br><input type="text" id="subreddit" name="sub" placeholder="p320"><button type="submit">Browse Media</button></form><br>"
+   strWebOutput = f"<form action="/testpost" method="post"><!-- Form elements go here --><label for="name">Subreddit:</label><br><input type="text" id="subreddit" name="sub" placeholder="p320"><button type="submit">Browse Media</button></form><br>"
    strMethod = request.method
    strWebOutput += f"<br>{strMethod}"
    
@@ -193,3 +193,4 @@ def testpost():
 if __name__ == '__main__':
 
   app.run(debug=True)
+
