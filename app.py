@@ -187,20 +187,32 @@ def testpost():
    try:
       strMethod = request.method
       strWebOutput = f"{strMethod}<br><br>"
-      strSubReddit = request.form.get['sub']
-      strWebOutput += f"{strSubReddit}<br><br>"
-      strWebOutput += f"<form action=\"/testpost\" method=\"post\"><!-- Form elements go here --><label for=\"name\">Subreddit:</label><br><input type=\"text\" id=\"subreddit\" name=\"sub\" placeholder=\"p320\"><button type=\"submit\">Browse Media</button></form><br><br>"
    except Exception as e:
-      strWebOutput += f"Trouble with gathering request method.<br><br>"
+      strWebOutput += f"Trouble with gathering request method. See: {e}<br><br>"
       return strWebOutput
    else:
       strWebOutput += "gathering request method complete without error<br><br>"
    finally:
       strWebOutput += "gathering request method completed<br><br>"
+   try:
+      strSubReddit = request.form.get['sub']
+      strWebOutput += f"{strSubReddit}<br><br>"
+   except Exception as e:
+      strWebOutput += f"Trouble with gathering form entry for 'sub'. See: {e}<br><br>"
+      #return strWebOutput
+   else:
+      strWebOutput += "gathering form entry for 'sub' complete without error<br><br>"
+   finally:
+      strWebOutput += "gathering form entry for 'sub completed<br><br>"
+
+
+   strWebOutput += f"<form action=\"/testpost\" method=\"post\"><!-- Form elements go here --><label for=\"name\">Subreddit:</label><br><input type=\"text\" id=\"subreddit\" name=\"sub\" placeholder=\"p320\"><button type=\"submit\">Browse Media</button></form><br><br>"
+
    
    return strWebOutput
 
 if __name__ == '__main__':
    app.run(debug=True)
+
 
 
