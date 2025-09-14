@@ -103,8 +103,8 @@ def refreshtoken():
       strWebOutput += f"post json complete"
    return strWebOutput
 
-@app.route('/use')
-def use():
+@app.route("/getcontent")
+def getcontent():
    '''
     #, methods=['GET', 'POST'])
    if request.method == 'POST':
@@ -183,6 +183,7 @@ def use():
 if __name__ == '__main__':
 
   app.run(debug=True)
+
 
 
 
