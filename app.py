@@ -182,19 +182,21 @@ def getcontent():
 
    return strWebOutput
 
-'''
-@app.route("/testpost", methods=['POST', 'GET'])
+@app.route("/testpost")
 def testpost():
-   strWebOutput = f"<form action=\"/testpost\" method=\"post\"><!-- Form elements go here --><label for=\"name\">Subreddit:</label><br><input type="text" id="subreddit" name="sub" placeholder="p320"><button type="submit">Browse Media</button></form><br>"
-   strMethod = request.method
-   strWebOutput += f"<br>{strMethod}"
+   try:
+      strWebOutput = f"<form action=\"/testpost\" method=\"post\"><!-- Form elements go here --><label for=\"name\">Subreddit:</label><br><input type="text" id="subreddit" name="sub" placeholder="p320"><button type="submit">Browse Media</button></form><br>"
+      strMethod = request.method
+      strWebOutput += f"<br>{strMethod}"
+   except Exception as e:
+      strWebOutput += f"Trouble with gathering request method.<br><br>"
+      return strWebOutput
+   else:
+      strWebOutput += "gathering request method complete without error<br><br>"
+   finally:
+      strWebOutput += "gathering request method completed<br><br>"
    
    return strWebOutput
-'''
 
 if __name__ == '__main__':
-
-  app.run(debug=True)
-
-
-
+   app.run(debug=True)
