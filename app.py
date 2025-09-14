@@ -198,6 +198,8 @@ def testpost():
       strSubReddit = request.form.get('sub')
       #strSubReddit = strSubReddit.get['sub']
       strWebOutput += f"{strSubReddit}<br><br>"
+      strMediaType = request.form.get('mediatype')
+      strWebOutput += f{mediatype}<br><br>"
    except Exception as e:
       strWebOutput += f"Trouble with gathering form entry for 'sub'. See: {e}<br><br>"
       #return strWebOutput
@@ -216,6 +218,7 @@ def testpost():
 
 if __name__ == '__main__':
    app.run(debug=True)
+
 
 
 
