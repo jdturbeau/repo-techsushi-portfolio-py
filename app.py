@@ -108,11 +108,11 @@ def getcontent():
    '''
     #, methods=['GET', 'POST'])
    if request.method == 'POST':
-      strSubReddit = request.form['sub']
+      strSubReddit = request.form.get['sub']
    else
       strSubReddit = "p320"
    
-   strSubReddit = request.form['sub']
+   strSubReddit = request.form.get['sub']
    if not strSubReddit:
   '''
    
@@ -182,18 +182,14 @@ def getcontent():
 
    return strWebOutput
 
+@app.route("/testpost", methods=["POST", "GET"])
+def testpost():
+   strWebOutput = f"<form action="/getcontent" method="post"><!-- Form elements go here --><label for="name">Subreddit:</label><br><input type="text" id="subreddit" name="sub" placeholder="p320"><button type="submit">Browse Media</button></form><br>"
+   strMethod = request.method
+   strWebOutput += f"<br>{strMethod}"
+   
+   return strWebOutput
+
 if __name__ == '__main__':
 
   app.run(debug=True)
-
-
-
-
-
-
-
-
-
-
-
-
