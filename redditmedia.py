@@ -210,7 +210,7 @@ def testpost():
       strWebOutput += "gathering form entry for 'sub completed<br><br>"
    
    strWebOutput += f"<form action=\"/testpost\" method=\"post\"><!-- Form elements go here -->"
-   strWebOutput += f"<label for=\"name\">Subreddit:</label><br><input type=\"text\" id=\"subreddit\" name=\"sub\" placeholder=\"p320\">"
+   strWebOutput += f"<label for=\"name\">Subreddit:</label><br><input type=\"text\" id=\"subreddit\" name=\"sub\" placeholder=\"p320\" autocomplete=\"off\">"
    strWebOutput += f"<input type=\"checkbox\" id=\"pictures\" name=\"mediatype\" value=\"pictures\" checked><label for=\"pictures\">Pictures</label>"
    strWebOutput += f"<input type=\"checkbox\" id=\"videos\" name=\"mediatype\" value=\"videos\"><label for=\"videos\">Videos</label><br><br>"
    strWebOutput += f"<button type=\"submit\">Browse Media</button></form><br><br>"
