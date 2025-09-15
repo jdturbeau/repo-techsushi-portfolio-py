@@ -5,90 +5,87 @@ from azure.keyvault.secrets import SecretClient
 
 #app = Flask(__name__)
 
-def kvsecretset(strVault, strRedditID, strRedditSecret):
-   strWebOutput = "begin keysset<br><br>"
-   try:
-      credential = DefaultAzureCredential()
-      secret_client = SecretClient(vault_url=f"https://{}.vault.azure.net/", credential=credential)
-      secret = secret_client.set_secret("api-reddit-id", f"{strRedditID}")
-      secret = secret_client.set_secret("api-reddit-secret", f"{strRedditSecret")
-      secret = secret_client.set_secret("api-reddit-tokentype", "bearer")
-      secret = secret_client.set_secret("api-reddit-token", "testtokenexample")
-      strWebOutput += f"{secret.name}<br><br>"
-      strWebOutput += f"{secret.value}<br><br>"
-      strWebOutput += f"{secret.properties.version}<br><br>"      
-   except Exception as e:
-      strWebOutput += f"an unexpected error occurred during set: {e}<br><br>"
-   else:
-      strWebOutput += f"set completed without error<br><br>"
-   finally:
-      strWebOutput += "end of set<br><br>"
-
-   return strWebOutput
-
-def kvsecretget(strVault, strRedditTokenType, strRedditToken):
-   strWebOutput = "begin keysget<br><br>"
+def kv_set(strVault, strName, strValue):
    try:
       credential = DefaultAzureCredential()
       secret_client = SecretClient(vault_url=f"https://{strVault}.vault.azure.net/", credential=credential) #kv-techsushi-site
-      #secret = secret_client.get_secret(strRedditToken) #api-reddit-token
-      #strWebOutput += f"{secret.name}<br><br>"
-      #strWebOutput += f"{secret.value}<br><br>"
-      secret = secret_client.get_secret(strRedditTokenType) #api-reddit-tokentype
-      strWebOutput += f"{secret.name}<br><br>"
-      strWebOutput += f"{secret.value}<br><br>"
-      #secret = secret_client.get_secret("api-reddit-id")
-      #strWebOutput += f"{secret.name}<br><br>"
-      #strWebOutput += f"{secret.value}<br><br>"
-      #secret = secret_client.get_secret("api-reddit-secret")
-      #strWebOutput += f"{secret.name}<br><br>"
-      #strWebOutput += f"{secret.value}<br><br>"
+      secret = secret_client.set_secret(strName, strValue) #api-reddit-id
    except Exception as e:
-      strWebOutput += f"an unexpected error occurred during get: {e}<br><br>"
-   else:
-      strWebOutput += f"get completed without error<br><br>"
-   finally:
-      strWebOutput += "end of get script<br><br>"
-
-   return strWebOutput
-
-def refreshtoken(strVault, strRedditTokenType, strRedditToken):
-   try:
-      strWebOutput = "begin retrieve credentials<br><br>"
-      credential = DefaultAzureCredential()
-      secret_client = SecretClient(vault_url=f"https://{strVault}.vault.azure.net/", credential=credential)
-      secret = secret_client.get_secret("api-reddit-id")
-      strID = secret.value
-      secret = secret_client.get_secret("api-reddit-secret")
-      strSecret = secret.value
-      strWebOutput += f"ID: {strID}<br><br>Sec: {strSecret}<br><br>"
-   except Exception as e:
-      strWebOutput += f"Trouble retrieving id credentials from kv, review: {e}<br><br>"
+      strWebOutput = f"an unexpected error occurred during <b>SET</b>: {e}<br><br>"
+      #raise strWebOutput
       return strWebOutput
-
+   else:
+      #strWebOutput = "<b>SET</b> completed successfully<br><br>"
+   finally:
+      #strWebOutput = "end of <b>SET</b> script<br><br>"      
+   return
+   
+def kv_get(strVault, strName):
    try:
-      strURL = "https://www.reddit.com/api/v1/access_token"
+      credential = DefaultAzureCredential()
+      secret_client = SecretClient(vault_url=f"https://{strVault}.vault.azure.net/", credential=credential) #kv-techsushi-site
+      secret = secret_client.get_secret(strName)
+      strValue = secret.value
+      #strWebOutput += f"{secret.name}<br><br>"
+      #strWebOutput += f"{secret.value}<br><br>"
+   except Exception as e:
+      strWebOutput = f"an unexpected error occurred during <b>GET</b>: {e}<br><br>"
+      #raise strWebOutput
+      return strWebOutput
+   else:
+      #strWebOutput = "<b>GET</b> completed successfully<br><br>"
+   finally:
+      #strWebOutput = "end of <b>GET</b> script<br><br>"
+   return strValue
+   
+def kv_refreshtoken(strVault, strRedditURL):
+   #https://www.reddit.com/api/v1/access_token
+   try:
+      strID = kv_get(strVault, "api-reddit-id") #kv-techsushi-site
+      strSecret = kv_get(strVault, "api-reddit-secret")
+      
+      #kv_get(strVault, "api-reddit-tokentype")
+      #kv_get(strVault, "api-reddit-token")
+      
       objClientAuth = (strID, strSecret)
       dictPostData = { "grant_type": "client_credentials" }
-      dictHeader = { "User-Agent": "imgdupedetect v0.1 by orbut8888" }
-      roReceived = requests.post(strURL, auth=objClientAuth, data=dictPostData, headers=dictHeader)
-      strWebOutput += f"{roReceived.status_code}<br><br>{roReceived.text}<br><br>{roReceived.content}<br><br>{roReceived.headers}<br><br>"
-      strWebOutput += f"Attempting to parse response for JSON...<br><br>"
+      dictHeader = { "User-Agent": "imgdupedetect v0.2 by orbut8888" }
+      roReceived = requests.post(strRedditURL, auth=objClientAuth, data=dictPostData, headers=dictHeader)
+      
+      #strWebOutput += f"{roReceived.status_code}<br><br>{roReceived.text}<br><br>{roReceived.content}<br><br>{roReceived.headers}<br><br>"
+      #strWebOutput += f"Attempting to parse response for JSON...<br><br>"
       dictReceived = roReceived.json()      
       strToken = dictReceived["access_token"]
-      strWebOutput += f"Attempting to store token...<br><br>"
-      secret = secret_client.set_secret("api-reddit-token", strToken)
       strTokenType = dictReceived["token_type"]
-      secret = secret_client.set_secret("api-reddit-tokentype", strTokenType)
-      strWebOutput += f"new token stored!<br><br>{strToken}<br><br>{strTokenType}<br><br>"
+      #strWebOutput += f"Attempting to store token...<br><br>"
+      kv_set(strVault, ("api-reddit-token", strToken)
+      kv_set(strVault, ("api-reddit-tokentype", strTokenType)
+      
+#      strWebOutput += f"new token stored!<br><br>{strToken}<br><br>{strTokenType}<br><br>"
    except Exception as e:
-      strWebOutput += f"Trouble with POST or JSON, review {e}<br><br>{roReceived}<br><br>"
+      #could contain sensitive information in error message
+      strWebOutput = f"Trouble with <b>REFRESH</b>, review {e}<br><br>{roReceived}<br><br>"
+      #raise strWebOutput
       return strWebOutput
    else:
-      strWebOutput += f"post json complete successfully"
+      #strWebOutput = f"<b>REFRESH</b> complete successfully"
    finally:
-      strWebOutput += f"post json complete"
-   return strWebOutput
+      #strWebOutput = f"<b>REFRESH</b> complete"
+      
+   return
+
+def reddit_getjson(strSubReddit, lstMediaType):
+   #handle [], [pictures], [videos], [pictures, videos], (other/unknown)
+   return
+
+def reddit_jsontohtml(jsonContent)
+   return
+
+
+
+
+
+
 
 
 def getcontent():
