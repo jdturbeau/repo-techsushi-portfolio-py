@@ -3,27 +3,17 @@ import requests
 from azure.identity import DefaultAzureCredential
 from azure.keyvault.secrets import SecretClient
 
-app = Flask(__name__)
+#app = Flask(__name__)
 
-@app.route("/")
-def index():
-   return render_template("index.html")
-
-@app.route("/demo")
-def demo():
-   return render_template("/demo/index.html")
-
-@app.route("/keysset")
-def keysset():
+def kvsecretset(strVault, strRedditID, strRedditSecret):
    strWebOutput = "begin keysset<br><br>"
    try:
       credential = DefaultAzureCredential()
-      secret_client = SecretClient(vault_url="https://kv-techsushi-site.vault.azure.net/", credential=credential)
-      secret = secret_client.set_secret("api-reddit-id", "nn-FtOW2w8zz7stJwwojIQ")
-      secret = secret_client.set_secret("api-reddit-secret", "YXcEaaKMLVnXEYTF1vSi7TOU1q4Edg")
+      secret_client = SecretClient(vault_url=f"https://{}.vault.azure.net/", credential=credential)
+      secret = secret_client.set_secret("api-reddit-id", f"{strRedditID}")
+      secret = secret_client.set_secret("api-reddit-secret", f"{strRedditSecret")
       secret = secret_client.set_secret("api-reddit-tokentype", "bearer")
-      #secret = secret_client.set_secret("api-reddit-token", "eyJhbGciOiJSUzI1NiIsImtpZCI6IlNIQTI1NjpzS3dsMnlsV0VtMjVmcXhwTU40cWY4MXE2OWFFdWFyMnpLMUdhVGxjdWNZIiwidHlwIjoiSldUIn0.eyJzdWIiOiJsb2lkIiwiZXhwIjoxNzU2NzY2MTg3LjA0Mjc3LCJpYXQiOjE3NTY2Nzk3ODcuMDQyNzcsImp0aSI6IkVDM2NSdzYyUllPdWhHS0FtQWRNOTRxTFJNbmZ5USIsImNpZCI6Im5uLUZ0T1cydzh6ejdzdEp3d29qSVEiLCJsaWQiOiJ0Ml8xd3VqZWkybHU5IiwibGNhIjoxNzU2Njc5Nzg3MDI3LCJzY3AiOiJlSnlLVnRKU2lnVUVBQURfX3dOekFTYyIsImZsbyI6Nn0.QKYFkS3OvsU0vSG1LC5-0CFsS-BaprNMISwUCmC9GQVNcUxuQkA5-kxixNWYDwBXfIphmbOaXlMj57qKeszCFYruA1tonfYI0Ac2fOsT8eTyA_MAK_ZGtNLYH_xsO7HCws2-Q0xqeJBPNXnAc7eoiWNiTR1WYH8UFoWnrH1zoDbxHVNo45IlF1XOyJqhCBHUQIVqkL05ASEFnjB3qv3JRcP2pT0reBUjHeU_DSj4XR4YbEiDA5FxrHS5tjYkY-tZjR1IgYI4kmwFwBgrE06wbxamL4ZpM1E5xxJdWpO1VlvwsJuntpYoyg8fXtfFK9duvcGLp0GE3NIm0TptlHqX6Q")
-      secret = secret_client.set_secret("api-reddit-token", "abcd")
+      secret = secret_client.set_secret("api-reddit-token", "testtokenexample")
       strWebOutput += f"{secret.name}<br><br>"
       strWebOutput += f"{secret.value}<br><br>"
       strWebOutput += f"{secret.properties.version}<br><br>"      
@@ -36,24 +26,23 @@ def keysset():
 
    return strWebOutput
 
-@app.route("/keysget")
-def keysget():
+def kvsecretget(strVault, strRedditTokenType, strRedditToken):
    strWebOutput = "begin keysget<br><br>"
    try:
       credential = DefaultAzureCredential()
-      secret_client = SecretClient(vault_url="https://kv-techsushi-site.vault.azure.net/", credential=credential)
-      secret = secret_client.get_secret("api-reddit-token")
+      secret_client = SecretClient(vault_url=f"https://{strVault}.vault.azure.net/", credential=credential) #kv-techsushi-site
+      #secret = secret_client.get_secret(strRedditToken) #api-reddit-token
+      #strWebOutput += f"{secret.name}<br><br>"
+      #strWebOutput += f"{secret.value}<br><br>"
+      secret = secret_client.get_secret(strRedditTokenType) #api-reddit-tokentype
       strWebOutput += f"{secret.name}<br><br>"
       strWebOutput += f"{secret.value}<br><br>"
-      secret = secret_client.get_secret("api-reddit-tokentype")
-      strWebOutput += f"{secret.name}<br><br>"
-      strWebOutput += f"{secret.value}<br><br>"
-      secret = secret_client.get_secret("api-reddit-id")
-      strWebOutput += f"{secret.name}<br><br>"
-      strWebOutput += f"{secret.value}<br><br>"
-      secret = secret_client.get_secret("api-reddit-secret")
-      strWebOutput += f"{secret.name}<br><br>"
-      strWebOutput += f"{secret.value}<br><br>"
+      #secret = secret_client.get_secret("api-reddit-id")
+      #strWebOutput += f"{secret.name}<br><br>"
+      #strWebOutput += f"{secret.value}<br><br>"
+      #secret = secret_client.get_secret("api-reddit-secret")
+      #strWebOutput += f"{secret.name}<br><br>"
+      #strWebOutput += f"{secret.value}<br><br>"
    except Exception as e:
       strWebOutput += f"an unexpected error occurred during get: {e}<br><br>"
    else:
@@ -63,13 +52,11 @@ def keysget():
 
    return strWebOutput
 
-
-@app.route("/refreshtoken")
-def refreshtoken():
+def refreshtoken(strVault, strRedditTokenType, strRedditToken):
    try:
       strWebOutput = "begin retrieve credentials<br><br>"
       credential = DefaultAzureCredential()
-      secret_client = SecretClient(vault_url="https://kv-techsushi-site.vault.azure.net/", credential=credential)
+      secret_client = SecretClient(vault_url=f"https://{strVault}.vault.azure.net/", credential=credential)
       secret = secret_client.get_secret("api-reddit-id")
       strID = secret.value
       secret = secret_client.get_secret("api-reddit-secret")
@@ -103,7 +90,7 @@ def refreshtoken():
       strWebOutput += f"post json complete"
    return strWebOutput
 
-@app.route("/getcontent")
+
 def getcontent():
    '''
     #, methods=['GET', 'POST'])
@@ -182,7 +169,6 @@ def getcontent():
 
    return strWebOutput
 
-@app.route('/testpost', methods=['GET', 'POST'])
 def testpost():
    try:
       strMethod = request.method
