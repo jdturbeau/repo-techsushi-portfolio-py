@@ -74,46 +74,46 @@ def kv_refreshtoken(strVault, strRedditURL):
       
    return
 
-def reddit_getjson(strSubReddit, lstMediaType):
+def reddit_getjson(strSubReddit, lstMediaType, strTokenType, strToken, strURL):
    #handle [], [pictures], [videos], [pictures, videos], (other/unknown)
+   #check POST vs GET (request.method ==
+
+   strTokenType = kv_get(strVault, "api-reddit-tokentype")
+   strToken = kv_get(strVault, "api-reddit-token")
+   dictHeader = { "Authorization": f"{strTokenType} {strToken}", "User-Agent": "imgdupedetect v0.1 by orbut8888" }
+   strURL = strURL #fhttps://oauth.reddit.com/r/{strSubReddit}/new
+   
+   roReceived = requests.get(strURL, headers = dictHeader)
+   # if roReceived.status_code = 401 (unauthorized), likely need new token
+   dictJson = roReceived.json()
+   #strAfterURL = dictJson["data"]["after"]
+   
+   return dictJson
+
+def reddit_jsontohtml(jsonContent):
+   #consider [], [pictures], [videos], [pictures, videos], (other/unknown)
+
+   
    return
 
-def reddit_jsontohtml(jsonContent)
-   return
+def html_form():
+   
+   strWebOutput += f"<form action=\"/testpost\" method=\"post\"><!-- Form elements go here -->"
+   strWebOutput += f"<label for=\"name\">Subreddit:</label><br><input type=\"text\" id=\"subreddit\" name=\"sub\" placeholder=\"p320\" autocomplete=\"off\">"
+   strWebOutput += f"<input type=\"checkbox\" id=\"pictures\" name=\"mediatype\" value=\"pictures\" checked><label for=\"pictures\">Pictures</label>"
+   strWebOutput += f"<input type=\"checkbox\" id=\"videos\" name=\"mediatype\" value=\"videos\"><label for=\"videos\">Videos</label><br><br>"
+   strWebOutput += f"<button type=\"submit\">Browse Media</button></form><br><br>"
 
-
-
+   return strWebOutput
 
 
 
 
 
 def getcontent():
-   '''
-    #, methods=['GET', 'POST'])
-   if request.method == 'POST':
-      strSubReddit = request.form.get['sub']
-   else
-      strSubReddit = "p320"
    
-   strSubReddit = request.form.get['sub']
-   if not strSubReddit:
-  '''
    
-   strSubReddit = "p320"
-   
-   strWebOutput = f"begin data retrieval of subreddit: {strSubReddit}<br><br>"
-   try:
-      credential = DefaultAzureCredential()
-      secret_client = SecretClient(vault_url="https://kv-techsushi-site.vault.azure.net/", credential=credential)
-      strTokenType = secret_client.get_secret("api-reddit-tokentype").value
-      strToken = secret_client.get_secret("api-reddit-token").value
-      strWebOutput += f"{strTokenType}<br><br>"
-      strWebOutput += f"{strToken}<br><br>"
-   except Exception as e:
-      strWebOutput += f"an unexpected error occurred during token retrieval: {e}<br><br>"
-      return strWebOutput
-   
+    
    try:
       strWebOutput += "end of get token from kv script<br><br>"
       dictHeader = { "Authorization": f"{strTokenType} {strToken}", "User-Agent": "imgdupedetect v0.1 by orbut8888" }
@@ -192,11 +192,6 @@ def testpost():
    finally:
       strWebOutput += "gathering form entry for 'sub completed<br><br>"
    
-   strWebOutput += f"<form action=\"/testpost\" method=\"post\"><!-- Form elements go here -->"
-   strWebOutput += f"<label for=\"name\">Subreddit:</label><br><input type=\"text\" id=\"subreddit\" name=\"sub\" placeholder=\"p320\" autocomplete=\"off\">"
-   strWebOutput += f"<input type=\"checkbox\" id=\"pictures\" name=\"mediatype\" value=\"pictures\" checked><label for=\"pictures\">Pictures</label>"
-   strWebOutput += f"<input type=\"checkbox\" id=\"videos\" name=\"mediatype\" value=\"videos\"><label for=\"videos\">Videos</label><br><br>"
-   strWebOutput += f"<button type=\"submit\">Browse Media</button></form><br><br>"
    
    return strWebOutput
 
