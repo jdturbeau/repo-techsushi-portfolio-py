@@ -42,9 +42,9 @@ def kv_set(strVault, strName, strValue):
       strWebOutput = f"an unexpected error occurred during <b>SET</b>: {e}<br><br>"
       #raise strWebOutput
       return strWebOutput
-   else:
+   #else:
       #strWebOutput = "<b>SET</b> completed successfully<br><br>"
-   finally:
+   #finally:
       #strWebOutput = "end of <b>SET</b> script<br><br>"      
    return
    
@@ -60,9 +60,9 @@ def kv_get(strVault, strName):
       strWebOutput = f"an unexpected error occurred during <b>GET</b>: {e}<br><br>"
       #raise strWebOutput
       return strWebOutput
-   else:
+   #else:
       #strWebOutput = "<b>GET</b> completed successfully<br><br>"
-   finally:
+   #finally:
       #strWebOutput = "end of <b>GET</b> script<br><br>"
    return strValue
    
@@ -95,9 +95,9 @@ def kv_refreshtoken(strVault, strRedditURL):
       strWebOutput = f"Trouble with <b>REFRESH</b>, review {e}<br><br>{roReceived}<br><br>"
       #raise strWebOutput
       return strWebOutput
-   else:
+   #else:
       #strWebOutput = f"<b>REFRESH</b> complete successfully"
-   finally:
+   #finally:
       #strWebOutput = f"<b>REFRESH</b> complete"
       
    return
@@ -121,9 +121,9 @@ def reddit_getjson(strSubReddit, lstMediaType, strTokenType, strToken, strURL):
       strWebOutput = f"Trouble with <b>GETJSON</b>, status code: {roReceived.status_code}<br> review: {e}<br><br>"
       #raise strWebOutput
       return strWebOutput
-   else:
+   #else:
       #strWebOutput = f"<b>GETJSON</b> complete successfully"
-   finally:
+   #finally:
       #strWebOutput = f"<b>GETJSON</b> complete"
       
    return dictJson
@@ -161,9 +161,9 @@ def reddit_jsontohtml(jsonContent):
       #could contain sensitive information in error message
       strWebOutput += f"Trouble with <b>JSONtoHTML</b>, review: {e}<br><br>{dictThreads}<br><br>"
       return strWebOutput
-   else:
+   #else:
       #strWebOutput += "<b>JSONtoHTML</b> completed successfully<br><br>"
-   finally:
+   #finally:
       #strWebOutput += "<b>JSONtoHTML</b> completed<br><br>"
 
    return strWebOutput
