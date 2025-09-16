@@ -5,17 +5,29 @@ from azure.keyvault.secrets import SecretClient
 
 #app = Flask(__name__)
 
-def app_dictionary():
-   #kv name   -   kv-techsushi-site
-   #kv token   - api-reddit-id
-   #kv tokentype   -   api-reddit-tokentype
-   #kv id      -   api-reddit-id
-   #kv secret   -   api-reddit-secret
-   #reddit login url   -   https://www.reddit.com/api/v1/access_token
-   #reddit oauth url   -   https://oauth.reddit.com/r/{strSubReddit}/new
-   #useragent   -   imgdupedetect v0.2 by orbut8888
+def app_dictionary(strLabel):
+   match strLabel:
+      case "kv_name":
+         strValue = "kv-techsushi-site"
+      case "kv_token":
+         strValue = "api-reddit-token"
+      case "kv_tokentype":
+         strValue = "api-reddit-tokentype"
+      case "kv_id":
+         strValue = "api-reddit-id"
+      case "kv_secret":
+         strValue = "api-reddit-secret"
+      case "url_login":
+         strValue = "https://www.reddit.com/api/v1/access_token"
+      case "url_oauth":
+         strValue = "https://oauth.reddit.com/r/" #{strSubReddit}/new
+      case "txt_useragent":
+         strValue = "imgdupedetect v0.2 by orbut8888"
+      case _:
+         #default unknown
+         strValue = "Unrecognized"
    
-   return
+   return strValue
    
 def kv_set(strVault, strName, strValue):
    #Only expected to be used during initial Reddit API and Azure KeyVault set up
