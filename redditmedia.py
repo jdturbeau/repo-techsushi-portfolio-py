@@ -105,9 +105,8 @@ def reddit_jsontohtml(jsonContent):
    #consider new, hot, rising, controversial, top
    #consider table view for alignment
 
-   strAfterURL = jsonContent["data"]["after"]
-
    try:
+      strAfterURL = jsonContent["data"]["after"]
       dictThreads = jsonContent["data"]["children"]
       
       strWebOutput = f"<head><base href=\"https://www.reddit.com/\" target=\"_blank\"></head><body>"
@@ -132,20 +131,18 @@ def reddit_jsontohtml(jsonContent):
 
    except Exception as e:
       #could contain sensitive information in error message
-      strWebOutput += f"Trouble with JSON, review: {e}<br><br>{dictThreads}<br><br>"
+      strWebOutput += f"Trouble with <b>JSONtoHTML</b>, review: {e}<br><br>{dictThreads}<br><br>"
       return strWebOutput
    else:
-      #strWebOutput += "json parse complete without error<br><br>"
+      #strWebOutput += "<b>JSONtoHTML</b> completed successfully<br><br>"
    finally:
-      #strWebOutput += "json parse completed<br><br>"
+      #strWebOutput += "<b>JSONtoHTML</b> completed<br><br>"
 
    return strWebOutput
-   
-   return
 
-def html_form():
+def html_form(strDestination):
    
-   strWebOutput += f"<form action=\"/testpost\" method=\"post\"><!-- Form elements go here -->"
+   strWebOutput = f"<form action=\"/{strDestination}\" method=\"post\"><!-- Form elements go here -->"
    strWebOutput += f"<label for=\"name\">Subreddit:</label><br><input type=\"text\" id=\"subreddit\" name=\"sub\" placeholder=\"p320\" autocomplete=\"off\">"
    strWebOutput += f"<input type=\"checkbox\" id=\"pictures\" name=\"mediatype\" value=\"pictures\" checked><label for=\"pictures\">Pictures</label>"
    strWebOutput += f"<input type=\"checkbox\" id=\"videos\" name=\"mediatype\" value=\"videos\"><label for=\"videos\">Videos</label><br><br>"
@@ -158,18 +155,6 @@ def html_form():
    
    return strWebOutput
 
-
-
-
-
-def getcontent():
-   
-   
-    
-
-   
-   
-
 def testpost():
    try:
       strMethod = request.method
@@ -181,23 +166,21 @@ def testpost():
       strWebOutput += "gathering request method complete without error<br><br>"
    finally:
       strWebOutput += "gathering request method completed<br><br>"
+   
    try:
       strSubReddit = request.form.get('sub')
-      #strSubReddit = strSubReddit.get['sub']
       strWebOutput += f"{strSubReddit}<br><br>"
-      #strMediaType = request.form.get('mediatype')
       strMediaType = request.form.getlist('mediatype')
       strWebOutput += f"{strMediaType}<br><br>"
    except Exception as e:
-      strWebOutput += f"Trouble with gathering form entry for 'sub'. See: {e}<br><br>"
+      strWebOutput += f"Trouble with <b>RETRIEVING FORM ENTRY</b> for 'sub'. See: {e}<br><br>"
       #return strWebOutput
    else:
-      strWebOutput += "gathering form entry for 'sub' complete without error<br><br>"
+      strWebOutput += "<b>RETRIEVING FORM ENTRY</b> for 'sub' completed successfully<br><br>"
    finally:
-      strWebOutput += "gathering form entry for 'sub completed<br><br>"
-   
+      strWebOutput += "<b>RETRIEVING FORM ENTRY</b> for 'sub completed<br><br>"
    
    return strWebOutput
 
-if __name__ == '__main__':
-   app.run(debug=True)
+#if __name__ == '__main__':
+   #app.run(debug=True)
