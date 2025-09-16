@@ -32,6 +32,7 @@ def index():
 def redmedia():
    #table with
    #   overview, what, technologies involved,
+   
    strWebOutput = "<head>"
    strWebOutput += "<title>TechSushi - Portfolio</title>"
    strWebOutput += "</head>"
@@ -40,6 +41,10 @@ def redmedia():
    #strWebOutput += "Run through version [010]</body>"
    
    strWebOutput += redditmedia.html_form("redmedia")
+
+   #strMethod = request.method
+   #strSubReddit = request.form.get('sub')
+   #strMediaType = request.form.getlist('mediatype')
    
    return strWebOutput
 
