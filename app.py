@@ -39,7 +39,7 @@ def redmedia():
    #strWebOutput += "<br><br><br><br>"
    #strWebOutput += "Run through version [010]</body>"
    
-   strWebOutput += html_form("/redmedia")
+   strWebOutput += html_form("redmedia")
    
    return strWebOutput
 
