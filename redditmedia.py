@@ -86,8 +86,8 @@ def kv_refreshtoken(strVault, strRedditURL):
       strToken = dictReceived["access_token"]
       strTokenType = dictReceived["token_type"]
       #strWebOutput += f"Attempting to store token...<br><br>"
-      kv_set(strVault, ("api-reddit-token", strToken)
-      kv_set(strVault, ("api-reddit-tokentype", strTokenType)
+      kv_set(strVault, "api-reddit-token", strToken)
+      kv_set(strVault, "api-reddit-tokentype", strTokenType)
       
       #strWebOutput += f"new token stored!<br><br>{strToken}<br><br>{strTokenType}<br><br>"
    except Exception as e:
