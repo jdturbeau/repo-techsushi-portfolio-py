@@ -17,11 +17,11 @@ def index():
 
    strWebOutput += "<a href=\"/redmedia\">Reddit media retreiver</a><br><br>"
    
-   strWebOutput += "<a href=\"/keysset\">KV set</a><br><br>"
-   strWebOutput += "<a href=\"/keysget\">KV retrieve</a><br><br>"
-   strWebOutput += "<a href=\"/demo\">demo second page routing</a><br><br>"
-   strWebOutput += "<a href=\"/refreshtoken\">refresh api token</a><br><br>"
-   strWebOutput += "<a href=\"/getcontent\">use api token to get content</a><br><br>"
+   #strWebOutput += "<a href=\"/keysset\">KV set</a><br><br>"
+   #strWebOutput += "<a href=\"/keysget\">KV retrieve</a><br><br>"
+   #strWebOutput += "<a href=\"/demo\">demo second page routing</a><br><br>"
+   #strWebOutput += "<a href=\"/refreshtoken\">refresh api token</a><br><br>"
+   #strWebOutput += "<a href=\"/getcontent\">use api token to get content</a><br><br>"
    strWebOutput += "<a href=\"/testpost\">test posting value</a><br><br><br>"
    strWebOutput += "</form><br><br><br><br>"
    strWebOutput += "Run through version [060]</body>"
@@ -37,7 +37,7 @@ def redmedia():
    strWebOutput += "</head>"
    strWebOutput += "<body>Welcome to the TechSushi - Portfolio page<br><br><br>"
    strWebOutput += "<br><br><br><br>"
-   strWebOutput += "Run through version [060]</body>"
+   strWebOutput += "Run through version [010]</body>"
   
    return
 
