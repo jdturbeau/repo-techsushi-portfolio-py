@@ -39,7 +39,7 @@ def redmedia():
    strWebOutput += "<br><br><br><br>"
    strWebOutput += "Run through version [010]</body>"
   
-   return
+   return strWebOutput
 
 if __name__ == '__main__':
    app.run(debug=True)
