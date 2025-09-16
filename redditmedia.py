@@ -6,11 +6,15 @@ from azure.keyvault.secrets import SecretClient
 #app = Flask(__name__)
 
 def kv_set(strVault, strName, strValue):
+   #Only expected to be used during initial Reddit API and Azure KeyVault set up
+   #From the Azure WebApp, ensure you have enabled System Identity (WebApp > Settings > Identity > On > Save)
+   #From the Azure KeyVault, ensure you assign (Key Vault Secrets Officer?) role to the Azure WebApp identity named above
    try:
       credential = DefaultAzureCredential()
       secret_client = SecretClient(vault_url=f"https://{strVault}.vault.azure.net/", credential=credential) #kv-techsushi-site
       secret = secret_client.set_secret(strName, strValue) #api-reddit-id
    except Exception as e:
+      #could contain sensitive information in error message
       strWebOutput = f"an unexpected error occurred during <b>SET</b>: {e}<br><br>"
       #raise strWebOutput
       return strWebOutput
