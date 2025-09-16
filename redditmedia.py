@@ -61,7 +61,7 @@ def kv_refreshtoken(strVault, strRedditURL):
       kv_set(strVault, ("api-reddit-token", strToken)
       kv_set(strVault, ("api-reddit-tokentype", strTokenType)
       
-#      strWebOutput += f"new token stored!<br><br>{strToken}<br><br>{strTokenType}<br><br>"
+      #strWebOutput += f"new token stored!<br><br>{strToken}<br><br>{strTokenType}<br><br>"
    except Exception as e:
       #could contain sensitive information in error message
       strWebOutput = f"Trouble with <b>REFRESH</b>, review {e}<br><br>{roReceived}<br><br>"
@@ -76,66 +76,39 @@ def kv_refreshtoken(strVault, strRedditURL):
 
 def reddit_getjson(strSubReddit, lstMediaType, strTokenType, strToken, strURL):
    #handle [], [pictures], [videos], [pictures, videos], (other/unknown)
+   #handle new, hot, rising, controversial, top
    #check POST vs GET (request.method ==
 
-   strTokenType = kv_get(strVault, "api-reddit-tokentype")
-   strToken = kv_get(strVault, "api-reddit-token")
-   dictHeader = { "Authorization": f"{strTokenType} {strToken}", "User-Agent": "imgdupedetect v0.1 by orbut8888" }
-   strURL = strURL #fhttps://oauth.reddit.com/r/{strSubReddit}/new
-   
-   roReceived = requests.get(strURL, headers = dictHeader)
-   # if roReceived.status_code = 401 (unauthorized), likely need new token
-   dictJson = roReceived.json()
-   #strAfterURL = dictJson["data"]["after"]
-   
+   try:
+      strTokenType = kv_get(strVault, "api-reddit-tokentype")
+      strToken = kv_get(strVault, "api-reddit-token")
+      dictHeader = { "Authorization": f"{strTokenType} {strToken}", "User-Agent": "imgdupedetect v0.2 by orbut8888" }
+      strURL = strURL #fhttps://oauth.reddit.com/r/{strSubReddit}/new
+      
+      roReceived = requests.get(strURL, headers = dictHeader)
+      # if roReceived.status_code = 401 (unauthorized), likely need new token
+      dictJson = roReceived.json()
+   except Exception as e:
+      #could contain sensitive information in error message
+      strWebOutput = f"Trouble with <b>GETJSON</b>, review {e}<br><br>"
+      #raise strWebOutput
+      return strWebOutput
+   else:
+      #strWebOutput = f"<b>GETJSON</b> complete successfully"
+   finally:
+      #strWebOutput = f"<b>GETJSON</b> complete"
+      
    return dictJson
 
 def reddit_jsontohtml(jsonContent):
    #consider [], [pictures], [videos], [pictures, videos], (other/unknown)
+   #consider new, hot, rising, controversial, top
+   #consider table view for alignment
 
-   
-   return
+   strAfterURL = jsonContent["data"]["after"]
 
-def html_form():
-   
-   strWebOutput += f"<form action=\"/testpost\" method=\"post\"><!-- Form elements go here -->"
-   strWebOutput += f"<label for=\"name\">Subreddit:</label><br><input type=\"text\" id=\"subreddit\" name=\"sub\" placeholder=\"p320\" autocomplete=\"off\">"
-   strWebOutput += f"<input type=\"checkbox\" id=\"pictures\" name=\"mediatype\" value=\"pictures\" checked><label for=\"pictures\">Pictures</label>"
-   strWebOutput += f"<input type=\"checkbox\" id=\"videos\" name=\"mediatype\" value=\"videos\"><label for=\"videos\">Videos</label><br><br>"
-   strWebOutput += f"<button type=\"submit\">Browse Media</button></form><br><br>"
-
-   return strWebOutput
-
-
-
-
-
-def getcontent():
-   
-   
-    
    try:
-      strWebOutput += "end of get token from kv script<br><br>"
-      dictHeader = { "Authorization": f"{strTokenType} {strToken}", "User-Agent": "imgdupedetect v0.1 by orbut8888" }
-      strURL = f"https://oauth.reddit.com/r/{strSubReddit}/new"
-      strWebOutput += f"{dictHeader}<br><br>"
-      roReceived = requests.get(strURL, headers = dictHeader)
-      # if roReceived.status_code = 401 (unauthorized), likely need new token
-      strWebOutput += f"{roReceived.status_code}<br><br>{roReceived.text}<br><br>{roReceived.content}<br><br>{roReceived.headers}<br><br>"
-      dictJson = roReceived.json()
-      strAfterURL = dictJson["data"]["after"]
-      strWebOutput += f"{strAfterURL}<br><br>"
-      strWebOutput += f"text received: [ {roReceived} ]<br><br>"
-   except Exception as e:
-      strWebOutput += f"an unexpected error occurred during token usage: {e}<br><br>"
-      return strWebOutput
-   else:
-      strWebOutput += f"usage completed without error<br><br>"
-   finally:
-      strWebOutput += "usage2 completed<br><br>"
-   
-   try:
-      dictThreads = dictJson["data"]["children"]
+      dictThreads = jsonContent["data"]["children"]
       
       strWebOutput = f"<head><base href=\"https://www.reddit.com/\" target=\"_blank\"></head><body>"
       
@@ -149,6 +122,7 @@ def getcontent():
          strThreadType = dictSingle.get("data", {}).get("post_hint", "Missing")
          strWebOutput += f"<font size=5><a href=\"{strThreadPermalink}\">{strThreadTitle}</a></font><br>"
          strWebOutput += f"<b>{strThreadAuthor}</b> - {strThreadComments} Comment(s) / Post Type - {strThreadType}<br><p>"
+         #ThreadType : link, image, hosted:video, null, (gallery?)
          match strThreadType:
             case "image":
                strWebOutput += f"<img src =\"{strThreadURL}\" width=\"60%\"></img><p>"
@@ -157,14 +131,44 @@ def getcontent():
       strWebOutput += f"<p><a href=\"{strAfterURL}\">Next Posts</a></p>"
 
    except Exception as e:
+      #could contain sensitive information in error message
       strWebOutput += f"Trouble with JSON, review: {e}<br><br>{dictThreads}<br><br>"
       return strWebOutput
    else:
-      strWebOutput += "json parse complete without error<br><br>"
+      #strWebOutput += "json parse complete without error<br><br>"
    finally:
-      strWebOutput += "json parse completed<br><br>"
+      #strWebOutput += "json parse completed<br><br>"
 
    return strWebOutput
+   
+   return
+
+def html_form():
+   
+   strWebOutput += f"<form action=\"/testpost\" method=\"post\"><!-- Form elements go here -->"
+   strWebOutput += f"<label for=\"name\">Subreddit:</label><br><input type=\"text\" id=\"subreddit\" name=\"sub\" placeholder=\"p320\" autocomplete=\"off\">"
+   strWebOutput += f"<input type=\"checkbox\" id=\"pictures\" name=\"mediatype\" value=\"pictures\" checked><label for=\"pictures\">Pictures</label>"
+   strWebOutput += f"<input type=\"checkbox\" id=\"videos\" name=\"mediatype\" value=\"videos\"><label for=\"videos\">Videos</label><br><br>"
+   strWebOutput += f"<button type=\"submit\">Browse Media</button></form><br><br>"
+   #add new, hot, rising, controversial, top
+   #add (media by) username
+   #consider single stream vs gallery view
+
+   #strAfterURL = dictJson["data"]["after"]
+   
+   return strWebOutput
+
+
+
+
+
+def getcontent():
+   
+   
+    
+
+   
+   
 
 def testpost():
    try:
