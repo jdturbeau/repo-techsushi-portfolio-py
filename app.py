@@ -28,7 +28,7 @@ def index():
   
    return strWebOutput
 
-@app.route("/redmedia")
+@app.route("/redmedia", methods=['GET', 'POST'])
 def redmedia():
    #table with
    #   overview, what, technologies involved,
@@ -36,9 +36,11 @@ def redmedia():
    strWebOutput += "<title>TechSushi - Portfolio</title>"
    strWebOutput += "</head>"
    strWebOutput += "<body>Welcome to the TechSushi - Portfolio page<br><br><br>"
-   strWebOutput += "<br><br><br><br>"
-   strWebOutput += "Run through version [010]</body>"
-  
+   #strWebOutput += "<br><br><br><br>"
+   #strWebOutput += "Run through version [010]</body>"
+   
+   strWebOutput += html_form("/redmedia")
+   
    return strWebOutput
 
 if __name__ == '__main__':
