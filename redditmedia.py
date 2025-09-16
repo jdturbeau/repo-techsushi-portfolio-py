@@ -5,6 +5,18 @@ from azure.keyvault.secrets import SecretClient
 
 #app = Flask(__name__)
 
+def app_dictionary():
+   #kv name   -   kv-techsushi-site
+   #kv token   - api-reddit-id
+   #kv tokentype   -   api-reddit-tokentype
+   #kv id      -   api-reddit-id
+   #kv secret   -   api-reddit-secret
+   #reddit login url   -   https://www.reddit.com/api/v1/access_token
+   #reddit oauth url   -   https://oauth.reddit.com/r/{strSubReddit}/new
+   #useragent   -   imgdupedetect v0.2 by orbut8888
+   
+   return
+   
 def kv_set(strVault, strName, strValue):
    #Only expected to be used during initial Reddit API and Azure KeyVault set up
    #From the Azure WebApp, ensure you have enabled System Identity (WebApp > Settings > Identity > On > Save)
@@ -27,7 +39,7 @@ def kv_set(strVault, strName, strValue):
 def kv_get(strVault, strName):
    try:
       credential = DefaultAzureCredential()
-      secret_client = SecretClient(vault_url=f"https://{strVault}.vault.azure.net/", credential=credential) #kv-techsushi-site
+      secret_client = SecretClient(vault_url=f"https://{strVault}.vault.azure.net/", credential=credential)
       secret = secret_client.get_secret(strName)
       strValue = secret.value
       #strWebOutput += f"{secret.name}<br><br>"
@@ -79,7 +91,7 @@ def kv_refreshtoken(strVault, strRedditURL):
    return
 
 def reddit_getjson(strSubReddit, lstMediaType, strTokenType, strToken, strURL):
-   #handle [], [pictures], [videos], [pictures, videos], (other/unknown)
+   #handle [], [pictures], [videos], [pictures, videos], (gallery?), (other/unknown)
    #handle new, hot, rising, controversial, top
    #check POST vs GET (request.method ==
 
@@ -94,7 +106,7 @@ def reddit_getjson(strSubReddit, lstMediaType, strTokenType, strToken, strURL):
       dictJson = roReceived.json()
    except Exception as e:
       #could contain sensitive information in error message
-      strWebOutput = f"Trouble with <b>GETJSON</b>, review {e}<br><br>"
+      strWebOutput = f"Trouble with <b>GETJSON</b>, status code: {roReceived.status_code}<br> review: {e}<br><br>"
       #raise strWebOutput
       return strWebOutput
    else:
