@@ -64,7 +64,7 @@ def redmedia():
       strURL = redditmedia.app_dictionary("url_oauth")
       dictResponse = reddit_getjson(strSubReddit, lstMediaType, strSort, strTokenType, strToken, strURL, strAfter)
       strDestURL = f"/redmedia?sub={strSubReddit}&sort={strSort}&after={strAfter}"
-      reddit_jsontohtml(dictResponse, lstMediaType, strDestURL)
+      strWebOutput += reddit_jsontohtml(dictResponse, lstMediaType, strDestURL)
       
       strWebOutput += redditmedia.app_dictionary("html_footer")
    except Exception as e:
