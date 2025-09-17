@@ -27,7 +27,7 @@ def app_dictionary(strLabel):
          strValue += "</head>"
          strValue += "<body>Welcome to the TechSushi - Portfolio page<br><br><br>"
       case "html_footer":
-         strValue = "Run through version [1.0.7]</body>"
+         strValue = "Run through version [1.0.8]</body>"
       case _:
          #default unknown
          strValue = f"Unrecognized value: [ {strLabel} ]"
@@ -82,7 +82,8 @@ def kv_refreshtoken(strVault, strRedditURL):
       
       objClientAuth = (strID, strSecret)
       dictPostData = { "grant_type": "client_credentials" }
-      dictHeader = { "User-Agent": "imgdupedetect v0.2 by orbut8888" }
+      strUserAgent = app_dictionary("txt_useragent")
+      dictHeader = { "User-Agent": strUserAgent }
       roReceived = requests.post(strRedditURL, auth=objClientAuth, data=dictPostData, headers=dictHeader)
       
       #strWebOutput += f"{roReceived.status_code}<br><br>{roReceived.text}<br><br>{roReceived.content}<br><br>{roReceived.headers}<br><br>"
@@ -117,7 +118,6 @@ def reddit_getjson(strSubReddit, lstMediaType, strSort, strTokenType, strToken, 
       #strToken = kv_get(strVault, "api-reddit-token")
       strUserAgent = app_dictionary("txt_useragent")
       dictHeader = { "Authorization": f"{strTokenType} {strToken}", "User-Agent": strUserAgent }
-      strURL = strURL #fhttps://oauth.reddit.com/r/{strSubReddit}/{strSort}
       #how to handle 'after' here?
       
       roReceived = requests.get(strURL, headers = dictHeader)
