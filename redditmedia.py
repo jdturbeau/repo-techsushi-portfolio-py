@@ -24,7 +24,7 @@ def app_dictionary(strLabel):
       case "html_header":
          strValue = "<head>"
          strValue += "<title>TechSushi - Portfolio</title>"
-         #strValue += "<base href=\"https://www.reddit.com/\" target=\"_blank\">"
+         #strValue += "<base href=\"https://www.reddit.com/\" target=\"_blank\">"#
          strValue += "</head>"
          strValue += "<body>Welcome to the TechSushi - Portfolio page<br><br><br>"
       case "html_footer":
