@@ -57,14 +57,14 @@ def redmedia():
 
       strVault = redditmedia.app_dictionary("kv_name")
       strRedditURL = redditmedia.app_dictionary("url_login")
-      kv_refreshtoken(strVault, strRedditURL)
+      redditmedia.kv_refreshtoken(strVault, strRedditURL)
 
       strTokenType = redditmedia.app_dictionary("api-reddit-tokentype")
       strToken = redditmedia.app_dictionary("api-reddit-token")
       strURL = redditmedia.app_dictionary("url_oauth")
-      dictResponse = reddit_getjson(strSubReddit, lstMediaType, strSort, strTokenType, strToken, strURL, strAfter)
+      dictResponse = redditmedia.reddit_getjson(strSubReddit, lstMediaType, strSort, strTokenType, strToken, strURL, strAfter)
       strDestURL = f"/redmedia?sub={strSubReddit}&sort={strSort}&after={strAfter}"
-      strWebOutput += reddit_jsontohtml(dictResponse, lstMediaType, strDestURL)
+      strWebOutput += redditmedia.reddit_jsontohtml(dictResponse, lstMediaType, strDestURL)
       
       strWebOutput += redditmedia.app_dictionary("html_footer")
    except Exception as e:
