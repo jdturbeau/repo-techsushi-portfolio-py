@@ -40,7 +40,6 @@ def redmedia():
             strSort = request.form.get("sort", "")
             strAfter = request.args.get("after", "")
             strLimit = request.args.get("limit", "")
-            strWebOutput += f"Subreddit [ {strSubReddit} ]<br>Media Type [ {lstMediaType} ]<br>Sort [ {strSort} ]<br>After [ {strAfter} ]<br>Limit [ {strLimit} ]<br><br>"
          case "GET":
             #handle first load
             #handle next/after
@@ -49,19 +48,22 @@ def redmedia():
             strSort = request.args.get("sort", "")
             strAfter = request.args.get("after", "")
             strLimit = request.args.get("limit", "")
-            strWebOutput += f"Subreddit [ {strSubReddit} ]<br>Media Type [ {lstMediaType} ]<br>Sort [ {strSort} ]<br>After [ {strAfter} ]<br>Limit [ {strLimit} ]<br><br>"
             #maybe request.GET.get('variable_name')
          case _:
             #default or unknown 
             strSubReddit = "unknown"
-
+      
+      strWebOutput += f"Subreddit [ {strSubReddit} ]<br>Media Type [ {lstMediaType} ]<br>Sort [ {strSort} ]<br>After [ {strAfter} ]<br>Limit [ {strLimit} ]<br><br>"
+      
       strVault = redditmedia.app_dictionary("kv_name")
       strRedditURL = redditmedia.app_dictionary("url_login")
       redditmedia.kv_refreshtoken(strVault, strRedditURL)
 
-      strTokenType = redditmedia.app_dictionary("api-reddit-tokentype")
-      strToken = redditmedia.app_dictionary("api-reddit-token")
+      strTokenType = redditmedia.app_dictionary("kv_tokentype")
+      strToken = redditmedia.app_dictionary("kv_token")
       strURL = redditmedia.app_dictionary("url_oauth")
+      if strSubReddit:
+         strURL += f"/{strSubReddit}/{strSort}"
       dictResponse = redditmedia.reddit_getjson(strSubReddit, lstMediaType, strSort, strTokenType, strToken, strURL, strAfter)
       strDestURL = f"/redmedia?sub={strSubReddit}&sort={strSort}&after={strAfter}"
       strWebOutput += redditmedia.reddit_jsontohtml(dictResponse, lstMediaType, strDestURL)
