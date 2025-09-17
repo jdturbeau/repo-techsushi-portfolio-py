@@ -123,10 +123,13 @@ def reddit_getjson(strSubReddit, lstMediaType, strSort, strTokenType, strToken, 
       match strReqStatus:
          case "403":
             strJsonOutput = f"<b>GETJSON</b>, status code: [ {roReceived.status_code} ]<br>Token type [ {strTokenType} ]<br> Unable to proceed!<br>"
+            #unsure why this does not work
             raise RuntimeError(strJsonOutput)
          case _:
             dictJson = roReceived.json()
-            
+      if not dictJson:
+         return f"JSON response is null. status code: [ {roReceived.status_code} ]<br>Token type [ {strTokenType} ]<br> Unable to proceed!<br>"
+      
    except Exception as e:
       #could contain sensitive information in error message
       strJsonOutput = f"Trouble with <b>GETJSON</b>, status code: {roReceived.status_code}<br> review: {e}<br>URL [ {strURL} ]<br>Header [ {dictHeader} ]<br>Token Type [ {strTokenType} ]<br>Token [ {strToken} ]<br><br>"
@@ -135,8 +138,8 @@ def reddit_getjson(strSubReddit, lstMediaType, strSort, strTokenType, strToken, 
       #strJsonOutput = f"<b>GETJSON</b> complete successfully"
    #finally:
       #strJsonOutput = f"<b>GETJSON</b> complete"
-   strJsonOutput = f"Trouble with <b>GETJSON</b>, status code: {roReceived.status_code}<br> review: {e}<br>URL [ {strURL} ]<br>Header [ {dictHeader} ]<br>Token Type [ {strTokenType} ]<br>Token [ {strToken} ]<br><br>"
-   return strJsonOutput
+   #strJsonOutput = f"Trouble with <b>GETJSON</b>, status code: {roReceived.status_code}<br> review: {e}<br>URL [ {strURL} ]<br>Header [ {dictHeader} ]<br>Token Type [ {strTokenType} ]<br>Token [ {strToken} ]<br><br>"
+   return dictJson
 
 def reddit_jsontohtml(jsonContent, lstMediaType, strDestURL):
    #consider [], [pictures], [videos], [pictures, videos], (other/unknown)
