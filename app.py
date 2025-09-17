@@ -35,17 +35,17 @@ def redmedia():
       strWebOutput += f"Method [ {strMethod} ]<br>"
       match strMethod:
          case "POST":
-            strSubReddit = request.form.get("sub")
+            strSubReddit = request.form.get("sub", "all")
             lstMediaType = request.form.getlist("mediatype")
-            strSort = request.form.get("sort", "")
+            strSort = request.form.get("sort", "new")
             strAfter = request.args.get("after", "")
             strLimit = request.args.get("limit", "")
          case "GET":
             #handle first load
             #handle next/after
-            strSubReddit = request.args.get("sub", "")
+            strSubReddit = request.args.get("sub", "all")
             lstMediaType = request.args.getlist("mediatype")
-            strSort = request.args.get("sort", "")
+            strSort = request.args.get("sort", "new")
             strAfter = request.args.get("after", "")
             strLimit = request.args.get("limit", "")
             #maybe request.GET.get('variable_name')
@@ -54,19 +54,27 @@ def redmedia():
             strSubReddit = "unknown"
       
       strWebOutput += f"Subreddit [ {strSubReddit} ]<br>Media Type [ {lstMediaType} ]<br>Sort [ {strSort} ]<br>After [ {strAfter} ]<br>Limit [ {strLimit} ]<br><br>"
+
+      strWebOutput += f"... attempting token refresh...<br>"
       
       strVault = redditmedia.app_dictionary("kv_name")
       strRedditURL = redditmedia.app_dictionary("url_login")
       redditmedia.kv_refreshtoken(strVault, strRedditURL)
 
+      strWebOutput += f"... token refresh successful...<br>"
+
       strTokenType = redditmedia.app_dictionary("kv_tokentype")
       strToken = redditmedia.app_dictionary("kv_token")
       strURL = redditmedia.app_dictionary("url_oauth")
-      if strSubReddit:
-         strURL += f"/{strSubReddit}/{strSort}"
+      strURL += f"{strSubReddit}/{strSort}"
+      
+      strWebOutput += f"... attempting to get json...<br>"
+      
       dictResponse = redditmedia.reddit_getjson(strSubReddit, lstMediaType, strSort, strTokenType, strToken, strURL, strAfter)
       strDestURL = f"/redmedia?sub={strSubReddit}&sort={strSort}&after={strAfter}"
       strWebOutput += redditmedia.reddit_jsontohtml(dictResponse, lstMediaType, strDestURL)
+      
+      strWebOutput += f"... json received successfully...<br>"
       
       strWebOutput += redditmedia.app_dictionary("html_footer")
    except Exception as e:
