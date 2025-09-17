@@ -76,7 +76,8 @@ def redmedia():
       strWebOutput += f"... attempting to convert JSON to HTML...<br>"
       
       strDestURL = f"/redmedia?sub={strSubReddit}&sort={strSort}" #&after={strAfter}"
-      strWebOutput += redditmedia.reddit_jsontohtml(dictResponse, lstMediaType, strDestURL)
+      strBody = redditmedia.reddit_jsontohtml(dictResponse, lstMediaType, strDestURL)
+      strWebOutput += strBody
       
       strWebOutput += f"... JSON to HTML conversion successful...<br>"
       
