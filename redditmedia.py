@@ -192,7 +192,7 @@ def reddit_jsontohtml(jsonContent, lstMediaType, strDestURL):
 def html_form(strDestination):
    
    strWebOutput = f"<form action=\"/{strDestination}\" method=\"post\"><!-- Form elements go here -->"
-   strWebOutput += f"<label for=\"name\">Subreddit:</label><br><input type=\"text\" id=\"subreddit\" name=\"sub\" placeholder=\"p320\" autocomplete=\"off\"><br><br>"
+   strWebOutput += f"<label for=\"name\">Subreddit:</label><br><input type=\"text\" id=\"subreddit\" name=\"sub\" placeholder=\"all\" autocomplete=\"off\"><br><br>"
    strWebOutput += f"<label for=\"mediatype\">Type of Media:</label><br><input type=\"checkbox\" id=\"pictures\" name=\"mediatype\" value=\"pictures\" checked><label for=\"pictures\">Pictures</label>"
    strWebOutput += f"<input type=\"checkbox\" id=\"videos\" name=\"mediatype\" value=\"videos\"><label for=\"videos\">Videos</label><br><br>"
    #add new, hot, rising, controversial, top
