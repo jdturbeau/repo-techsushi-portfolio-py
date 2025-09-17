@@ -38,7 +38,7 @@ def redmedia():
          case "POST":
             strSubReddit = request.form.get('sub')
             strMediaType = request.form.getlist('mediatype')
-         case "GET:
+         case "GET":
             #handle first load
             #handle next/after
             strSubReddit = request.args.get("sub", "") # Get with a default value
