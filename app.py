@@ -33,14 +33,17 @@ def redmedia():
       strWebOutput = redditmedia.app_dictionary("html_header")
       strWebOutput += redditmedia.html_form("redmedia")
       strMethod = request.method
+      strWebOutput += f"Method [ {strMethod} ]<br>"
       match strMethod:
          case "POST":
-            strSubReddit = request.form.get('sub')
-            strMediaType = request.form.getlist('mediatype')
+            strSubReddit = request.form.get("sub")
+            strMediaType = request.form.getlist("mediatype")
+            strWebOutput += f"Subreddit [ {strSubReddit} ]<br>Media Type [ {strMediaType} ]<br>"
          case "GET":
             #handle first load
             #handle next/after
             strSubReddit = request.args.get("sub", "") # Get with a default value
+            strWebOutput += f"Subreddit [ {strSubReddit} ]<br>"   #Media Type [ {strMediaType} ]<br>
             # request.args is a MultiDict, allowing multiple values for the same key
             #all_tags = request.args.getlist('tag') # Get all values for a repeated parameter
             #maybe
@@ -48,7 +51,7 @@ def redmedia():
          case _:
             #default or unknown 
             strSubReddit = "unknown"
-      strWebOutput += f"Method [ {strMethod} ]<br>Subreddit [ {strSubReddit} ]<br>Media Type [ {strMediaType} ]<br>"
+      
       strWebOutput += redditmedia.app_dictionary("html_footer")
    except Exception as e:
       #could contain sensitive information in error message
