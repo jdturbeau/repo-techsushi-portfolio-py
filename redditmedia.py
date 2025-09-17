@@ -44,13 +44,13 @@ def kv_set(strVault, strName, strValue):
       secret = secret_client.set_secret(strName, strValue) #api-reddit-id
    except Exception as e:
       #could contain sensitive information in error message
-      strWebOutput = f"an unexpected error occurred during <b>SET</b>: {e}<br><br>"
-      #raise strWebOutput
-      return strWebOutput
+      strSetOutput = f"an unexpected error occurred during <b>SET</b>: {e}<br><br>"
+      #raise strSetOutput
+      return strSetOutput
    #else:
-      #strWebOutput = "<b>SET</b> completed successfully<br><br>"
+      #strSetOutput = "<b>SET</b> completed successfully<br><br>"
    #finally:
-      #strWebOutput = "end of <b>SET</b> script<br><br>"      
+      #strSetOutput = "end of <b>SET</b> script<br><br>"      
    return
    
 def kv_get(strVault, strName):
@@ -59,16 +59,16 @@ def kv_get(strVault, strName):
       secret_client = SecretClient(vault_url=f"https://{strVault}.vault.azure.net/", credential=credential)
       secret = secret_client.get_secret(strName)
       strValue = secret.value
-      #strWebOutput += f"{secret.name}<br><br>"
-      #strWebOutput += f"{secret.value}<br><br>"
+      #strGetOutput += f"{secret.name}<br><br>"
+      #strGetOutput += f"{secret.value}<br><br>"
    except Exception as e:
-      strWebOutput = f"an unexpected error occurred during <b>GET</b>: {e}<br><br>"
-      #raise strWebOutput
-      return strWebOutput
+      strGetOutput = f"an unexpected error occurred during <b>GET</b>: {e}<br><br>"
+      #raise strGetOutput
+      return strGetOutput
    #else:
-      #strWebOutput = "<b>GET</b> completed successfully<br><br>"
+      #strGetOutput = "<b>GET</b> completed successfully<br><br>"
    #finally:
-      #strWebOutput = "end of <b>GET</b> script<br><br>"
+      #strGetOutput = "end of <b>GET</b> script<br><br>"
    return strValue
    
 def kv_refreshtoken(strVault, strRedditURL):
@@ -86,25 +86,25 @@ def kv_refreshtoken(strVault, strRedditURL):
       dictHeader = { "User-Agent": strUserAgent }
       roReceived = requests.post(strRedditURL, auth=objClientAuth, data=dictPostData, headers=dictHeader)
       
-      #strWebOutput += f"{roReceived.status_code}<br><br>{roReceived.text}<br><br>{roReceived.content}<br><br>{roReceived.headers}<br><br>"
-      #strWebOutput += f"Attempting to parse response for JSON...<br><br>"
+      #strRefreshOutput += f"{roReceived.status_code}<br><br>{roReceived.text}<br><br>{roReceived.content}<br><br>{roReceived.headers}<br><br>"
+      #strRefreshOutput += f"Attempting to parse response for JSON...<br><br>"
       dictReceived = roReceived.json()      
       strToken = dictReceived["access_token"]
       strTokenType = dictReceived["token_type"]
-      #strWebOutput += f"Attempting to store token...<br><br>"
+      #strRefreshOutput += f"Attempting to store token...<br><br>"
       kv_set(strVault, "api-reddit-token", strToken)
       kv_set(strVault, "api-reddit-tokentype", strTokenType)
       
-      #strWebOutput += f"new token stored!<br><br>{strToken}<br><br>{strTokenType}<br><br>"
+      #strRefreshOutput += f"new token stored!<br><br>{strToken}<br><br>{strTokenType}<br><br>"
    except Exception as e:
       #could contain sensitive information in error message
-      strWebOutput = f"Trouble with <b>REFRESH</b>, review {e}<br><br>{roReceived}<br><br>"
-      #raise strWebOutput
-      return strWebOutput
+      strRefreshOutput = f"Trouble with <b>REFRESH</b>, review {e}<br><br>{roReceived}<br><br>"
+      #raise strRefreshOutput
+      return strRefreshOutput
    #else:
-      #strWebOutput = f"<b>REFRESH</b> complete successfully"
+      #strRefreshOutput = f"<b>REFRESH</b> complete successfully"
    #finally:
-      #strWebOutput = f"<b>REFRESH</b> complete"
+      #strRefreshOutput = f"<b>REFRESH</b> complete"
       
    return
 
@@ -120,19 +120,18 @@ def reddit_getjson(strSubReddit, lstMediaType, strSort, strTokenType, strToken, 
       dictHeader = { "Authorization": f"{strTokenType} {strToken}", "User-Agent": strUserAgent }
       #how to handle 'after' here?
       
-      roReceived = requests.get(strURL, headers = dictHeader)
+      roReceived = requests.get(strURL, headers=dictHeader)
       # if roReceived.status_code = 401 (unauthorized), likely need new token
-      #dictJson = roReceived.json()
-      dictJson = "wat and wat"
+      dictJson = roReceived.json()
    except Exception as e:
       #could contain sensitive information in error message
-      strWebOutput = f"Trouble with <b>GETJSON</b>, status code: {roReceived.status_code}<br> review: {e}<br><br>"
+      strJsonOutput = f"Trouble with <b>GETJSON</b>, status code: {roReceived.status_code}<br> review: {e}<br><br>"
       #raise strWebOutput
-      return strWebOutput
+      return strJsonOutput
    #else:
-      #strWebOutput = f"<b>GETJSON</b> complete successfully"
+      #strJsonOutput = f"<b>GETJSON</b> complete successfully"
    #finally:
-      #strWebOutput = f"<b>GETJSON</b> complete"
+      #strJsonOutput = f"<b>GETJSON</b> complete"
       
    return dictJson
 
@@ -142,11 +141,16 @@ def reddit_jsontohtml(jsonContent, lstMediaType, strDestURL):
    #consider table view for alignment
 
    try:
-      strAfterURL = "&after="
-      strAfterURL += jsonContent["data"]["after"]
+      strAfterURL = jsonContent["data"]["after"]
+      if not strAfterURL:
+         strAfterURL = ""
+      else:
+         strAfterURL = f"&after={strAfterURL}"
+         
       dictThreads = jsonContent["data"]["children"]
       
-      strWebOutput = f"<head><base href=\"https://www.reddit.com/\" target=\"_blank\"></head><body>"
+      #strHtmlOutput = f"<head><base href=\"https://www.reddit.com/\" target=\"_blank\"></head><body>"
+      strHtmlOutput = "<br>"
       
       for dictSingle in dictThreads:
          strThreadTitle = dictSingle["data"]["title"]
@@ -157,62 +161,62 @@ def reddit_jsontohtml(jsonContent, lstMediaType, strDestURL):
          strThreadMedia = dictSingle["data"]["media"]
          strThreadType = dictSingle.get("data", {}).get("post_hint", "Missing")
          
-         strWebOutput += f"<font size=5><a href=\"{strThreadPermalink}\">{strThreadTitle}</a></font><br>"
-         strWebOutput += f"<b>{strThreadAuthor}</b> - {strThreadComments} Comment(s) / Post Type - {strThreadType}<br><p>"
+         strHtmlOutput += f"<font size=5><a href=\"{strThreadPermalink}\">{strThreadTitle}</a></font><br>"
+         strHtmlOutput += f"<b>{strThreadAuthor}</b> - {strThreadComments} Comment(s) / Post Type - {strThreadType}<br><p>"
          
          #ThreadType : link, image, hosted:video, null, (gallery?)
          match strThreadType:
             case "image":
-               strWebOutput += f"<img src =\"{strThreadURL}\" width=\"60%\"></img><p>"
+               strHtmlOutput += f"<img src =\"{strThreadURL}\" width=\"60%\"></img><p>"
             case "rich:video":
                strThreadEmbed = strThreadMedia["oembed"]["html"]
                strThreadEmbed = strThreadEmbed.replace("&lt;","<")
                strThreadEmbed = strThreadEmbed.replace("&gt;",">")
                strThreadEmbed = strThreadEmbed.replace("\"100%\"","\"60%\"")
                strThreadEmbed = strThreadEmbed.replace("position:absolute;","")
-               strWebOutput += f"{strThreadEmbed}<br><p>"
+               strHtmlOutput += f"{strThreadEmbed}<br><p>"
             #is_gallery: true
             #hosted:video
             #link
             case _:
-               strWebOutput += f"<font color=red>Error experienced [ {strThreadType} ]</font><p>"
+               strHtmlOutput += f"<font color=red>Error experienced [ {strThreadType} ]</font><p>"
          
          #{strDestURL} & after={strAfterURL}
-         strWebOutput += f"<p><a href=\"{strDestURL}{strAfterURL}\">Next Posts</a></p>"
+         strHtmlOutput += f"<p><a href=\"{strDestURL}&{strAfterURL}\">Next Posts</a></p>"
 
    except Exception as e:
       #could contain sensitive information in error message
-      strWebOutput += f"Trouble with <b>JSONtoHTML</b>, review: {e}<br><br>{dictThreads}<br><br>"
-      return strWebOutput
+      strHtmlOutput = f"Trouble with <b>JSONtoHTML</b>, review: {e}<br><br>{dictThreads}<br><br>"
+      return strHtmlOutput
    #else:
       #strWebOutput += "<b>JSONtoHTML</b> completed successfully<br><br>"
    #finally:
       #strWebOutput += "<b>JSONtoHTML</b> completed<br><br>"
 
-   return strWebOutput
+   return strHtmlOutput
 
 def html_form(strDestination):
    
-   strWebOutput = f"<form action=\"/{strDestination}\" method=\"post\"><!-- Form elements go here -->"
-   strWebOutput += f"<label for=\"name\">Subreddit:</label><br><input type=\"text\" id=\"subreddit\" name=\"sub\" placeholder=\"all\" autocomplete=\"off\"><br><br>"
-   strWebOutput += f"<label for=\"mediatype\">Type of Media:</label><br><input type=\"checkbox\" id=\"pictures\" name=\"mediatype\" value=\"pictures\" checked><label for=\"pictures\">Pictures</label>"
-   strWebOutput += f"<input type=\"checkbox\" id=\"videos\" name=\"mediatype\" value=\"videos\"><label for=\"videos\">Videos</label><br><br>"
+   strFormOutput = f"<form action=\"/{strDestination}\" method=\"post\"><!-- Form elements go here -->"
+   strFormOutput += f"<label for=\"name\">Subreddit:</label><br><input type=\"text\" id=\"subreddit\" name=\"sub\" placeholder=\"all\" autocomplete=\"off\"><br><br>"
+   strFormOutput += f"<label for=\"mediatype\">Type of Media:</label><br><input type=\"checkbox\" id=\"pictures\" name=\"mediatype\" value=\"pictures\" checked><label for=\"pictures\">Pictures</label>"
+   strFormOutput += f"<input type=\"checkbox\" id=\"videos\" name=\"mediatype\" value=\"videos\"><label for=\"videos\">Videos</label><br><br>"
    #add new, hot, rising, controversial, top
-   strWebOutput += f"<label for=\"sort\">Choose Sort Order:</label><br>"
-   strWebOutput += f"<select id=\"sort\" name=\"sort\">"
-   strWebOutput += f"<option value=\"new\" selected=\"true\">New</option>"
-   strWebOutput += f"<option value=\"hot\">Hot</option>"
-   strWebOutput += f"<option value=\"rising\">Rising</option>"
-   strWebOutput += f"<option value=\"controversial\">Controversial</option>"
-   strWebOutput += f"<option value=\"top\">Top</option>"
-   strWebOutput += f"</select><br><br>"
-   strWebOutput += f"<button type=\"submit\">Browse Media</button></form><br><br>"
+   strFormOutput += f"<label for=\"sort\">Choose Sort Order:</label><br>"
+   strFormOutput += f"<select id=\"sort\" name=\"sort\">"
+   strFormOutput += f"<option value=\"new\" selected=\"true\">New</option>"
+   strFormOutput += f"<option value=\"hot\">Hot</option>"
+   strFormOutput += f"<option value=\"rising\">Rising</option>"
+   strFormOutput += f"<option value=\"controversial\">Controversial</option>"
+   strFormOutput += f"<option value=\"top\">Top</option>"
+   strFormOutput += f"</select><br><br>"
+   strFormOutput += f"<button type=\"submit\">Browse Media</button></form><br><br>"
    #add (media by) username
    #consider single stream vs gallery view
 
    #strAfterURL = dictJson["data"]["after"]
    
-   return strWebOutput
+   return strFormOutput
 
 def testpost():
    try:
