@@ -37,17 +37,21 @@ def redmedia():
       match strMethod:
          case "POST":
             strSubReddit = request.form.get("sub")
-            strMediaType = request.form.getlist("mediatype")
-            strWebOutput += f"Subreddit [ {strSubReddit} ]<br>Media Type [ {strMediaType} ]<br>"
+            lstMediaType = request.form.getlist("mediatype")
+            strSort = request.form.get("sort")
+            strAfter = request.args.get("after", "")
+            strLimit = request.args.get("limit", "")
+            strWebOutput += f"Subreddit [ {strSubReddit} ]<br>Media Type [ {lstMediaType} ]<br>Sort [ {strSort} ]<br>After [ {strAfter} ]<br>Limit [ {strLimit} ]<br>"
          case "GET":
             #handle first load
             #handle next/after
-            strSubReddit = request.args.get("sub", "") # Get with a default value
-            strWebOutput += f"Subreddit [ {strSubReddit} ]<br>"   #Media Type [ {strMediaType} ]<br>
-            # request.args is a MultiDict, allowing multiple values for the same key
-            #all_tags = request.args.getlist('tag') # Get all values for a repeated parameter
-            #maybe
-            #request.GET.get('variable_name')
+            strSubReddit = request.args.get("sub", "")
+            lstMediaType = request.args.getlist("mediatype")
+            strSort = request.args.get("sort", "")
+            strAfter = request.args.get("after", "")
+            strLimit = request.args.get("limit", "")
+            strWebOutput += f"Subreddit [ {strSubReddit} ]<br>Media Type [ {lstMediaType} ]<br>Sort [ {strSort} ]<br>After [ {strAfter} ]<br>Limit [ {strLimit} ]<br>"
+            #maybe request.GET.get('variable_name')
          case _:
             #default or unknown 
             strSubReddit = "unknown"
