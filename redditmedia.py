@@ -22,16 +22,15 @@ def app_dictionary(strLabel):
       case "txt_useragent":
          strValue = "imgdupedetect v0.2 by orbut8888"
       case "html_header":
-         strValue = ""
-         strWebOutput = "<head>"
-         strWebOutput += "<title>TechSushi - Portfolio</title>"
-         strWebOutput += "</head>"
-         strWebOutput += "<body>Welcome to the TechSushi - Portfolio page<br><br><br>"
+         strValue = "<head>"
+         strValue += "<title>TechSushi - Portfolio</title>"
+         strValue += "</head>"
+         strValue += "<body>Welcome to the TechSushi - Portfolio page<br><br><br>"
       case "html_footer":
          strValue = "Run through version [1.0.5]</body>"
       case _:
          #default unknown
-         strValue = f"Unrecognized value: [{strLabel}]"
+         strValue = f"Unrecognized value: [ {strLabel} ]"
    
    return strValue
    
@@ -134,7 +133,7 @@ def reddit_getjson(strSubReddit, lstMediaType, strTokenType, strToken, strURL):
       
    return dictJson
 
-def reddit_jsontohtml(jsonContent):
+def reddit_jsontohtml(jsonContent, strDestURL):
    #consider [], [pictures], [videos], [pictures, videos], (other/unknown)
    #consider new, hot, rising, controversial, top
    #consider table view for alignment
@@ -153,15 +152,29 @@ def reddit_jsontohtml(jsonContent):
          strThreadURL = dictSingle["data"]["url"]
          strThreadMedia = dictSingle["data"]["media"]
          strThreadType = dictSingle.get("data", {}).get("post_hint", "Missing")
+         
          strWebOutput += f"<font size=5><a href=\"{strThreadPermalink}\">{strThreadTitle}</a></font><br>"
          strWebOutput += f"<b>{strThreadAuthor}</b> - {strThreadComments} Comment(s) / Post Type - {strThreadType}<br><p>"
+         
          #ThreadType : link, image, hosted:video, null, (gallery?)
          match strThreadType:
             case "image":
                strWebOutput += f"<img src =\"{strThreadURL}\" width=\"60%\"></img><p>"
+            case "rich:video":
+               strThreadEmbed = strThreadMedia["oembed"]["html"]
+               strThreadEmbed = strThreadEmbed.replace("&lt;","<")
+               strThreadEmbed = strThreadEmbed.replace("&gt;",">")
+               strThreadEmbed = strThreadEmbed.replace("\"100%\"","\"60%\"")
+               strThreadEmbed = strThreadEmbed.replace("position:absolute;","")
+               strWebOutput += f"{strThreadEmbed}<br><p>"
+            #is_gallery: true
+            #hosted:video
+            #link
             case _:
                strWebOutput += f"<font color=red>Error experienced [ {strThreadType} ]</font><p>"
-      strWebOutput += f"<p><a href=\"{strAfterURL}\">Next Posts</a></p>"
+         
+         #{strDestURL} & after={strAfterURL}
+         strWebOutput += f"<p><a href=\"{strDestURL}{strAfterURL}\">Next Posts</a></p>"
 
    except Exception as e:
       #could contain sensitive information in error message
