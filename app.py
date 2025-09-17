@@ -101,8 +101,10 @@ def redmedia():
 @app.route("/checktoken")
 def checktoken():
    try:
+      strVault = redditmedia.app_dictionary("kv_name")
       strTokenType = redditmedia.kv_get(strVault, "api-reddit-tokentype")
       strToken = redditmedia.kv_get(strVault, "api-reddit-token")
+      strURL = redditmedia.app_dictionary("url_oauth")
       strUserAgent = redditmedia.app_dictionary("txt_useragent")
       dictHeader = { "Authorization": f"{strTokenType} {strToken}", "User-Agent": strUserAgent }
       #how to handle 'after' here?
