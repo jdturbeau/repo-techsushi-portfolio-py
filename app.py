@@ -12,6 +12,7 @@ def index():
    strWebOutput = redditmedia.app_dictionary("html_header")
    strWebOutput += "Would you like to visit:<br><br>"
 
+   strWebOutput += "<a href=\"/checktoken\">Check token status</a><br><br>"
    strWebOutput += "<a href=\"/redmedia\">Reddit media retreiver</a><br><br>"
    
    #strWebOutput += "<a href=\"/keysset\">KV set</a><br><br>"
@@ -19,7 +20,7 @@ def index():
    #strWebOutput += "<a href=\"/demo\">demo second page routing</a><br><br>"
    #strWebOutput += "<a href=\"/refreshtoken\">refresh api token</a><br><br>"
    #strWebOutput += "<a href=\"/getcontent\">use api token to get content</a><br><br>"
-   strWebOutput += "<a href=\"/testpost\">test posting value</a><br><br>"
+   #strWebOutput += "<a href=\"/testpost\">test posting value</a><br><br>"
    strWebOutput += redditmedia.app_dictionary("html_footer")
    
    return strWebOutput
@@ -80,7 +81,7 @@ def redmedia():
       
       dictResponse = redditmedia.reddit_getjson(strSubReddit, lstMediaType, strSort, strTokenType, strToken, strURL, strAfter)
       
-      strWebOutput += f"... get json successful... [ {dictResponse} ]<br>"
+      strWebOutput += f"... get json result... [ {dictResponse} ]<br>"
       strWebOutput += f"... attempting to convert JSON to HTML...<br>"
       
       strDestURL = f"/redmedia?sub={strSubReddit}&sort={strSort}" #&after={strAfter}
@@ -95,6 +96,30 @@ def redmedia():
       strWebOutput += f"an unexpected error occurred during <b>RETRIEVE</b>: <font color=red>{e}</font><br><br>"
       #raise strWebOutput
       return strWebOutput
+   return strWebOutput
+
+@app.route("/checktoken")
+def checktoken():
+   try:
+      strTokenType = redditmedia.kv_get(strVault, "api-reddit-tokentype")
+      strToken = redditmedia.kv_get(strVault, "api-reddit-token")
+      strUserAgent = redditmedia.app_dictionary("txt_useragent")
+      dictHeader = { "Authorization": f"{strTokenType} {strToken}", "User-Agent": strUserAgent }
+      #how to handle 'after' here?
+      
+      strWebOutput = f"Token type [ {strTokenType} ]<br>Header [ {dictHeader} ]<br>"
+      
+      roReceived = requests.get(strURL, headers=dictHeader)
+      strReqStatus = roReceived.status_code
+      
+      strWebOutput += f"Status Code [ {strReqStatus} ]<br>"
+      
+      match strReqStatus:
+         case "403":
+            strJsonOutput = f"<b>GETJSON</b>, status code: [ {roReceived.status_code} ]<br>Token type [ {strTokenType} ]<br> Unable to proceed!<br>"
+            raise RuntimeError(strJsonOutput)
+         case _:
+            dictJson = roReceived.json()
    return strWebOutput
 
 if __name__ == '__main__':
