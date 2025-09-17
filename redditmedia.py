@@ -3,8 +3,6 @@ import requests
 from azure.identity import DefaultAzureCredential
 from azure.keyvault.secrets import SecretClient
 
-#app = Flask(__name__)
-
 def app_dictionary(strLabel):
    match strLabel:
       case "kv_name":
@@ -23,9 +21,17 @@ def app_dictionary(strLabel):
          strValue = "https://oauth.reddit.com/r/" #{strSubReddit}/new
       case "txt_useragent":
          strValue = "imgdupedetect v0.2 by orbut8888"
+      case "html_header":
+         strValue = ""
+         strWebOutput = "<head>"
+         strWebOutput += "<title>TechSushi - Portfolio</title>"
+         strWebOutput += "</head>"
+         strWebOutput += "<body>Welcome to the TechSushi - Portfolio page<br><br><br>"
+      case "html_footer":
+         strValue = "Run through version [1.0.4]</body>"
       case _:
          #default unknown
-         strValue = "Unrecognized"
+         strValue = f"Unrecognized value: [{strLabel}]"
    
    return strValue
    
@@ -209,6 +215,3 @@ def testpost():
       strWebOutput += "<b>RETRIEVING FORM ENTRY</b> for 'sub completed<br><br>"
    
    return strWebOutput
-
-#if __name__ == '__main__':
-   #app.run(debug=True)
