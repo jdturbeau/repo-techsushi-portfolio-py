@@ -195,12 +195,12 @@ def html_form(strDestination):
    strWebOutput += f"<input type=\"checkbox\" id=\"videos\" name=\"mediatype\" value=\"videos\"><label for=\"videos\">Videos</label><br><br>"
    #add new, hot, rising, controversial, top
    strWebOutput += f"<label for=\"sort\">Choose Sort Order:</label>"
-   strWebOutput += f"<select id=\"sort\" name=\"sort\">
-   strWebOutput += f"<option value="new" selected="true">New</option>
-   strWebOutput += f"<option value="hot">Hot</option>
-   strWebOutput += f"<option value="rising">Rising</option>
-   strWebOutput += f"<option value="controversial">Controversial</option>
-   strWebOutput += f"<option value="top">Top</option>
+   strWebOutput += f"<select id=\"sort\" name=\"sort\">"
+   strWebOutput += f"<option value=\"new\" selected=\"true\">New</option>"
+   strWebOutput += f"<option value=\"hot\">Hot</option>"
+   strWebOutput += f"<option value=\"rising\">Rising</option>"
+   strWebOutput += f"<option value=\"controversial\">Controversial</option>"
+   strWebOutput += f"<option value=\"top\">Top</option>"
    strWebOutput += f"</select>"
    strWebOutput += f"<button type=\"submit\">Browse Media</button></form><br><br>"
    #add (media by) username
