@@ -114,8 +114,6 @@ def reddit_getjson(strSubReddit, lstMediaType, strSort, strTokenType, strToken, 
    #check POST vs GET (request.method ==
 
    try:
-      #strTokenType = kv_get(strVault, "api-reddit-tokentype")
-      #strToken = kv_get(strVault, "api-reddit-token")
       strUserAgent = app_dictionary("txt_useragent")
       dictHeader = { "Authorization": f"{strTokenType} {strToken}", "User-Agent": strUserAgent }
       #how to handle 'after' here?
@@ -131,8 +129,7 @@ def reddit_getjson(strSubReddit, lstMediaType, strSort, strTokenType, strToken, 
             
    except Exception as e:
       #could contain sensitive information in error message
-      strJsonOutput = f"Trouble with <b>GETJSON</b>, status code: {roReceived.status_code}<br> review: {e}<br><br>"
-      #raise strWebOutput
+      strJsonOutput = f"Trouble with <b>GETJSON</b>, status code: {roReceived.status_code}<br> review: {e}<br>URL [ {strURL} ]<br>Header [ {dictHeader} ]<br>Token Type [ {strTokenType} ]<br>Token [ {strToken} ]<br><br>"
       return strJsonOutput
    #else:
       #strJsonOutput = f"<b>GETJSON</b> complete successfully"
