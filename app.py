@@ -9,10 +9,7 @@ app = Flask(__name__)
 @app.route("/")
 def index():
    #return render_template("index.html")
-   strWebOutput = "<head>"
-   strWebOutput += "<title>TechSushi - Portfolio</title>"
-   strWebOutput += "</head>"
-   strWebOutput += "<body>Welcome to the TechSushi - Portfolio page<br><br><br>"
+   strWebOutput = redditmedia.app_dictionary("html_header")
    strWebOutput += "Would you like to visit:<br><br>"
 
    strWebOutput += "<a href=\"/redmedia\">Reddit media retreiver</a><br><br>"
@@ -24,8 +21,8 @@ def index():
    #strWebOutput += "<a href=\"/getcontent\">use api token to get content</a><br><br>"
    strWebOutput += "<a href=\"/testpost\">test posting value</a><br><br><br>"
    strWebOutput += "</form><br><br><br><br>"
-   strWebOutput += "Run through version [060]</body>"
-  
+   strWebOutput += redditmedia.app_dictionary("html_footer")
+   
    return strWebOutput
 
 @app.route("/redmedia", methods=['GET', 'POST'])
@@ -33,28 +30,33 @@ def redmedia():
    #table with
    #   overview, what, technologies involved,
    
-   strWebOutput = "<head>"
-   strWebOutput += "<title>TechSushi - Portfolio</title>"
-   strWebOutput += "</head>"
-   strWebOutput += "<body>Welcome to the TechSushi - Portfolio page<br><br><br>"
-   #strWebOutput += "<br><br><br><br>"
-   #strWebOutput += "Run through version [010]</body>"
-   
+   strWebOutput = redditmedia.app_dictionary("html_header")
    strWebOutput += redditmedia.html_form("redmedia")
-'''
    try:
       strMethod = request.method
       match strMethod:
-case "POST":
-strSubReddit = request.form.get('sub')
-      strMediaType = request.form.getlist('mediatype')
-case "GET:
-#handle first load
-#handle next/after
-case _:
-#default or unknown 
-   else:
-'''   
+         case "POST":
+            strSubReddit = request.form.get('sub')
+            strMediaType = request.form.getlist('mediatype')
+         case "GET:
+            #handle first load
+            #handle next/after
+            strSubReddit = request.args.get("sub", "") # Get with a default value
+            # request.args is a MultiDict, allowing multiple values for the same key
+            #all_tags = request.args.getlist('tag') # Get all values for a repeated parameter
+            #maybe
+            #request.GET.get('variable_name')
+         case _:
+            #default or unknown 
+            strSubReddit = "unknown"
+   except Exception as e:
+      #could contain sensitive information in error message
+      strWebOutput = f"an unexpected error occurred during <b>RETRIEVE</b>: {e}<br><br>"
+      #raise strWebOutput
+      return strWebOutput
+
+   strWebOutput += f"Method [ {strMethod} ]<br>Subreddit [ {strSubReddit} ]<br>Media Type [ {strMediaType} ]<br>"
+   strWebOutput += redditmedia.app_dictionary("html_footer")
    return strWebOutput
 
 if __name__ == '__main__':
