@@ -38,46 +38,52 @@ def redmedia():
             strSubReddit = request.form.get("sub", "all")
             lstMediaType = request.form.getlist("mediatype")
             strSort = request.form.get("sort", "new")
-            strAfter = request.args.get("after", "")
-            strLimit = request.args.get("limit", "")
+            #strAfter = request.args.get("after", "")
+            #strLimit = request.args.get("limit", "")
          case "GET":
             #handle first load
             #handle next/after
             strSubReddit = request.args.get("sub", "all")
             lstMediaType = request.args.getlist("mediatype")
             strSort = request.args.get("sort", "new")
-            strAfter = request.args.get("after", "")
-            strLimit = request.args.get("limit", "")
+            #strAfter = request.args.get("after", "")
+            #strLimit = request.args.get("limit", "")
             #maybe request.GET.get('variable_name')
          case _:
             #default or unknown 
-            strSubReddit = "unknown"
+            strSubReddit = "all"
+            lstMediaType = ["pictures"]
+            strSort = "new"
+      if not lstMediaType:
+         lstMediaType = ["pictures"]
       
       strWebOutput += f"Subreddit [ {strSubReddit} ]<br>Media Type [ {lstMediaType} ]<br>Sort [ {strSort} ]<br>After [ {strAfter} ]<br>Limit [ {strLimit} ]<br><br>"
 
-      strWebOutput += f"... attempting token refresh...<br>"
+      strWebOutput += "... attempting token refresh...<br>"
       
       strVault = redditmedia.app_dictionary("kv_name")
       strRedditURL = redditmedia.app_dictionary("url_login")
-      redditmedia.kv_refreshtoken(strVault, strRedditURL)
+      strResult = redditmedia.kv_refreshtoken(strVault, strRedditURL)
 
-      strWebOutput += f"... token refresh successful...<br>"
+      strWebOutput += f"... token refresh successful...[ {strResult} ]<br>"
 
       strTokenType = redditmedia.app_dictionary("kv_tokentype")
       strToken = redditmedia.app_dictionary("kv_token")
       strURL = redditmedia.app_dictionary("url_oauth")
-      strURL += f"{strSubReddit}/{strSort}"
+      strURL += f"{strSubReddit}"
+      strURL += "/"
+      strURL += f"{strSort}"
       
-      strWebOutput += f"... attempting to get json...<br>"
+      strWebOutput += f"... attempting to get json [ {strURL} ]...<br>"
       
       dictResponse = redditmedia.reddit_getjson(strSubReddit, lstMediaType, strSort, strTokenType, strToken, strURL, strAfter)
       
-      strWebOutput += f"... get json successful...<br>"
+      strWebOutput += f"... get json successful... [ {dictResponse} ]<br>"
       strWebOutput += f"... attempting to convert JSON to HTML...<br>"
       
-      strDestURL = f"/redmedia?sub={strSubReddit}&sort={strSort}" #&after={strAfter}"
+      strDestURL = f"/redmedia?sub={strSubReddit}&sort={strSort}" #&after={strAfter}
       strBody = redditmedia.reddit_jsontohtml(dictResponse, lstMediaType, strDestURL)
-      strWebOutput += strBody
+      strWebOutput += f"Body [ {strBody} ]<br>"
       
       strWebOutput += f"... JSON to HTML conversion successful...<br>"
       
