@@ -71,7 +71,7 @@ def redmedia():
       strWebOutput += f"... attempting to get json...<br>"
       
       dictResponse = redditmedia.reddit_getjson(strSubReddit, lstMediaType, strSort, strTokenType, strToken, strURL, strAfter)
-      strDestURL = f"/redmedia?sub={strSubReddit}&sort={strSort}&after={strAfter}"
+      strDestURL = f"/redmedia?sub={strSubReddit}&sort={strSort}" #&after={strAfter}"
       strWebOutput += redditmedia.reddit_jsontohtml(dictResponse, lstMediaType, strDestURL)
       
       strWebOutput += f"... json received successfully...<br>"
