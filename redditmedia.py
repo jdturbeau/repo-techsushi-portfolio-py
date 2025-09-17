@@ -28,7 +28,7 @@ def app_dictionary(strLabel):
          strWebOutput += "</head>"
          strWebOutput += "<body>Welcome to the TechSushi - Portfolio page<br><br><br>"
       case "html_footer":
-         strValue = "Run through version [1.0.4]</body>"
+         strValue = "Run through version [1.0.5]</body>"
       case _:
          #default unknown
          strValue = f"Unrecognized value: [{strLabel}]"
