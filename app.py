@@ -19,8 +19,7 @@ def index():
    #strWebOutput += "<a href=\"/demo\">demo second page routing</a><br><br>"
    #strWebOutput += "<a href=\"/refreshtoken\">refresh api token</a><br><br>"
    #strWebOutput += "<a href=\"/getcontent\">use api token to get content</a><br><br>"
-   strWebOutput += "<a href=\"/testpost\">test posting value</a><br><br><br>"
-   strWebOutput += "</form><br><br><br><br>"
+   strWebOutput += "<a href=\"/testpost\">test posting value</a><br><br>"
    strWebOutput += redditmedia.app_dictionary("html_footer")
    
    return strWebOutput
@@ -38,10 +37,10 @@ def redmedia():
          case "POST":
             strSubReddit = request.form.get("sub")
             lstMediaType = request.form.getlist("mediatype")
-            strSort = request.form.get("sort")
+            strSort = request.form.get("sort", "")
             strAfter = request.args.get("after", "")
             strLimit = request.args.get("limit", "")
-            strWebOutput += f"Subreddit [ {strSubReddit} ]<br>Media Type [ {lstMediaType} ]<br>Sort [ {strSort} ]<br>After [ {strAfter} ]<br>Limit [ {strLimit} ]<br>"
+            strWebOutput += f"Subreddit [ {strSubReddit} ]<br>Media Type [ {lstMediaType} ]<br>Sort [ {strSort} ]<br>After [ {strAfter} ]<br>Limit [ {strLimit} ]<br><br>"
          case "GET":
             #handle first load
             #handle next/after
@@ -50,7 +49,7 @@ def redmedia():
             strSort = request.args.get("sort", "")
             strAfter = request.args.get("after", "")
             strLimit = request.args.get("limit", "")
-            strWebOutput += f"Subreddit [ {strSubReddit} ]<br>Media Type [ {lstMediaType} ]<br>Sort [ {strSort} ]<br>After [ {strAfter} ]<br>Limit [ {strLimit} ]<br>"
+            strWebOutput += f"Subreddit [ {strSubReddit} ]<br>Media Type [ {lstMediaType} ]<br>Sort [ {strSort} ]<br>After [ {strAfter} ]<br>Limit [ {strLimit} ]<br><br>"
             #maybe request.GET.get('variable_name')
          case _:
             #default or unknown 
