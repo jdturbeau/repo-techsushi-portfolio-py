@@ -71,7 +71,7 @@ def redmedia():
       strWebOutput += redditmedia.app_dictionary("html_footer")
    except Exception as e:
       #could contain sensitive information in error message
-      strWebOutput = f"an unexpected error occurred during <b>RETRIEVE</b>: {e}<br><br>"
+      strWebOutput += f"an unexpected error occurred during <b>RETRIEVE</b>: <font color=red>{e}</font><br><br>"
       #raise strWebOutput
       return strWebOutput
    return strWebOutput
