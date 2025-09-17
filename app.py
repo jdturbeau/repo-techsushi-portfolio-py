@@ -41,11 +41,20 @@ def redmedia():
    #strWebOutput += "Run through version [010]</body>"
    
    strWebOutput += redditmedia.html_form("redmedia")
-
-   #strMethod = request.method
-   #strSubReddit = request.form.get('sub')
-   #strMediaType = request.form.getlist('mediatype')
-   
+'''
+   try:
+      strMethod = request.method
+      match strMethod:
+case "POST":
+strSubReddit = request.form.get('sub')
+      strMediaType = request.form.getlist('mediatype')
+case "GET:
+#handle first load
+#handle next/after
+case _:
+#default or unknown 
+   else:
+'''   
    return strWebOutput
 
 if __name__ == '__main__':
