@@ -135,8 +135,8 @@ def reddit_getjson(strSubReddit, lstMediaType, strSort, strTokenType, strToken, 
       #strJsonOutput = f"<b>GETJSON</b> complete successfully"
    #finally:
       #strJsonOutput = f"<b>GETJSON</b> complete"
-      
-   return dictJson
+   strJsonOutput = f"Trouble with <b>GETJSON</b>, status code: {roReceived.status_code}<br> review: {e}<br>URL [ {strURL} ]<br>Header [ {dictHeader} ]<br>Token Type [ {strTokenType} ]<br>Token [ {strToken} ]<br><br>"
+   return strJsonOutput
 
 def reddit_jsontohtml(jsonContent, lstMediaType, strDestURL):
    #consider [], [pictures], [videos], [pictures, videos], (other/unknown)
@@ -144,6 +144,9 @@ def reddit_jsontohtml(jsonContent, lstMediaType, strDestURL):
    #consider table view for alignment
 
    try:
+      if not jsonContent:
+         strHtmlOutput = "Error: JSON provided is empty/null!"
+         return strHtmlOutput
       strAfterURL = jsonContent["data"]["after"]
       if not strAfterURL:
          strAfterURL = ""
