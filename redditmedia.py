@@ -113,9 +113,10 @@ def reddit_getjson(strSubReddit, lstMediaType, strSort, strTokenType, strToken, 
    #check POST vs GET (request.method ==
 
    try:
-      strTokenType = kv_get(strVault, "api-reddit-tokentype")
-      strToken = kv_get(strVault, "api-reddit-token")
-      dictHeader = { "Authorization": f"{strTokenType} {strToken}", "User-Agent": "imgdupedetect v0.2 by orbut8888" }
+      #strTokenType = kv_get(strVault, "api-reddit-tokentype")
+      #strToken = kv_get(strVault, "api-reddit-token")
+      strUserAgent = app_dictionary("txt_useragent")
+      dictHeader = { "Authorization": f"{strTokenType} {strToken}", "User-Agent": strUserAgent }
       strURL = strURL #fhttps://oauth.reddit.com/r/{strSubReddit}/{strSort}
       #how to handle 'after' here?
       
