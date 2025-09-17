@@ -54,6 +54,17 @@ def redmedia():
          case _:
             #default or unknown 
             strSubReddit = "unknown"
+
+      strVault = redditmedia.app_dictionary("kv_name")
+      strRedditURL = redditmedia.app_dictionary("url_login")
+      kv_refreshtoken(strVault, strRedditURL)
+
+      strTokenType = redditmedia.app_dictionary("api-reddit-tokentype")
+      strToken = redditmedia.app_dictionary("api-reddit-token")
+      strURL = redditmedia.app_dictionary("url_oauth")
+      dictResponse = reddit_getjson(strSubReddit, lstMediaType, strSort, strTokenType, strToken, strURL, strAfter)
+      strDestURL = f"/redmedia?sub={strSubReddit}&sort={strSort}&after={strAfter}"
+      reddit_jsontohtml(dictResponse, lstMediaType, strDestURL)
       
       strWebOutput += redditmedia.app_dictionary("html_footer")
    except Exception as e:
