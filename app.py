@@ -29,10 +29,9 @@ def index():
 def redmedia():
    #table with
    #   overview, what, technologies involved,
-   
-   strWebOutput = redditmedia.app_dictionary("html_header")
-   strWebOutput += redditmedia.html_form("redmedia")
    try:
+      strWebOutput = redditmedia.app_dictionary("html_header")
+      strWebOutput += redditmedia.html_form("redmedia")
       strMethod = request.method
       match strMethod:
          case "POST":
@@ -49,14 +48,13 @@ def redmedia():
          case _:
             #default or unknown 
             strSubReddit = "unknown"
+      strWebOutput += f"Method [ {strMethod} ]<br>Subreddit [ {strSubReddit} ]<br>Media Type [ {strMediaType} ]<br>"
+      strWebOutput += redditmedia.app_dictionary("html_footer")
    except Exception as e:
       #could contain sensitive information in error message
       strWebOutput = f"an unexpected error occurred during <b>RETRIEVE</b>: {e}<br><br>"
       #raise strWebOutput
       return strWebOutput
-
-   strWebOutput += f"Method [ {strMethod} ]<br>Subreddit [ {strSubReddit} ]<br>Media Type [ {strMediaType} ]<br>"
-   strWebOutput += redditmedia.app_dictionary("html_footer")
    return strWebOutput
 
 if __name__ == '__main__':
