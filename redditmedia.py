@@ -18,16 +18,17 @@ def app_dictionary(strLabel):
       case "url_login":
          strValue = "https://www.reddit.com/api/v1/access_token"
       case "url_oauth":
-         strValue = "https://oauth.reddit.com/r/" #{strSubReddit}/new
+         strValue = "https://oauth.reddit.com/r/"
       case "txt_useragent":
-         strValue = "imgdupedetect v0.2 by orbut8888"
+         strValue = "imgdupedetect v0.3 by orbut8888"
       case "html_header":
          strValue = "<head>"
          strValue += "<title>TechSushi - Portfolio</title>"
+         strValue += "<base href=\"https://www.reddit.com/\" target=\"_blank\">"
          strValue += "</head>"
          strValue += "<body>Welcome to the TechSushi - Portfolio page<br><br><br>"
       case "html_footer":
-         strValue = "Run through version [1.0.8]</body>"
+         strValue = "Run through version [1.1.0]</body>"
       case _:
          #default unknown
          strValue = f"Unrecognized value: [ {strLabel} ]"
@@ -132,7 +133,7 @@ def reddit_getjson(strSubReddit, lstMediaType, strSort, strTokenType, strToken, 
       
    except Exception as e:
       #could contain sensitive information in error message
-      strJsonOutput = f"Trouble with <b>GETJSON</b>, status code: {roReceived.status_code}<br> review: {e}<br>URL [ {strURL} ]<br>Header [ {dictHeader} ]<br>Token Type [ {strTokenType} ]<br>Token [ {strToken} ]<br><br>"
+      strJsonOutput = f"Trouble with <b>GETJSON</b>, status code: {roReceived.status_code}<br> review: {e}<br>URL [ {strURL} ]<br>Token Type [ {strTokenType} ]<br><br>"
       return strJsonOutput
    #else:
       #strJsonOutput = f"<b>GETJSON</b> complete successfully"
@@ -162,6 +163,7 @@ def reddit_jsontohtml(jsonContent, lstMediaType, strDestURL):
       strHtmlOutput = "<br>"
       
       for dictSingle in dictThreads:
+         strSubRed = dictSingle["data"]["subreddit"]
          strThreadTitle = dictSingle["data"]["title"]
          strThreadAuthor = dictSingle["data"]["author"]
          strThreadPermalink = dictSingle["data"]["permalink"]
@@ -170,28 +172,29 @@ def reddit_jsontohtml(jsonContent, lstMediaType, strDestURL):
          strThreadMedia = dictSingle["data"]["media"]
          strThreadType = dictSingle.get("data", {}).get("post_hint", "Missing")
          
-         strHtmlOutput += f"<font size=5><a href=\"{strThreadPermalink}\">{strThreadTitle}</a></font><br>"
-         strHtmlOutput += f"<b>{strThreadAuthor}</b> - {strThreadComments} Comment(s) / Post Type - {strThreadType}<br><p>"
+         strThreadOutput = f"<font size=5><a href=\"{strThreadPermalink}\">{strThreadTitle}</a></font><br>"
+         strThreadOutput += f"{strSubRed} - <b>{strThreadAuthor}</b> - {strThreadComments} Comment(s) / Post Type - {strThreadType}<br><p>"
          
          #ThreadType : link, image, hosted:video, null, (gallery?)
          match strThreadType:
             case "image":
-               strHtmlOutput += f"<img src =\"{strThreadURL}\" width=\"60%\"></img><p>"
+               strThreadOutput += f"<img src =\"{strThreadURL}\" width=\"60%\"></img><p>"
             case "rich:video":
                strThreadEmbed = strThreadMedia["oembed"]["html"]
                strThreadEmbed = strThreadEmbed.replace("&lt;","<")
                strThreadEmbed = strThreadEmbed.replace("&gt;",">")
                strThreadEmbed = strThreadEmbed.replace("\"100%\"","\"60%\"")
                strThreadEmbed = strThreadEmbed.replace("position:absolute;","")
-               strHtmlOutput += f"{strThreadEmbed}<br><p>"
+               strThreadOutput += f"{strThreadEmbed}<br><p>"
             #is_gallery: true
             #hosted:video
             #link
             case _:
-               strHtmlOutput += f"<font color=red>Error experienced [ {strThreadType} ]</font><p>"
+               #strThreadOutput += f"<font color=red>Error experienced [ {strThreadType} ]</font><p>"
+               strThreadOutput = ""
+         strHtmlOutput += strThreadOutput
          
-         #{strDestURL} & after={strAfterURL}
-         strHtmlOutput += f"<p><a href=\"{strDestURL}&{strAfterURL}\">Next Posts</a></p>"
+      strHtmlOutput += f"<p><a href=\"{strDestURL}&{strAfterURL}\">Next Posts</a></p>"
 
    except Exception as e:
       #could contain sensitive information in error message
@@ -208,7 +211,7 @@ def html_form(strDestination):
    
    strFormOutput = f"<form action=\"/{strDestination}\" method=\"post\"><!-- Form elements go here -->"
    strFormOutput += f"<label for=\"name\">Subreddit:</label><br><input type=\"text\" id=\"subreddit\" name=\"sub\" placeholder=\"all\" autocomplete=\"off\"><br><br>"
-   strFormOutput += f"<label for=\"mediatype\">Type of Media:</label><br><input type=\"checkbox\" id=\"pictures\" name=\"mediatype\" value=\"pictures\" checked><label for=\"pictures\">Pictures</label>"
+   strFormOutput += f"<label for=\"mediatype\">Type of Media:</label><br><input type=\"checkbox\" id=\"images\" name=\"mediatype\" value=\"images\" checked><label for=\"pictures\">Images</label>"
    strFormOutput += f"<input type=\"checkbox\" id=\"videos\" name=\"mediatype\" value=\"videos\"><label for=\"videos\">Videos</label><br><br>"
    #add new, hot, rising, controversial, top
    strFormOutput += f"<label for=\"sort\">Choose Sort Order:</label><br>"
