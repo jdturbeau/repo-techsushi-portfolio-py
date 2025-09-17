@@ -71,10 +71,14 @@ def redmedia():
       strWebOutput += f"... attempting to get json...<br>"
       
       dictResponse = redditmedia.reddit_getjson(strSubReddit, lstMediaType, strSort, strTokenType, strToken, strURL, strAfter)
+      
+      strWebOutput += f"... get json successful...<br>"
+      strWebOutput += f"... attempting to convert JSON to HTML...<br>"
+      
       strDestURL = f"/redmedia?sub={strSubReddit}&sort={strSort}" #&after={strAfter}"
       strWebOutput += redditmedia.reddit_jsontohtml(dictResponse, lstMediaType, strDestURL)
       
-      strWebOutput += f"... json received successfully...<br>"
+      strWebOutput += f"... JSON to HTML conversion successful...<br>"
       
       strWebOutput += redditmedia.app_dictionary("html_footer")
    except Exception as e:
