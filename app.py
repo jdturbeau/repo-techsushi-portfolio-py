@@ -38,22 +38,24 @@ def redmedia():
             strSubReddit = request.form.get("sub", "all")
             lstMediaType = request.form.getlist("mediatype")
             strSort = request.form.get("sort", "new")
-            #strAfter = request.args.get("after", "")
-            #strLimit = request.args.get("limit", "")
+            strAfter = request.args.get("after", "ignoreP1")
+            strLimit = request.args.get("limit", "ignoreP2")
          case "GET":
             #handle first load
             #handle next/after
             strSubReddit = request.args.get("sub", "all")
             lstMediaType = request.args.getlist("mediatype")
             strSort = request.args.get("sort", "new")
-            #strAfter = request.args.get("after", "")
-            #strLimit = request.args.get("limit", "")
+            strAfter = request.args.get("after", "ignoreG1")
+            strLimit = request.args.get("limit", "ignoreG2")
             #maybe request.GET.get('variable_name')
          case _:
             #default or unknown 
             strSubReddit = "all"
             lstMediaType = ["pictures"]
             strSort = "new"
+            strAfter = "ignoreU1"
+            strLimit = "ignoreU2"
       if not lstMediaType:
          lstMediaType = ["pictures"]
       
