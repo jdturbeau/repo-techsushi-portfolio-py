@@ -107,7 +107,7 @@ def kv_refreshtoken(strVault, strRedditURL):
       
    return
 
-def reddit_getjson(strSubReddit, lstMediaType, strSort, strTokenType, strToken, strURL):
+def reddit_getjson(strSubReddit, lstMediaType, strSort, strTokenType, strToken, strURL, strAfter):
    #handle [], [pictures], [videos], [pictures, videos], (gallery?), (other/unknown)
    #handle new, hot, rising, controversial, top
    #check POST vs GET (request.method ==
@@ -117,6 +117,7 @@ def reddit_getjson(strSubReddit, lstMediaType, strSort, strTokenType, strToken, 
       strToken = kv_get(strVault, "api-reddit-token")
       dictHeader = { "Authorization": f"{strTokenType} {strToken}", "User-Agent": "imgdupedetect v0.2 by orbut8888" }
       strURL = strURL #fhttps://oauth.reddit.com/r/{strSubReddit}/{strSort}
+      #how to handle 'after' here?
       
       roReceived = requests.get(strURL, headers = dictHeader)
       # if roReceived.status_code = 401 (unauthorized), likely need new token
