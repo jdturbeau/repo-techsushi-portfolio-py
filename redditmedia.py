@@ -27,7 +27,7 @@ def app_dictionary(strLabel):
          strValue += "</head>"
          strValue += "<body>Welcome to the TechSushi - Portfolio page<br><br><br>"
       case "html_footer":
-         strValue = "Run through version [1.0.6]</body>"
+         strValue = "Run through version [1.0.7]</body>"
       case _:
          #default unknown
          strValue = f"Unrecognized value: [ {strLabel} ]"
@@ -107,7 +107,7 @@ def kv_refreshtoken(strVault, strRedditURL):
       
    return
 
-def reddit_getjson(strSubReddit, lstMediaType, strTokenType, strToken, strURL):
+def reddit_getjson(strSubReddit, lstMediaType, strSort, strTokenType, strToken, strURL):
    #handle [], [pictures], [videos], [pictures, videos], (gallery?), (other/unknown)
    #handle new, hot, rising, controversial, top
    #check POST vs GET (request.method ==
@@ -116,7 +116,7 @@ def reddit_getjson(strSubReddit, lstMediaType, strTokenType, strToken, strURL):
       strTokenType = kv_get(strVault, "api-reddit-tokentype")
       strToken = kv_get(strVault, "api-reddit-token")
       dictHeader = { "Authorization": f"{strTokenType} {strToken}", "User-Agent": "imgdupedetect v0.2 by orbut8888" }
-      strURL = strURL #fhttps://oauth.reddit.com/r/{strSubReddit}/new
+      strURL = strURL #fhttps://oauth.reddit.com/r/{strSubReddit}/{strSort}
       
       roReceived = requests.get(strURL, headers = dictHeader)
       # if roReceived.status_code = 401 (unauthorized), likely need new token
@@ -133,13 +133,14 @@ def reddit_getjson(strSubReddit, lstMediaType, strTokenType, strToken, strURL):
       
    return dictJson
 
-def reddit_jsontohtml(jsonContent, strDestURL):
+def reddit_jsontohtml(jsonContent, lstMediaType, strDestURL):
    #consider [], [pictures], [videos], [pictures, videos], (other/unknown)
    #consider new, hot, rising, controversial, top
    #consider table view for alignment
 
    try:
-      strAfterURL = jsonContent["data"]["after"]
+      strAfterURL = "&after="
+      strAfterURL += jsonContent["data"]["after"]
       dictThreads = jsonContent["data"]["children"]
       
       strWebOutput = f"<head><base href=\"https://www.reddit.com/\" target=\"_blank\"></head><body>"
