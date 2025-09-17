@@ -121,8 +121,14 @@ def reddit_getjson(strSubReddit, lstMediaType, strSort, strTokenType, strToken, 
       #how to handle 'after' here?
       
       roReceived = requests.get(strURL, headers=dictHeader)
-      # if roReceived.status_code = 401 (unauthorized), likely need new token
-      dictJson = roReceived.json()
+      strReqStatus = roReceived.status_code
+      match strReqStatus:
+         case "403":
+            strJsonOutput = f"<b>GETJSON</b>, status code: [ {roReceived.status_code} ]<br>Token type [ {strTokenType} ]<br> Unable to proceed!<br>"
+            raise RuntimeError(strJsonOutput)
+         case _:
+            dictJson = roReceived.json()
+            
    except Exception as e:
       #could contain sensitive information in error message
       strJsonOutput = f"Trouble with <b>GETJSON</b>, status code: {roReceived.status_code}<br> review: {e}<br><br>"
