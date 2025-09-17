@@ -12,7 +12,7 @@ def index():
    strWebOutput = redditmedia.app_dictionary("html_header")
    strWebOutput += "Would you like to visit:<br><br>"
 
-   strWebOutput += "<a href=\"/checktoken\">Check token status</a><br><br>"
+   #strWebOutput += "<a href=\"/checktoken\">Check token status</a><br><br>"
    strWebOutput += "<a href=\"/redmedia\">Reddit media retreiver</a><br><br>"
    
    #strWebOutput += "<a href=\"/keysset\">KV set</a><br><br>"
@@ -60,15 +60,14 @@ def redmedia():
       if not lstMediaType:
          lstMediaType = ["pictures"]
       
-      strWebOutput += f"Subreddit [ {strSubReddit} ]<br>Media Type [ {lstMediaType} ]<br>Sort [ {strSort} ]<br>After [ {strAfter} ]<br>Limit [ {strLimit} ]<br><br>"
-
-      strWebOutput += "... attempting token refresh...<br>"
+      #strWebOutput += f"Subreddit [ {strSubReddit} ]<br>Media Type [ {lstMediaType} ]<br>Sort [ {strSort} ]<br>After [ {strAfter} ]<br>Limit [ {strLimit} ]<br><br>"
+      #strWebOutput += "... attempting token refresh...<br>"
       
       strVault = redditmedia.app_dictionary("kv_name")
       strRedditURL = redditmedia.app_dictionary("url_login")
       strResult = redditmedia.kv_refreshtoken(strVault, strRedditURL)
 
-      strWebOutput += f"... token refresh successful...[ {strResult} ]<br>"
+      #strWebOutput += f"... token refresh successful...[ {strResult} ]<br>"
 
       strTokenType = redditmedia.app_dictionary("kv_tokentype")
       strTokenType = redditmedia.kv_get(strVault, strTokenType)
@@ -79,18 +78,19 @@ def redmedia():
       strURL += "/"
       strURL += f"{strSort}"
       
-      strWebOutput += f"... attempting to get json [ {strURL} ]...<br>"
+      #strWebOutput += f"... attempting to get json [ {strURL} ]...<br>"
       
       dictResponse = redditmedia.reddit_getjson(strSubReddit, lstMediaType, strSort, strTokenType, strToken, strURL, strAfter)
       
-      strWebOutput += f"... get json result... [ {dictResponse} ]<br>"
-      strWebOutput += f"... attempting to convert JSON to HTML...<br>"
+      #strWebOutput += f"... get json result... [ {dictResponse} ]<br>"
+      #strWebOutput += f"... attempting to convert JSON to HTML...<br>"
       
       strDestURL = f"/redmedia?sub={strSubReddit}&sort={strSort}" #&after={strAfter}
       strBody = redditmedia.reddit_jsontohtml(dictResponse, lstMediaType, strDestURL)
-      strWebOutput += f"Body [ {strBody} ]<br>"
+      #strWebOutput += f"Body [ {strBody} ]<br>"
+      #strWebOutput += f"... JSON to HTML conversion successful...<br>"
       
-      strWebOutput += f"... JSON to HTML conversion successful...<br>"
+      strWebOutput += strBody
       
       strWebOutput += redditmedia.app_dictionary("html_footer")
    except Exception as e:
