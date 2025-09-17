@@ -71,7 +71,9 @@ def redmedia():
       strWebOutput += f"... token refresh successful...[ {strResult} ]<br>"
 
       strTokenType = redditmedia.app_dictionary("kv_tokentype")
+      strTokenType = redditmedia.kv_get(strVault, strTokenType)
       strToken = redditmedia.app_dictionary("kv_token")
+      strToken = redditmedia.kv_get(strVault, strToken)
       strURL = redditmedia.app_dictionary("url_oauth")
       strURL += f"{strSubReddit}"
       strURL += "/"
