@@ -120,6 +120,10 @@ def checktoken():
             raise RuntimeError(strJsonOutput)
          case _:
             dictJson = roReceived.json()
+   except Exception as e:
+      #could contain sensitive information in error message
+      strWebOutput += f"an unexpected error occurred during <b>RETRIEVE</b>: <font color=red>{e}</font><br><br>"
+      return strWebOutput
    return strWebOutput
 
 if __name__ == '__main__':
