@@ -33,7 +33,7 @@ def redmedia():
       strWebOutput = redditmedia.app_dictionary("html_header")
       strWebOutput += redditmedia.html_form("redmedia")
       strMethod = request.method
-      strWebOutput += f"Method [ {strMethod} ]<br>"
+      #strWebOutput += f"Method [ {strMethod} ]<br>"
       match strMethod:
          case "POST":
             strSubReddit = request.form.get("sub", "all")
