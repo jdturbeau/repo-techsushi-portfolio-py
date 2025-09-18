@@ -214,6 +214,8 @@ def html_form(strDestination):
    strFormOutput += f"<label for=\"mediatype\">Type of Media:</label><br><input type=\"checkbox\" id=\"images\" name=\"mediatype\" value=\"images\" checked><label for=\"pictures\">Images</label>"
    strFormOutput += f"<input type=\"checkbox\" id=\"videos\" name=\"mediatype\" value=\"videos\"><label for=\"videos\">Videos</label><br><br>"
    #add new, hot, rising, controversial, top
+   #option to hide header lines (image only)
+   #nsfw block / blur
    strFormOutput += f"<label for=\"sort\">Choose Sort Order:</label><br>"
    strFormOutput += f"<select id=\"sort\" name=\"sort\">"
    strFormOutput += f"<option value=\"new\" selected=\"true\">New</option>"
@@ -221,6 +223,7 @@ def html_form(strDestination):
    strFormOutput += f"<option value=\"rising\">Rising</option>"
    strFormOutput += f"<option value=\"controversial\">Controversial</option>"
    strFormOutput += f"<option value=\"top\">Top</option>"
+   strFormOutput += f"<option value=\"random\">Random</option>"
    strFormOutput += f"</select><br><br>"
    strFormOutput += f"<button type=\"submit\">Browse Media</button></form><br><br>"
    #add (media by) username
