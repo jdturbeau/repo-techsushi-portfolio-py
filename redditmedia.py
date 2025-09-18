@@ -173,12 +173,12 @@ def reddit_jsontohtml(jsonContent, lstMediaType, strDestURL):
          strThreadType = dictSingle.get("data", {}).get("post_hint", "Missing")
          
          strThreadOutput = f"<font size=5><a href=\"{strThreadPermalink}\">{strThreadTitle}</a></font><br>"
-         strThreadOutput += f"{strSubRed} - <b>{strThreadAuthor}</b> - {strThreadComments} Comment(s) / Post Type - {strThreadType}<br><p>"
+         strThreadOutput += f"r/{strSubRed} - <b>{strThreadAuthor}</b> - {strThreadComments} Comment(s) / Post Type - {strThreadType}<br><p>"
          
          #ThreadType : link, image, hosted:video, null, (gallery?)
          match strThreadType:
             case "image":
-               strThreadOutput += f"<img src =\"{strThreadURL}\" width=\"60%\"></img><p>"
+               strThreadOutput += f"<a href=\"{strThreadURL}\" target=\"_blank\"><img src =\"{strThreadURL}\" width=\"60%\"></img></a><p>"
             case "rich:video":
                strThreadEmbed = strThreadMedia["oembed"]["html"]
                strThreadEmbed = strThreadEmbed.replace("&lt;","<")
