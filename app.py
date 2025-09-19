@@ -39,7 +39,7 @@ def redmedia():
             strSubReddit = request.form.get("sub", "all")
             lstMediaType = request.form.getlist("mediatype")
             strSort = request.form.get("sort", "new")
-            strAfter = request.args.get("after", "ignoreP1")
+            strAfter = request.args.get("after", "") #ignoreP1")
             strLimit = request.args.get("limit", "ignoreP2")
          case "GET":
             #handle first load
@@ -47,18 +47,18 @@ def redmedia():
             strSubReddit = request.args.get("sub", "all")
             lstMediaType = request.args.getlist("mediatype")
             strSort = request.args.get("sort", "new")
-            strAfter = request.args.get("after", "ignoreG1")
+            strAfter = request.args.get("after", "") #"ignoreG1")
             strLimit = request.args.get("limit", "ignoreG2")
             #maybe request.GET.get('variable_name')
          case _:
             #default or unknown 
             strSubReddit = "all"
-            lstMediaType = ["pictures"]
+            lstMediaType = ["images, videos"]
             strSort = "new"
-            strAfter = "ignoreU1"
+            strAfter = "" #"ignoreU1"
             strLimit = "ignoreU2"
       if not lstMediaType:
-         lstMediaType = ["pictures"]
+         lstMediaType = ["images, videos"]
       
       #strWebOutput += f"Subreddit [ {strSubReddit} ]<br>Media Type [ {lstMediaType} ]<br>Sort [ {strSort} ]<br>After [ {strAfter} ]<br>Limit [ {strLimit} ]<br><br>"
       #strWebOutput += "... attempting token refresh...<br>"
@@ -77,10 +77,13 @@ def redmedia():
       strURL += f"{strSubReddit}"
       strURL += "/"
       strURL += f"{strSort}"
+      if strAfter:
+         strURL += f"?after={strAfter}"
       
       #strWebOutput += f"... attempting to get json [ {strURL} ]...<br>"
       
-      dictResponse = redditmedia.reddit_getjson(strSubReddit, lstMediaType, strSort, strTokenType, strToken, strURL, strAfter)
+      #dictResponse = redditmedia.reddit_getjson(strSubReddit, lstMediaType, strSort, strTokenType, strToken, strURL, strAfter)
+      dictResponse = redditmedia.reddit_getjson(strSubReddit, lstMediaType, strSort, strTokenType, strToken, strURL)
       
       #strWebOutput += f"... get json result... [ {dictResponse} ]<br>"
       #strWebOutput += f"... attempting to convert JSON to HTML...<br>"
