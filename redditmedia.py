@@ -109,7 +109,7 @@ def kv_refreshtoken(strVault, strRedditURL):
       
    return
 
-def reddit_getjson(strSubReddit, lstMediaType, strSort, strTokenType, strToken, strURL, strAfter):
+def reddit_getjson(strSubReddit, lstMediaType, strSort, strTokenType, strToken, strURL):
    #handle [], [pictures], [videos], [pictures, videos], (gallery?), (other/unknown)
    #handle new, hot, rising, controversial, top
    #check POST vs GET (request.method ==
@@ -117,12 +117,9 @@ def reddit_getjson(strSubReddit, lstMediaType, strSort, strTokenType, strToken, 
    try:
       strUserAgent = app_dictionary("txt_useragent")
       dictHeader = { "Authorization": f"{strTokenType} {strToken}", "User-Agent": strUserAgent }
-      #how to handle 'after' here?
       
-      if not strAfter:
-         roReceived = requests.get(strURL, headers=dictHeader)
-      else
-         roReceived = requests.get(f"{strURL}{strAfter}", headers=dictHeader)
+      roReceived = requests.get(strURL, headers=dictHeader)
+      
       strReqStatus = roReceived.status_code
       match strReqStatus:
          case "403":
@@ -159,6 +156,7 @@ def reddit_jsontohtml(jsonContent, lstMediaType, strDestURL):
          strAfterURL = ""
       else:
          strAfterURL = f"&after={strAfterURL}"
+         strDestURL += strAfterURL
          
       dictThreads = jsonContent["data"]["children"]
       
@@ -197,7 +195,7 @@ def reddit_jsontohtml(jsonContent, lstMediaType, strDestURL):
                strThreadOutput = ""
          strHtmlOutput += strThreadOutput
          
-      strHtmlOutput += f"<p><p style=\"text-align: right;\"><a href=\"{strDestURL}&{strAfterURL}\">Next Posts</a></p>"
+      strHtmlOutput += f"<p><p style=\"text-align: right;\"><a href=\"{strDestURL}\">Next Posts</a></p>"
 
    except Exception as e:
       #could contain sensitive information in error message
@@ -231,7 +229,5 @@ def html_form(strDestination):
    strFormOutput += f"<button type=\"submit\">Browse Media</button></form><br><br>"
    #add (media by) username
    #consider single stream vs gallery view
-
-   #strAfterURL = dictJson["data"]["after"]
-   
+  
    return strFormOutput
