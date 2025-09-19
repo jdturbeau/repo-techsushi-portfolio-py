@@ -119,7 +119,10 @@ def reddit_getjson(strSubReddit, lstMediaType, strSort, strTokenType, strToken, 
       dictHeader = { "Authorization": f"{strTokenType} {strToken}", "User-Agent": strUserAgent }
       #how to handle 'after' here?
       
-      roReceived = requests.get(strURL, headers=dictHeader)
+      if not strAfter:
+         roReceived = requests.get(strURL, headers=dictHeader)
+      else
+         roReceived = requests.get(f"{strURL}{strAfter}", headers=dictHeader)
       strReqStatus = roReceived.status_code
       match strReqStatus:
          case "403":
@@ -194,7 +197,7 @@ def reddit_jsontohtml(jsonContent, lstMediaType, strDestURL):
                strThreadOutput = ""
          strHtmlOutput += strThreadOutput
          
-      strHtmlOutput += f"<p><a href=\"{strDestURL}&{strAfterURL}\">Next Posts</a></p>"
+      strHtmlOutput += f"<p><p style=\"text-align: right;\"><a href=\"{strDestURL}&{strAfterURL}\">Next Posts</a></p>"
 
    except Exception as e:
       #could contain sensitive information in error message
@@ -211,9 +214,9 @@ def html_form(strDestination):
    
    strFormOutput = f"<form action=\"/{strDestination}\" method=\"post\"><!-- Form elements go here -->"
    strFormOutput += f"<label for=\"name\">Subreddit:</label><br><input type=\"text\" id=\"subreddit\" name=\"sub\" placeholder=\"all\" autocomplete=\"off\"><br><br>"
-   strFormOutput += f"<label for=\"mediatype\">Type of Media:</label><br><input type=\"checkbox\" id=\"images\" name=\"mediatype\" value=\"images\" checked><label for=\"pictures\">Images</label>"
-   strFormOutput += f"<input type=\"checkbox\" id=\"videos\" name=\"mediatype\" value=\"videos\"><label for=\"videos\">Videos</label><br><br>"
-   #add new, hot, rising, controversial, top
+   strFormOutput += f"<label for=\"mediatype\">Type of Media:</label><br><input type=\"checkbox\" id=\"images\" name=\"mediatype\" value=\"images\" checked><label for=\"images\">Images</label>"
+   strFormOutput += f"<input type=\"checkbox\" id=\"videos\" name=\"mediatype\" value=\"videos\" checked><label for=\"videos\">Videos</label><br><br>"
+   #add new, hot, rising, controversial, top, (random is invalid?)
    #option to hide header lines (image only)
    #nsfw block / blur
    strFormOutput += f"<label for=\"sort\">Choose Sort Order:</label><br>"
@@ -223,7 +226,7 @@ def html_form(strDestination):
    strFormOutput += f"<option value=\"rising\">Rising</option>"
    strFormOutput += f"<option value=\"controversial\">Controversial</option>"
    strFormOutput += f"<option value=\"top\">Top</option>"
-   strFormOutput += f"<option value=\"random\">Random</option>"
+   #strFormOutput += f"<option value=\"random\">Random</option>"
    strFormOutput += f"</select><br><br>"
    strFormOutput += f"<button type=\"submit\">Browse Media</button></form><br><br>"
    #add (media by) username
@@ -232,30 +235,3 @@ def html_form(strDestination):
    #strAfterURL = dictJson["data"]["after"]
    
    return strFormOutput
-
-def testpost():
-   try:
-      strMethod = request.method
-      strWebOutput = f"{strMethod}<br><br>"
-   except Exception as e:
-      strWebOutput += f"Trouble with gathering request method. See: {e}<br><br>"
-      #return strWebOutput
-   else:
-      strWebOutput += "gathering request method complete without error<br><br>"
-   finally:
-      strWebOutput += "gathering request method completed<br><br>"
-   
-   try:
-      strSubReddit = request.form.get('sub')
-      strWebOutput += f"{strSubReddit}<br><br>"
-      strMediaType = request.form.getlist('mediatype')
-      strWebOutput += f"{strMediaType}<br><br>"
-   except Exception as e:
-      strWebOutput += f"Trouble with <b>RETRIEVING FORM ENTRY</b> for 'sub'. See: {e}<br><br>"
-      #return strWebOutput
-   else:
-      strWebOutput += "<b>RETRIEVING FORM ENTRY</b> for 'sub' completed successfully<br><br>"
-   finally:
-      strWebOutput += "<b>RETRIEVING FORM ENTRY</b> for 'sub completed<br><br>"
-   
-   return strWebOutput
