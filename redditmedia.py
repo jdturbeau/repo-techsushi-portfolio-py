@@ -143,7 +143,7 @@ def reddit_getjson(strSubReddit, lstMediaType, strSort, strTokenType, strToken, 
    return dictJson
 
 def reddit_jsontohtml(jsonContent, lstMediaType, strDestURL):
-   #consider [], [pictures], [videos], [pictures, videos], (other/unknown)
+   #consider [], [images], [videos], [images, videos], (other/unknown)
    #consider new, hot, rising, controversial, top
    #consider table view for alignment
 
@@ -195,7 +195,7 @@ def reddit_jsontohtml(jsonContent, lstMediaType, strDestURL):
                strThreadOutput = ""
          strHtmlOutput += strThreadOutput
          
-      strHtmlOutput += f"<p><p style=\"text-align: right;\"><a href=\"{strDestURL}\">Next Posts</a></p>"
+      strHtmlOutput += f"<p><right><a href=\"{strDestURL}\">Next Posts</a></right>"
 
    except Exception as e:
       #could contain sensitive information in error message
