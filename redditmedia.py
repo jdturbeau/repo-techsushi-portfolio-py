@@ -2,6 +2,7 @@ from flask import (Flask, redirect, render_template, request, send_from_director
 import requests
 from azure.identity import DefaultAzureCredential
 from azure.keyvault.secrets import SecretClient
+import re
 
 def app_dictionary(strLabel):
    match strLabel:
@@ -36,6 +37,7 @@ def app_dictionary(strLabel):
    return strValue
    
 def kv_set(strVault, strName, strValue):
+   
    #Only expected to be used during initial Reddit API and Azure KeyVault set up
    #From the Azure WebApp, ensure you have enabled System Identity (WebApp > Settings > Identity > On > Save)
    #From the Azure KeyVault, ensure you assign (Key Vault Secrets Officer?) role to the Azure WebApp identity named above
@@ -48,31 +50,25 @@ def kv_set(strVault, strName, strValue):
       strSetOutput = f"an unexpected error occurred during <b>SET</b>: {e}<br><br>"
       #raise strSetOutput
       return strSetOutput
-   #else:
-      #strSetOutput = "<b>SET</b> completed successfully<br><br>"
-   #finally:
-      #strSetOutput = "end of <b>SET</b> script<br><br>"      
+   
    return
    
 def kv_get(strVault, strName):
+   
    try:
       credential = DefaultAzureCredential()
       secret_client = SecretClient(vault_url=f"https://{strVault}.vault.azure.net/", credential=credential)
       secret = secret_client.get_secret(strName)
       strValue = secret.value
-      #strGetOutput += f"{secret.name}<br><br>"
-      #strGetOutput += f"{secret.value}<br><br>"
    except Exception as e:
       strGetOutput = f"an unexpected error occurred during <b>GET</b>: {e}<br><br>"
       #raise strGetOutput
       return strGetOutput
-   #else:
-      #strGetOutput = "<b>GET</b> completed successfully<br><br>"
-   #finally:
-      #strGetOutput = "end of <b>GET</b> script<br><br>"
+
    return strValue
    
 def kv_refreshtoken(strVault, strRedditURL):
+   
    #https://www.reddit.com/api/v1/access_token
    try:
       strID = kv_get(strVault, "api-reddit-id") #kv-techsushi-site
@@ -102,14 +98,11 @@ def kv_refreshtoken(strVault, strRedditURL):
       strRefreshOutput = f"Trouble with <b>REFRESH</b>, review {e}<br><br>{roReceived}<br><br>"
       #raise strRefreshOutput
       return strRefreshOutput
-   #else:
-      #strRefreshOutput = f"<b>REFRESH</b> complete successfully"
-   #finally:
-      #strRefreshOutput = f"<b>REFRESH</b> complete"
       
    return
 
 def reddit_getjson(strSubReddit, lstMediaType, strSort, strTokenType, strToken, strURL):
+   
    #handle [], [pictures], [videos], [pictures, videos], (gallery?), (other/unknown)
    #handle new, hot, rising, controversial, top
    #check POST vs GET (request.method ==
@@ -125,24 +118,23 @@ def reddit_getjson(strSubReddit, lstMediaType, strSort, strTokenType, strToken, 
          case "403":
             strJsonOutput = f"<b>GETJSON</b>, status code: [ {roReceived.status_code} ]<br>Token type [ {strTokenType} ]<br> Unable to proceed!<br>"
             #unsure why this does not work
-            raise RuntimeError(strJsonOutput)
+            #raise RuntimeError(strJsonOutput)
+            return strJsonOutput
          case _:
             dictJson = roReceived.json()
       if not dictJson:
-         return f"JSON response is null. status code: [ {roReceived.status_code} ]<br>Token type [ {strTokenType} ]<br> Unable to proceed!<br>"
+         strJsonOutput = f"JSON response is null. status code: [ {roReceived.status_code} ]<br>Token type [ {strTokenType} ]<br> Unable to proceed!<br>"
+         return strJsonOutput
       
    except Exception as e:
       #could contain sensitive information in error message
       strJsonOutput = f"Trouble with <b>GETJSON</b>, status code: {roReceived.status_code}<br> review: {e}<br>URL [ {strURL} ]<br>Token Type [ {strTokenType} ]<br><br>"
       return strJsonOutput
-   #else:
-      #strJsonOutput = f"<b>GETJSON</b> complete successfully"
-   #finally:
-      #strJsonOutput = f"<b>GETJSON</b> complete"
-   #strJsonOutput = f"Trouble with <b>GETJSON</b>, status code: {roReceived.status_code}<br> review: {e}<br>URL [ {strURL} ]<br>Header [ {dictHeader} ]<br>Token Type [ {strTokenType} ]<br>Token [ {strToken} ]<br><br>"
+
    return dictJson
 
 def reddit_jsontohtml(jsonContent, lstMediaType, strDestURL):
+   
    #consider [], [images], [videos], [images, videos], (other/unknown)
    #consider new, hot, rising, controversial, top
    #consider table view for alignment
@@ -160,7 +152,6 @@ def reddit_jsontohtml(jsonContent, lstMediaType, strDestURL):
          
       dictThreads = jsonContent["data"]["children"]
       
-      #strHtmlOutput = f"<head><base href=\"https://www.reddit.com/\" target=\"_blank\"></head><body>"
       strHtmlOutput = "<br>"
       
       for dictSingle in dictThreads:
@@ -172,9 +163,12 @@ def reddit_jsontohtml(jsonContent, lstMediaType, strDestURL):
          strThreadURL = dictSingle["data"]["url"]
          strThreadMedia = dictSingle["data"]["media"]
          strThreadType = dictSingle.get("data", {}).get("post_hint", "Missing")
+         #"over_18": false
          
-         strThreadOutput = f"<font size=5><a href=\"{strThreadPermalink}\">{strThreadTitle}</a></font><br>"
-         strThreadOutput += f"r/{strSubRed} - <b>{strThreadAuthor}</b> - {strThreadComments} Comment(s) / Post Type - {strThreadType}<br><p>"
+         strThreadOutput = f"<font size=5><a href=\"https://www.reddit.com/{strThreadPermalink}\">{strThreadTitle}</a></font><br>"
+         #regex work in progress
+         strSubRedLink = strDestURL
+         strThreadOutput += f"<a href=\"{strSubRedLink}\">r/{strSubRed}</a> - <b>{strThreadAuthor}</b> - {strThreadComments} Comment(s) / Post Type - {strThreadType}<br><p>"
          
          #ThreadType : link, image, hosted:video, null, (gallery?)
          match strThreadType:
@@ -187,24 +181,28 @@ def reddit_jsontohtml(jsonContent, lstMediaType, strDestURL):
                strThreadEmbed = strThreadEmbed.replace("\"100%\"","\"60%\"")
                strThreadEmbed = strThreadEmbed.replace("position:absolute;","")
                strThreadOutput += f"{strThreadEmbed}<br><p>"
-            #is_gallery: true
-            #hosted:video
-            #link
+            case "hosted:video":   
+               strThreadEmbed = strThreadMedia["oembed"]["html"]
+               strThreadEmbed = strThreadEmbed.replace("&lt;","<")
+               strThreadEmbed = strThreadEmbed.replace("&gt;",">")
+               strThreadEmbed = strThreadEmbed.replace("\"100%\"","\"60%\"")
+               strThreadEmbed = strThreadEmbed.replace("position:absolute;","")
+               strThreadOutput += f"{strThreadEmbed}<br><p>"
+            case "link":
+               strThreadOutput = ""
+            #"is_video": true
+            #"is_gallery": true
             case _:
-               #strThreadOutput += f"<font color=red>Error experienced [ {strThreadType} ]</font><p>"
+               #strThreadOutput += f"<font color=red>unexpected MediaType experienced [ {strThreadType} ]</font><p>"
                strThreadOutput = ""
          strHtmlOutput += strThreadOutput
          
-      strHtmlOutput += f"<p><right><a href=\"{strDestURL}\">Next Posts</a></right>"
+      strHtmlOutput += f"<p align=\"right\"><a href=\"{strDestURL}\">Next Posts</a></p>"
 
    except Exception as e:
       #could contain sensitive information in error message
       strHtmlOutput = f"Trouble with <b>JSONtoHTML</b>, review: {e}<br><br>{dictThreads}<br><br>"
       return strHtmlOutput
-   #else:
-      #strWebOutput += "<b>JSONtoHTML</b> completed successfully<br><br>"
-   #finally:
-      #strWebOutput += "<b>JSONtoHTML</b> completed<br><br>"
 
    return strHtmlOutput
 
