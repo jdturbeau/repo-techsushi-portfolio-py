@@ -12,7 +12,8 @@ on:
 
 jobs:
   build:
-    runs-on: ubuntu-latest
+    #runs-on: ubuntu-latest
+    runs-on: self-hosted
     permissions:
       contents: read #This is required for actions/checkout
 
@@ -43,7 +44,8 @@ jobs:
             !venv/
 
   deploy:
-    runs-on: ubuntu-latest
+    #runs-on: ubuntu-latest
+    runs-on: self-hosted
     needs: build
     permissions:
       id-token: write #This is required for requesting the JWT
@@ -70,6 +72,7 @@ jobs:
           slot-name: 'Production'
 
           
+
 
 
 
