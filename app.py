@@ -57,7 +57,7 @@ def redmedia():
             strSort = "new"
             strAfter = "" #"ignoreU1"
             strLimit = "ignoreU2"
-      if lstMediaType = []:
+      if lstMediaType == []:
          lstMediaType = ["images, videos"]
       
       #strWebOutput += f"Subreddit [ {strSubReddit} ]<br>Media Type [ {lstMediaType} ]<br>Sort [ {strSort} ]<br>After [ {strAfter} ]<br>Limit [ {strLimit} ]<br><br>"
