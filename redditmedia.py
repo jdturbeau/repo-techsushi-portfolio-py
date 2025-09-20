@@ -181,15 +181,15 @@ def reddit_jsontohtml(jsonContent, lstMediaType, strDestURL):
                strThreadEmbed = strThreadEmbed.replace("\"100%\"","\"60%\"")
                strThreadEmbed = strThreadEmbed.replace("position:absolute;","")
                strThreadOutput += f"{strThreadEmbed}<br><p>"
-            case "hosted:video":   
-               strThreadEmbed = strThreadMedia["oembed"]["html"]
-               strThreadEmbed = strThreadEmbed.replace("&lt;","<")
-               strThreadEmbed = strThreadEmbed.replace("&gt;",">")
-               strThreadEmbed = strThreadEmbed.replace("\"100%\"","\"60%\"")
-               strThreadEmbed = strThreadEmbed.replace("position:absolute;","")
-               strThreadOutput += f"{strThreadEmbed}<br><p>"
-            case "link":
-               strThreadOutput = ""
+            #case "hosted:video":   
+               #strThreadEmbed = strThreadMedia["oembed"]["html"]
+               #strThreadEmbed = strThreadEmbed.replace("&lt;","<")
+               #strThreadEmbed = strThreadEmbed.replace("&gt;",">")
+               #strThreadEmbed = strThreadEmbed.replace("\"100%\"","\"60%\"")
+               #strThreadEmbed = strThreadEmbed.replace("position:absolute;","")
+               #strThreadOutput += f"{strThreadEmbed}<br><p>"
+            #case "link":
+               #strThreadOutput = ""
             #"is_video": true
             #"is_gallery": true
             case _:
