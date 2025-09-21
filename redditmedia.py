@@ -164,6 +164,7 @@ def reddit_jsontohtml(jsonContent, lstMediaType, strDestURL):
          strThreadMedia = dictSingle["data"]["media"]
          strThreadType = dictSingle.get("data", {}).get("post_hint", "Missing")
          #"over_18": false
+#is_gallery
          
          strThreadOutput = f"<font size=5><a href=\"https://www.reddit.com/{strThreadPermalink}\">{strThreadTitle}</a></font><br>"
          #regex work in progress
@@ -186,7 +187,7 @@ def reddit_jsontohtml(jsonContent, lstMediaType, strDestURL):
                strThreadOutput += f"{strThreadEmbed}<br><p>"
             case "hosted:video":   
                #*********
-               strHostedVid = dictSingle["data"]["secure_media"]["fallback_url"]
+               #strHostedVid = dictSingle["data"]["secure_media"]["fallback_url"]
                #*********
                #strThreadEmbed = strThreadMedia["oembed"]["html"]
                #strThreadEmbed = strThreadEmbed.replace("&lt;","<")
