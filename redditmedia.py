@@ -224,10 +224,11 @@ def reddit_jsontohtml(jsonContent, lstMediaType, strDestURL):
 def html_form(strDestination):
    
    strFormOutput = f"<form action=\"/{strDestination}\" method=\"post\"><!-- Form elements go here -->"
-   strFormOutput += f"<label for=\"name\">Subreddit:</label><br><input type=\"text\" id=\"subreddit\" name=\"sub\" placeholder=\"all\" autocomplete=\"off\"><br><br>"
+   #strFormOutput += f"<label for=\"name\">Subreddit:</label><br><input type=\"text\" id=\"subreddit\" name=\"sub\" placeholder=\"all\" autocomplete=\"off\"><br><br>"
+   strFormOutput += f"<label for=\"name\">Subreddit:</label><br><input type=\"text\" id=\"subreddit\" name=\"sub\" placeholder=\"all\" autocomplete=\"off\">"
    strFormOutput += f"<label for=\"mediatype\">Type of Media:</label><br><input type=\"checkbox\" id=\"images\" name=\"mediatype\" value=\"images\" checked><label for=\"images\">Images</label>"
    strFormOutput += f"<input type=\"checkbox\" id=\"videos\" name=\"mediatype\" value=\"videos\" checked><label for=\"videos\">Videos</label><br><br>"
-   #add new, hot, rising, controversial, top, (random is invalid?)
+   #gallery view or list
    #option to hide header lines (image only)
    #nsfw block / blur - 'over_18': False, 
    strFormOutput += f"<label for=\"sort\">Choose Sort Order:</label><br>"
@@ -237,8 +238,10 @@ def html_form(strDestination):
    strFormOutput += f"<option value=\"rising\">Rising</option>"
    strFormOutput += f"<option value=\"controversial\">Controversial</option>"
    strFormOutput += f"<option value=\"top\">Top</option>"
-   #strFormOutput += f"<option value=\"random\">Random</option>"
-   strFormOutput += f"</select><br><br>"
+   #strFormOutput += f"<option value=\"random\">Random</option>" #invalid option
+   #strFormOutput += f"</select><br><br>"
+   strFormOutput += f"</select>"
+   strFormOutput += f"<input type=\"checkbox\" id=\"nsfw\" name=\"nsfw\" value=\"nsfw\" disabled><label for=\"nsfw\">Allow over_18 flag?</label><br><br>"
    strFormOutput += f"<button type=\"submit\">Browse Media</button></form><br><br>"
    #add (media by) username
    #consider single stream vs gallery view
