@@ -4,6 +4,9 @@ from azure.identity import DefaultAzureCredential
 from azure.keyvault.secrets import SecretClient
 import re
 
+# https://www.reddit.com/dev/api/
+# POST /api/search_subreddits
+
 def app_dictionary(strLabel):
    match strLabel:
       case "kv_name":
@@ -19,6 +22,8 @@ def app_dictionary(strLabel):
       case "url_login":
          strValue = "https://www.reddit.com/api/v1/access_token"
       case "url_oauth":
+         #to capture user data, may need to move the /r/ out
+         # /user/username/submitted
          strValue = "https://oauth.reddit.com/r/"
       case "txt_useragent":
          strValue = "imgdupedetect v0.3 by orbut8888"
@@ -26,6 +31,8 @@ def app_dictionary(strLabel):
          strValue = "<head>"
          strValue += "<title>TechSushi - Portfolio</title>"
          #strValue += "<base href=\"https://www.reddit.com/\" target=\"_blank\">"#
+         strValue += "<meta name=\"viewport\" content=\"width=device-width, initial-scale=1\">"
+         strValue += "<meta name=\"description\" content=\"A brief description of my webpage for search engines.\">"
          strValue += "</head>"
          strValue += "<body>Welcome to the TechSushi - Portfolio page<br><br><br>"
       case "html_footer":
