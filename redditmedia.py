@@ -187,6 +187,7 @@ def reddit_jsontohtml(jsonContent, lstMediaType, strDestURL):
                strThreadOutput += f"{strThreadEmbed}<br><p>"
             case "hosted:video":   
                #*********
+               strThreadOutput = ""
                #strHostedVid = dictSingle["data"]["secure_media"]["fallback_url"]
                #*********
                #strThreadEmbed = strThreadMedia["oembed"]["html"]
