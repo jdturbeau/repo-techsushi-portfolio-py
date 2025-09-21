@@ -170,8 +170,9 @@ def reddit_jsontohtml(jsonContent, lstMediaType, strDestURL):
          strThreadURL = dictSingle["data"]["url"]
          strThreadMedia = dictSingle["data"]["media"]
          strThreadType = dictSingle.get("data", {}).get("post_hint", "Missing")
+         
          #"over_18": false
-#is_gallery
+         #is_gallery
          
          strThreadOutput = f"<font size=5><a href=\"https://www.reddit.com/{strThreadPermalink}\">{strThreadTitle}</a></font><br>"
          #regex work in progress
@@ -241,7 +242,7 @@ def html_form(strDestination):
    #strFormOutput += f"</select><br><br>"
    strFormOutput += f"</select>"
    strFormOutput += f"<input type=\"checkbox\" id=\"nsfw\" name=\"nsfw\" value=\"nsfw\" disabled><label for=\"nsfw\">Allow over_18 flag?</label><br><br>"
-   strFormOutput += f"<input type=\"radio\" id=\"list\" name=\"view\" value=\"list\"><label for=\"list\">List View</label>"
+   strFormOutput += f"<input type=\"radio\" id=\"list\" name=\"view\" value=\"list\" checked><label for=\"list\">List View</label>"
    strFormOutput += f"<input type=\"radio\" id=\"gallery\" name=\"view\" value=\"gallery\"><label for=\"gallery\">Gallery View</label>"
    strFormOutput += f"<label for=\"count\">Result Count:</label><input type=\"text\" id=\"count\" name=\"count\" placeholder=\"5\" autocomplete=\"off\" disabled>"
    strFormOutput += f"<br><br>"
