@@ -29,7 +29,7 @@ def app_dictionary(strLabel):
          strValue += "</head>"
          strValue += "<body>Welcome to the TechSushi - Portfolio page<br><br><br>"
       case "html_footer":
-         strValue = "Run through version [1.1.0]</body>"
+         strValue = "Run through version [1.2.0]</body>"
       case _:
          #default unknown
          strValue = f"Unrecognized value: [ {strLabel} ]"
@@ -168,7 +168,10 @@ def reddit_jsontohtml(jsonContent, lstMediaType, strDestURL):
          strThreadOutput = f"<font size=5><a href=\"https://www.reddit.com/{strThreadPermalink}\">{strThreadTitle}</a></font><br>"
          #regex work in progress
          strSubRedLink = strDestURL
-         strThreadOutput += f"<a href=\"{strSubRedLink}\">r/{strSubRed}</a> - <b>{strThreadAuthor}</b> - {strThreadComments} Comment(s) / Post Type - {strThreadType}<br><p>"
+         #"https://www.reddit.com/user/epicap232/submitted/"
+         #/r/u_ExampleUser/new
+         strAuthorLink = f"./redmedia?sub=u_{strThreadAuthor}"
+         strThreadOutput += f"<a href=\"{strSubRedLink}\">r/{strSubRed}</a> - <a href=\"{strAuthorLink}\"><b>{strThreadAuthor}</b></a> - {strThreadComments} Comment(s) / Post Type - {strThreadType}<br><p>"
          
          #ThreadType : link, image, hosted:video, null, (gallery?)
          match strThreadType:
@@ -214,7 +217,7 @@ def html_form(strDestination):
    strFormOutput += f"<input type=\"checkbox\" id=\"videos\" name=\"mediatype\" value=\"videos\" checked><label for=\"videos\">Videos</label><br><br>"
    #add new, hot, rising, controversial, top, (random is invalid?)
    #option to hide header lines (image only)
-   #nsfw block / blur
+   #nsfw block / blur - 'over_18': False, 
    strFormOutput += f"<label for=\"sort\">Choose Sort Order:</label><br>"
    strFormOutput += f"<select id=\"sort\" name=\"sort\">"
    strFormOutput += f"<option value=\"new\" selected=\"true\">New</option>"
