@@ -109,6 +109,11 @@ def kv_refreshtoken(strVault, strRedditURL):
    return
 
 def reddit_getjson(strSubReddit, lstMediaType, strSort, strTokenType, strToken, strURL):
+
+   #add params for:
+   # result count
+   # list view / gallery view
+   # over_18 flag
    
    #check if subreddit exists
    #handle [], [pictures], [videos], [pictures, videos], (gallery?), (other/unknown)
