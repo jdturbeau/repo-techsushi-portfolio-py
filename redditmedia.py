@@ -224,27 +224,26 @@ def reddit_jsontohtml(jsonContent, lstMediaType, strDestURL):
 
 def html_form(strDestination):
    
+   #possible additions
+   # option to hide header lines (image only)   
    strFormOutput = f"<form action=\"/{strDestination}\" method=\"post\"><!-- Form elements go here -->"
-   #strFormOutput += f"<label for=\"name\">Subreddit:</label><br><input type=\"text\" id=\"subreddit\" name=\"sub\" placeholder=\"all\" autocomplete=\"off\"><br><br>"
    strFormOutput += f"<label for=\"name\">Subreddit:</label><input type=\"text\" id=\"subreddit\" name=\"sub\" placeholder=\"all\" autocomplete=\"off\">"
    strFormOutput += f"<input type=\"checkbox\" id=\"images\" name=\"mediatype\" value=\"images\" checked><label for=\"images\">Images</label>"
-   strFormOutput += f"<input type=\"checkbox\" id=\"videos\" name=\"mediatype\" value=\"videos\" checked><label for=\"videos\">Videos</label><br><br>"
-   #gallery view or list
-   #option to hide header lines (image only)   
-   strFormOutput += f"<label for=\"sort\">Sort by:</label><br>"
-   strFormOutput += f"<select id=\"sort\" name=\"sort\">"
+   strFormOutput += f"<input type=\"checkbox\" id=\"videos\" name=\"mediatype\" value=\"videos\" checked><label for=\"videos\">Videos</label>
+   strFormOutput += f"<br><br>"
+   strFormOutput += f"<label for=\"sort\">Sort by:</label><select id=\"sort\" name=\"sort\">"
    strFormOutput += f"<option value=\"new\" selected=\"true\">New</option>"
    strFormOutput += f"<option value=\"hot\">Hot</option>"
    strFormOutput += f"<option value=\"rising\">Rising</option>"
    strFormOutput += f"<option value=\"controversial\">Controversial</option>"
    strFormOutput += f"<option value=\"top\">Top</option>"
    #strFormOutput += f"<option value=\"random\">Random</option>" #invalid option
-   #strFormOutput += f"</select><br><br>"
    strFormOutput += f"</select>"
-   strFormOutput += f"<input type=\"checkbox\" id=\"nsfw\" name=\"nsfw\" value=\"nsfw\" disabled><label for=\"nsfw\">Allow over_18 flag?</label><br><br>"
+   strFormOutput += f"<label for=\"count\">Result Count:</label><input type=\"text\" id=\"count\" name=\"count\" placeholder=\"10\" autocomplete=\"off\" disabled>"
+   strFormOutput += f"<br><br>"
    strFormOutput += f"<input type=\"radio\" id=\"list\" name=\"view\" value=\"list\" checked><label for=\"list\">List View</label>"
    strFormOutput += f"<input type=\"radio\" id=\"gallery\" name=\"view\" value=\"gallery\"><label for=\"gallery\">Gallery View</label>"
-   strFormOutput += f"<label for=\"count\">Result Count:</label><input type=\"text\" id=\"count\" name=\"count\" placeholder=\"10\" autocomplete=\"off\" disabled>"
+   strFormOutput += f"<input type=\"checkbox\" id=\"nsfw\" name=\"nsfw\" value=\"nsfw\" disabled><label for=\"nsfw\">Allow over_18 flag?</label>
    strFormOutput += f"<br><br>"
    strFormOutput += f"<button type=\"submit\">Browse Media</button></form><br><br>"
    #add (media by) username
