@@ -232,7 +232,8 @@ def html_form(strDestination):
    strFormOutput += f"<input type=\"checkbox\" id=\"images\" name=\"mediatype\" value=\"images\" checked><label for=\"images\">Images</label>"
    strFormOutput += f"<input type=\"checkbox\" id=\"videos\" name=\"mediatype\" value=\"videos\" checked><label for=\"videos\">Videos</label>"
    strFormOutput += f"<br><br>"
-   strFormOutput += f"<label for=\"sort\">Sort by: </label><select id=\"sort\" name=\"sort\" disabled>"
+   strFormOutput += f"<label for=\"count\">Result Count: </label><input type=\"text\" id=\"count\" name=\"count\" placeholder=\"10\" autocomplete=\"off\" disabled>"
+   strFormOutput += f"<label for=\"sort\"> Sort by: </label><select id=\"sort\" name=\"sort\" disabled>"
    strFormOutput += f"<option value=\"new\" selected=\"true\">New</option>"
    strFormOutput += f"<option value=\"hot\">Hot</option>"
    strFormOutput += f"<option value=\"rising\">Rising</option>"
@@ -240,11 +241,10 @@ def html_form(strDestination):
    strFormOutput += f"<option value=\"top\">Top</option>"
    #strFormOutput += f"<option value=\"random\">Random</option>" #invalid option
    strFormOutput += f"</select>"
-   strFormOutput += f"<label for=\"count\"> Result Count: </label><input type=\"text\" id=\"count\" name=\"count\" placeholder=\"10\" autocomplete=\"off\" disabled>"
    strFormOutput += f"<br><br>"
    strFormOutput += f"<input type=\"radio\" id=\"list\" name=\"view\" value=\"list\" checked><label for=\"list\">List View</label>"
    strFormOutput += f"<input type=\"radio\" id=\"gallery\" name=\"view\" value=\"gallery\" disabled><label for=\"gallery\">Gallery View</label>"
-   strFormOutput += f"<input type=\"checkbox\" id=\"nsfw\" name=\"nsfw\" value=\"nsfw\" disabled><label for=\"nsfw\">Allow over_18 flag?</label>"
+   strFormOutput += f"<input type=\"checkbox\" id=\"nsfw\" name=\"nsfw\" value=\"nsfw\" checked disabled><label for=\"nsfw\">Allow over_18 flag?</label>"
    strFormOutput += f"<br><br>"
    strFormOutput += f"<button type=\"submit\">Browse Media</button></form><br><br>"
    #add (media by) username
