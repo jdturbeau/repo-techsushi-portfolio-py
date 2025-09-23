@@ -12,63 +12,57 @@ def index():
    strWebOutput = redditmedia.app_dictionary("html_header")
    strWebOutput += "Would you like to visit:<br><br>"
 
-   #strWebOutput += "<a href=\"/checktoken\">Check token status</a><br><br>"
    strWebOutput += "<a href=\"/redmedia\">Reddit media retreiver</a><br><br>"
    
-   #strWebOutput += "<a href=\"/keysset\">KV set</a><br><br>"
-   #strWebOutput += "<a href=\"/keysget\">KV retrieve</a><br><br>"
-   #strWebOutput += "<a href=\"/demo\">demo second page routing</a><br><br>"
-   #strWebOutput += "<a href=\"/refreshtoken\">refresh api token</a><br><br>"
-   #strWebOutput += "<a href=\"/getcontent\">use api token to get content</a><br><br>"
-   #strWebOutput += "<a href=\"/testpost\">test posting value</a><br><br>"
    strWebOutput += redditmedia.app_dictionary("html_footer")
    
    return strWebOutput
 
 @app.route("/redmedia", methods=['GET', 'POST'])
 def redmedia():
+   
    #table with
    #   overview, what, technologies involved,
+   
    try:
       strWebOutput = redditmedia.app_dictionary("html_header")
       strWebOutput += redditmedia.html_form("redmedia")
       strMethod = request.method
-      #strWebOutput += f"Method [ {strMethod} ]<br>"
+      
+      #Do these cases need to be separate?
       match strMethod:
          case "POST":
             strSubReddit = request.form.get("sub", "all")
             lstMediaType = request.form.getlist("mediatype")
             strSort = request.form.get("sort", "new")
-            strAfter = request.args.get("after", "") #ignoreP1")
-            strLimit = request.args.get("limit", "ignoreP2")
+            strAfter = request.args.get("after", "")
+            strLimit = request.args.get("limit", "10")
          case "GET":
             #handle first load
             #handle next/after
             strSubReddit = request.args.get("sub", "all")
             lstMediaType = request.args.getlist("mediatype")
             strSort = request.args.get("sort", "new")
-            strAfter = request.args.get("after", "") #"ignoreG1")
-            strLimit = request.args.get("limit", "ignoreG2")
-            #maybe request.GET.get('variable_name')
+            strAfter = request.args.get("after", "")
+            strLimit = request.args.get("limit", "10")
          case _:
             #default or unknown 
             strSubReddit = "all"
             lstMediaType = ["images, videos"]
             strSort = "new"
             strAfter = "" #"ignoreU1"
-            strLimit = "ignoreU2"
+            strLimit = "10"
       if lstMediaType == []:
          lstMediaType = ["images, videos"]
-      
-      #strWebOutput += f"Subreddit [ {strSubReddit} ]<br>Media Type [ {lstMediaType} ]<br>Sort [ {strSort} ]<br>After [ {strAfter} ]<br>Limit [ {strLimit} ]<br><br>"
-      #strWebOutput += "... attempting token refresh...<br>"
+
+      #Should - Test if existing token works using known simple api call?
       
       strVault = redditmedia.app_dictionary("kv_name")
       strRedditURL = redditmedia.app_dictionary("url_login")
       strResult = redditmedia.kv_refreshtoken(strVault, strRedditURL)
 
-      #strWebOutput += f"... token refresh successful...[ {strResult} ]<br>"
-
+      #Should - Test if subreddit exists
+      
       strTokenType = redditmedia.app_dictionary("kv_tokentype")
       strTokenType = redditmedia.kv_get(strVault, strTokenType)
       strToken = redditmedia.app_dictionary("kv_token")
@@ -79,9 +73,8 @@ def redmedia():
       strURL += f"{strSort}"
       if strAfter:
          strURL += f"?after={strAfter}"
-      
-      #strWebOutput += f"... attempting to get json [ {strURL} ]...<br>"
-      
+
+      #Next - make this "after" change
       #dictResponse = redditmedia.reddit_getjson(strSubReddit, lstMediaType, strSort, strTokenType, strToken, strURL, strAfter)
       dictResponse = redditmedia.reddit_getjson(strSubReddit, lstMediaType, strSort, strTokenType, strToken, strURL)
       
