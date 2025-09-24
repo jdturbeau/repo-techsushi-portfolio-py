@@ -24,6 +24,7 @@ Technology and/or skills demonstrated:
 (road map?) Feature Improvements:
   Resume section
   Blog utilizing MarkDown with three example articles
+  Portfolio - revolving door style section w/ 240x360 images
   Portfolio - Redundancy / high availability with multiple cloud vendors
   Portfolio - Honeypot with detection and auto mitigate with alert for verification
   Portfolio - Social Forum Media Scraper
