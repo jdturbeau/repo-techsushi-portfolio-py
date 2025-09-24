@@ -50,7 +50,7 @@ def redmedia():
             strSubReddit = "all"
             lstMediaType = ["images, videos"]
             strSort = "new"
-            strAfter = "" #"ignoreU1"
+            strAfter = ""
             strLimit = "10"
       if lstMediaType == []:
          lstMediaType = ["images, videos"]
@@ -71,11 +71,15 @@ def redmedia():
       strURL += f"{strSubReddit}"
       strURL += "/"
       strURL += f"{strSort}"
+      #determine ? versus &
       if strAfter:
          strURL += f"?after={strAfter}"
 
+      #strLimit is intended for display limit, not retrieval limit - may not always retrieve media for each thread
+      
       #Next - make this "after" change
       #dictResponse = redditmedia.reddit_getjson(strSubReddit, lstMediaType, strSort, strTokenType, strToken, strURL, strAfter)
+      #dictResponse = redditmedia.reddit_getjson(strSubReddit, lstMediaType, strSort, strTokenType, strToken, strURL, strLimit, strAfter)
       dictResponse = redditmedia.reddit_getjson(strSubReddit, lstMediaType, strSort, strTokenType, strToken, strURL)
       
       #strWebOutput += f"... get json result... [ {dictResponse} ]<br>"
