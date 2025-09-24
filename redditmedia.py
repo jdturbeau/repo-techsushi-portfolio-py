@@ -111,7 +111,7 @@ def kv_refreshtoken(strVault, strRedditURL):
 def reddit_getjson(strSubReddit, lstMediaType, strSort, strTokenType, strToken, strURL):
 
    #add params for:
-   # result count
+   # result count - this likely belongs in jsontohtml function
    # list view / gallery view
    # over_18 flag
    
