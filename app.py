@@ -3,6 +3,7 @@ import requests
 from azure.identity import DefaultAzureCredential
 from azure.keyvault.secrets import SecretClient
 import redditmedia
+import blog
 
 app = Flask(__name__)
 
@@ -13,6 +14,7 @@ def index():
    strWebOutput += "Would you like to visit:<br><br>"
 
    strWebOutput += "<a href=\"/redmedia\">Reddit media retreiver</a><br><br>"
+   strWebOutput += "<a href=\"/displayblog\">MarkDown Blog</a><br><br>"
    
    strWebOutput += redditmedia.app_dictionary("html_footer")
    
@@ -129,6 +131,12 @@ def checktoken():
       strWebOutput += f"an unexpected error occurred during <b>RETRIEVE</b>: <font color=red>{e}</font><br><br>"
       return strWebOutput
    return strWebOutput
+
+@app.route("/displayblog")
+def displayblog():
+   strPostFile = "2025-0925.welcome.md"
+   strPostContent = blog.blog_post(strPostFile)
+   return strPostContent
 
 if __name__ == '__main__':
    app.run(debug=True)
