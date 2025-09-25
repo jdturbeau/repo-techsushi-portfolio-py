@@ -5,7 +5,7 @@
 
 def blog_post(strPostFile):
   
-  with open(f"_posts/{strFile}", "r") as p:
+  with open(f"_posts/{strPostFile}", "r") as p:
     strContent = p.read()
   #strHTML = markdown.markdown(strContent)
 
