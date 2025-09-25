@@ -228,6 +228,28 @@ def reddit_jsontohtml(jsonContent, lstMediaType, strDestURL):
 
    return strHtmlOutput
 
+def html_crafturl(strSub, strSort, lstMediaType, strAfter, strLimit):
+
+   strBase = redditmedia.app_dictionary("url_oauth")
+   strBase += f"{strSub}/{strSort}?"
+   if lstMediaType:
+      strBase += ""
+   if strAfter:
+      strBase += f"after={strAfter}"
+   if strLimit:
+      strBase += ""
+   
+   '''
+    strURL += f"{strSubReddit}"
+      strURL += "/"
+      strURL += f"{strSort}"
+      #determine ? versus &
+      if strAfter:
+         strURL += f"?after={strAfter}"
+   '''
+   
+   return
+
 def html_form(strDestination):
    
    #possible additions
