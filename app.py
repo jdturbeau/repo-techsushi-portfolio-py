@@ -134,7 +134,7 @@ def checktoken():
 
 @app.route("/displayblog")
 def displayblog():
-   strPostFile = "2025-0925.welcome.md"
+   strPostFile = "2025-0925-welcome.md"
    strPostContent = blog.blog_post(strPostFile)
    return strPostContent
 
