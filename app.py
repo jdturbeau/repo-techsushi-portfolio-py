@@ -15,6 +15,7 @@ def index():
 
    strWebOutput += "<a href=\"/redmedia\">Reddit media retreiver</a><br><br>"
    strWebOutput += "<a href=\"/displayblog\">MarkDown Blog</a><br><br>"
+   strWebOutput += "<a href=\"/displaytop\">Display Most Recent Blog Articles</a><br><br>"
    
    strWebOutput += redditmedia.app_dictionary("html_footer")
    
