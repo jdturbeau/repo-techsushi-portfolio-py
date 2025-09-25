@@ -25,7 +25,8 @@ def blog_recent(intCount):
       intCount = 5
       
     os.chdir("./_posts/")
-    lstFiles = filter(os.path.isfile, os.listdir("./_posts/"))
+    #lstFiles = filter(os.path.isfile, os.listdir("./_posts/"))
+    lstFiles = filter(os.path.isfile, os.listdir())
     lstFiles = [os.path.join("./_posts/", f) for f in files]
     lstFiles.sort(key=os.path.getmtime)
   except Exception as e:
