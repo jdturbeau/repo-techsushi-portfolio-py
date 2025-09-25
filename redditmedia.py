@@ -2,7 +2,7 @@ from flask import (Flask, redirect, render_template, request, send_from_director
 import requests
 from azure.identity import DefaultAzureCredential
 from azure.keyvault.secrets import SecretClient
-import re
+#import re
 
 # https://www.reddit.com/dev/api/
 # POST /api/search_subreddits
@@ -36,7 +36,7 @@ def app_dictionary(strLabel):
          strValue += "</head>"
          strValue += "<body>Welcome to the TechSushi - Portfolio page<br><br><br>"
       case "html_footer":
-         strValue = "Run through version [1.2.0]</body>"
+         strValue = "Run through version [1.3.0]</body>"
       case _:
          #default unknown
          strValue = f"Unrecognized value: [ {strLabel} ]"
@@ -234,8 +234,8 @@ def html_form(strDestination):
    # option to hide header lines (image only)   
    strFormOutput = f"<form action=\"/{strDestination}\" method=\"post\"><!-- Form elements go here -->"
    strFormOutput += f"<label for=\"name\">Subreddit: </label><input type=\"text\" id=\"subreddit\" name=\"sub\" placeholder=\"all\" autocomplete=\"off\">"
-   strFormOutput += f"<input type=\"checkbox\" id=\"images\" name=\"mediatype\" value=\"images\" checked><label for=\"images\">Images</label>"
-   strFormOutput += f"<input type=\"checkbox\" id=\"videos\" name=\"mediatype\" value=\"videos\" checked><label for=\"videos\">Videos</label>"
+   strFormOutput += f"<input type=\"checkbox\" id=\"images\" name=\"mediatype\" value=\"images\" checked><label for=\"images\" disabled>Images</label>"
+   strFormOutput += f"<input type=\"checkbox\" id=\"videos\" name=\"mediatype\" value=\"videos\" checked><label for=\"videos\" disabled>Videos</label>"
    strFormOutput += f"<br><br>"
    strFormOutput += f"<label for=\"count\">Result Count: </label><input type=\"text\" id=\"count\" name=\"count\" placeholder=\"10\" autocomplete=\"off\" disabled>"
    strFormOutput += f"<label for=\"sort\"> Sort by: </label><select id=\"sort\" name=\"sort\" disabled>"
@@ -247,9 +247,9 @@ def html_form(strDestination):
    #strFormOutput += f"<option value=\"random\">Random</option>" #invalid option
    strFormOutput += f"</select>"
    strFormOutput += f"<br><br>"
-   strFormOutput += f"<input type=\"radio\" id=\"list\" name=\"view\" value=\"list\" checked><label for=\"list\">List View</label>"
+   strFormOutput += f"<input type=\"radio\" id=\"list\" name=\"view\" value=\"list\" checked disabled><label for=\"list\">List View</label>"
    strFormOutput += f"<input type=\"radio\" id=\"gallery\" name=\"view\" value=\"gallery\" disabled><label for=\"gallery\">Gallery View</label>"
-   strFormOutput += f"<input type=\"checkbox\" id=\"nsfw\" name=\"nsfw\" value=\"nsfw\" checked disabled><label for=\"nsfw\">Allow over_18 flag?</label>"
+   strFormOutput += f"<input type=\"checkbox\" id=\"nsfw\" name=\"nsfw\" value=\"nsfw\" disabled><label for=\"nsfw\">Allow over_18 flag?</label>"
    strFormOutput += f"<br><br>"
    strFormOutput += f"<button type=\"submit\">Browse Media</button></form><br><br>"
    #add (media by) username
