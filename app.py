@@ -138,5 +138,12 @@ def displayblog():
    strPostContent = blog.blog_post(strPostFile)
    return strPostContent
 
+@app.route("/displaytop")
+def displaytop():
+   
+   strTopContent = blog.blog_recent(5)
+   
+   return strTopContent
+
 if __name__ == '__main__':
    app.run(debug=True)
