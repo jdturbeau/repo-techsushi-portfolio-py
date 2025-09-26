@@ -27,7 +27,7 @@ def blog_recent(intCount):
     os.chdir("./_posts/")
     #lstFiles = filter(os.path.isfile, os.listdir("./_posts/"))
     lstFiles = filter(os.path.isfile, os.listdir())
-    lstFiles = [os.path.join("./_posts/", f) for f in files]
+    lstFiles = [os.path.join("./_posts/", f) for f in lstFiles]
     lstFiles.sort(key=os.path.getmtime)
   except Exception as e:
       #could contain sensitive information in error message
