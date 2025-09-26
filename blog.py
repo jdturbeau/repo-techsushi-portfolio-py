@@ -48,11 +48,12 @@ def blog_recent(intCount):
     strSetOutput += "1 chdir worked<br>"
     strCWD = os.getcwd()
     strSetOutput += f"2 current directory - [ {strCWD} ]<br>"
-    '''
-    #lstFiles = filter(os.path.isfile, os.listdir("/_posts/"))
-    lstFiles = filter(os.path.isfile, os.listdir())
+    
+    lstFiles = filter(os.path.isfile, os.listdir(f"{strCWD}"))
+    #lstFiles = filter(os.path.isfile, os.listdir())
     strSetOutput += "2 filter worked<br>"
     
+    '''
     lstFiles = [os.path.join("/_posts/", f) for f in lstFiles]
     strSetOutput += "3 pathjoin worked<br>"
     lstFiles.sort(key=os.path.getmtime)
