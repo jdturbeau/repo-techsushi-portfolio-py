@@ -53,12 +53,12 @@ def blog_recent(intCount):
     #lstFiles = filter(os.path.isfile, os.listdir())
     strSetOutput += "2 filter worked<br>"
     
-    '''
-    lstFiles = [os.path.join("/_posts/", f) for f in lstFiles]
+    
+    lstFiles = [os.path.join("_posts", f) for f in lstFiles]
     strSetOutput += "3 pathjoin worked<br>"
     lstFiles.sort(key=os.path.getmtime)
     strSetOutput += "4 sort worked<br>"
-    '''
+    
   except Exception as e:
       #could contain sensitive information in error message
       strSetOutput += f"an unexpected error occurred during <b>BLOG RECENT</b>: {e}<br><br>" #{lstFiles}<br><br>"
