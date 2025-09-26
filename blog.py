@@ -29,8 +29,8 @@ def blog_recent(intCount):
     #strCWD = os.path.dirname(os.path.realpath(__file__))
     #strSetOutput += f"1 current directory - [ {strCWD} ]<br>"
     
-    #app_root = os.environ.get('APP_PATH', '/home/site/wwwroot')
-    #strSetOutput += f"2 current directory - [ {app_root} ]<br>"
+    app_root = os.environ.get('APP_PATH', '/home/site/wwwroot')
+    strSetOutput += f"2 current directory - [ {app_root} ]<br>"
     #contents = os.listdir(app_root)
 
     #for item in contents:
@@ -44,7 +44,7 @@ def blog_recent(intCount):
 
     #strSetOutput += f"4 file content - [ {strContent} ]"
     
-    os.chdir("_posts")
+    os.chdir("_posts") #avoid... chdir impacts actions going forward and on other pages
     strSetOutput += "1 chdir worked<br>"
     strCWD = os.getcwd()
     strSetOutput += f"2 current directory - [ {strCWD} ]<br>"
