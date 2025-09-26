@@ -54,7 +54,7 @@ def blog_recent(intCount):
     strSetOutput += "2 filter worked<br>"
     
     
-    lstFiles = [os.path.join("_posts", f) for f in lstFiles]
+    lstFiles = [os.path.join(f"{strCWD}", f) for f in lstFiles]
     strSetOutput += "3 pathjoin worked<br>"
     lstFiles.sort(key=os.path.getmtime)
     strSetOutput += "4 sort worked<br>"
