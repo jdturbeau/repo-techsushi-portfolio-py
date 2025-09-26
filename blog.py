@@ -9,7 +9,7 @@ def blog_post(strPostFile):
     #check if file string is not null, then check if file exists
     with open(f"_posts/{strPostFile}", "r") as p:
       strContent = p.read()
-    strHTML = markdown.markdown(strContent)
+    #strHTML = markdown.markdown(strContent)
   except Exception as e:
       #could contain sensitive information in error message
       strSetOutput = f"an unexpected error occurred during <b>BLOG GET</b>: {e}<br><br>"
@@ -48,17 +48,17 @@ def blog_recent(intCount):
     strSetOutput += "1 chdir worked<br>"
     strCWD = os.getcwd()
     strSetOutput += f"2 current directory - [ {strCWD} ]<br>"
-    
+    '''
     lstFiles = filter(os.path.isfile, os.listdir(f"{strCWD}"))
     #lstFiles = filter(os.path.isfile, os.listdir())
     strSetOutput += "2 filter worked<br>"
     
     
-    lstFiles = [os.path.join(f"{strCWD}", f) for f in lstFiles]
+    lstSortedFiles = [os.path.join(f"{strCWD}", f) for f in lstFiles]
     strSetOutput += "3 pathjoin worked<br>"
-    lstFiles.sort(key=os.path.getmtime)
+    lstSortedFiles.sort(key=os.path.getmtime)
     strSetOutput += "4 sort worked<br>"
-    
+    '''
   except Exception as e:
       #could contain sensitive information in error message
       strSetOutput += f"an unexpected error occurred during <b>BLOG RECENT</b>: {e}<br><br>" #{lstFiles}<br><br>"
