@@ -24,13 +24,20 @@ def blog_recent(intCount):
     #if not intCount:
       #intCount = 5
     
-    strCWD = os.getcwd()
-    strSetOutput = f"0 current directory - [ {strCWD} ]<br>"
+    #strCWD = os.getcwd()
+    #strSetOutput = f"0 current directory - [ {strCWD} ]<br>"
     #strCWD = os.path.dirname(os.path.realpath(__file__))
     #strSetOutput += f"1 current directory - [ {strCWD} ]<br>"
     
     app_root = os.environ.get('APP_PATH', '/home/site/wwwroot')
     strSetOutput += f"2 current directory - [ {app_root} ]<br>"
+    file_path = os.path.join(app_root, '_posts', '2025-0925-welcome.md')
+    strSetOutput += f"3 file path after joins - [ {file_path} ]<br>"
+    
+    with open(f"{file_path}", "r") as p:
+      strContent = p.read()
+
+    strSetOutput += f"4 file content - [ {strContent} ]"
     
     #os.chdir("/_posts/")
     #strSetOutput += "1 chdir worked<br>"
