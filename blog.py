@@ -7,7 +7,7 @@ def blog_post(strPostFile):
   
   try:
     #check if file string is not null, then check if file exists
-    with open(f"./_posts/{strPostFile}", "r") as p:
+    with open(f"_posts/{strPostFile}", "r") as p:
       strContent = p.read()
     #strHTML = markdown.markdown(strContent)
   except Exception as e:
@@ -25,13 +25,17 @@ def blog_recent(intCount):
       intCount = 5
       
     os.chdir("./_posts/")
+    strSetOutput = "1 chdir worked<br>"
     #lstFiles = filter(os.path.isfile, os.listdir("./_posts/"))
     lstFiles = filter(os.path.isfile, os.listdir())
-    lstFiles = [os.path.join("./_posts/", f) for f in lstFiles]
+    strSetOutput += "2 filter worked<br>"
+    lstFiles = [os.path.join("_posts/", f) for f in lstFiles]
+    strSetOutput += "3 pathjoin worked<br>"
     lstFiles.sort(key=os.path.getmtime)
+    strSetOutput += "4 sort worked<br>"
   except Exception as e:
       #could contain sensitive information in error message
-      strSetOutput = f"an unexpected error occurred during <b>BLOG RECENT</b>: {e}<br><br>"
+      strSetOutput += f"an unexpected error occurred during <b>BLOG RECENT</b>: {e}<br><br>"
       return strSetOutput
   
   return lstFiles
