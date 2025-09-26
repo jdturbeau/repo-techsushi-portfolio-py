@@ -21,13 +21,13 @@ def blog_post(strPostFile):
 def blog_recent(intCount):
 
   try:
-    if not intCount:
-      intCount = 5
+    #if not intCount:
+      #intCount = 5
     
     strCWD = os.getcwd()
     strSetOutput = f"0 current directory - [ {strCWD} ]<br>"
-    strCWD = os.path.dirname(os.path.realpath(__file__))
-    strSetOutput += f"1 current directory - [ {strCWD} ]<br>"
+    #strCWD = os.path.dirname(os.path.realpath(__file__))
+    #strSetOutput += f"1 current directory - [ {strCWD} ]<br>"
     '''
     os.chdir("/_posts/")
     strSetOutput += "1 chdir worked<br>"
@@ -43,7 +43,7 @@ def blog_recent(intCount):
     '''
   except Exception as e:
       #could contain sensitive information in error message
-      strSetOutput += f"an unexpected error occurred during <b>BLOG RECENT</b>: {e}<br><br>{lstFiles}<br><br>"
+      strSetOutput += f"an unexpected error occurred during <b>BLOG RECENT</b>: {e}<br><br>" #{lstFiles}<br><br>"
       return strSetOutput
   
-  return lstFiles
+  return strSetOutput #lstFiles
