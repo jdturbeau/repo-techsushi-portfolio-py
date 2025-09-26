@@ -29,10 +29,13 @@ def blog_recent(intCount):
     #strCWD = os.path.dirname(os.path.realpath(__file__))
     #strSetOutput += f"1 current directory - [ {strCWD} ]<br>"
     
-    os.chdir("/_posts/")
-    strSetOutput += "1 chdir worked<br>"
-    strCWD = os.getcwd()
-    strSetOutput += f"2 current directory - [ {strCWD} ]<br>"
+    app_root = os.environ.get('APP_PATH', '/home/site/wwwroot')
+    strSetOutput += f"2 current directory - [ {app_root} ]<br>"
+    
+    #os.chdir("/_posts/")
+    #strSetOutput += "1 chdir worked<br>"
+    #strCWD = os.getcwd()
+    #strSetOutput += f"2 current directory - [ {strCWD} ]<br>"
     '''
     #lstFiles = filter(os.path.isfile, os.listdir("/_posts/"))
     lstFiles = filter(os.path.isfile, os.listdir())
