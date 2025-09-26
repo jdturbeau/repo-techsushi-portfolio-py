@@ -7,7 +7,7 @@ def blog_post(strPostFile):
   
   try:
     #check if file string is not null, then check if file exists
-    with open(f"/_posts/{strPostFile}", "r") as p:
+    with open(f"_posts/{strPostFile}", "r") as p:
       strContent = p.read()
     #strHTML = markdown.markdown(strContent)
   except Exception as e:
@@ -31,13 +31,18 @@ def blog_recent(intCount):
     
     app_root = os.environ.get('APP_PATH', '/home/site/wwwroot')
     strSetOutput += f"2 current directory - [ {app_root} ]<br>"
-    file_path = os.path.join(app_root, '_posts', '2025-0925-welcome.md')
-    strSetOutput += f"3 file path after joins - [ {file_path} ]<br>"
+    contents = os.listdir(app_root)
+
+    for item in contents:
+      strSetOutput += f"{item}"
+      
+    #file_path = os.path.join(app_root, '_posts', '2025-0925-welcome.md')
+    #strSetOutput += f"3 file path after joins - [ {file_path} ]<br>"
     
     #with open(f"{file_path}", "r") as p:
       #strContent = p.read()
 
-    strSetOutput += f"4 file content - [ {strContent} ]"
+    #strSetOutput += f"4 file content - [ {strContent} ]"
     
     #os.chdir("/_posts/")
     #strSetOutput += "1 chdir worked<br>"
