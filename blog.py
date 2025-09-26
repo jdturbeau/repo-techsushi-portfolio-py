@@ -44,7 +44,7 @@ def blog_recent(intCount):
 
     #strSetOutput += f"4 file content - [ {strContent} ]"
     
-    os.chdir("_posts/")
+    os.chdir("_posts")
     strSetOutput += "1 chdir worked<br>"
     strCWD = os.getcwd()
     strSetOutput += f"2 current directory - [ {strCWD} ]<br>"
