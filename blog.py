@@ -34,8 +34,8 @@ def blog_recent(intCount):
     file_path = os.path.join(app_root, '_posts', '2025-0925-welcome.md')
     strSetOutput += f"3 file path after joins - [ {file_path} ]<br>"
     
-    with open(f"{file_path}", "r") as p:
-      strContent = p.read()
+    #with open(f"{file_path}", "r") as p:
+      #strContent = p.read()
 
     strSetOutput += f"4 file content - [ {strContent} ]"
     
