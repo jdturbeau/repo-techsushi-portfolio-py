@@ -1,6 +1,6 @@
 #from flask import (Flask, redirect, render_template, request, send_from_directory, url_for)
 #import requests
-import os #needed for chdirand getcwd
+import os #needed for chdir and getcwd
 import markdown
 
 def blog_post(strPostFile):
@@ -21,16 +21,57 @@ def blog_post(strPostFile):
 def blog_recent(intCount):
 
   try:
-    #if not intCount:
-      #intCount = 5
+    if not intCount:
+      intCount = 5
+    
+    #app_path typically temp folder, such as '/tmp/8ddfd43c8909fcd'
+    strAppPath = os.environ.get("APP_PATH", "/home/site/wwwroot")
+
+    #full path example '/tmp/8ddfd43c8909fcd/_posts/2025-0926-test.md'
+    strAppPath += "/_posts"
+    
+    lstFiles = filter(os.path.isfile, os.listdir(f"{strAppPath}"))
+    lstSortedFiles = [os.path.join(f"{strAppPath}", f) for f in lstFiles]
+    lstSortedFiles.sort(key=os.path.getmtime) #modified
+    #lstSortedFiles.sort(key=os.path.getctime) #created windows?
+    #lstSortedFiles.sort(key=os.path.getctime) #created linux?
+    
+    #respect intCount or less
+
+    for lstPostFile in lstSortedFiles:
+      #parse file results for article title, date, author, and formating
+      blog_postheader(lstPostFile)
+      #format results
+    
+    
+  except Exception as e:
+      #could contain sensitive information in error message
+      strSetOutput += f"an unexpected error occurred during <b>BLOG RECENT</b>: {e}<br><br>"
+      return strSetOutput
+  
+  return strSetOutput
+
+def blog_postheader(strFile):
+  
+  return
+
+def blog_postformat(strContent):
+
+  return
+
+def blog_briefformat(strContent):
+
+  return
+
+  
+def blog_notes():
+  '''
     
     strCWD = os.getcwd()
     strSetOutput = f"0 current directory - [ {strCWD} ]<br>"
     #strCWD = os.path.dirname(os.path.realpath(__file__))
     #strSetOutput += f"1 current directory - [ {strCWD} ]<br>"
     
-    app_root = os.environ.get('APP_PATH', '/home/site/wwwroot')
-    strSetOutput += f"2 current directory - [ {app_root} ]<br>"
     #contents = os.listdir(app_root)
 
     #for item in contents:
@@ -48,22 +89,15 @@ def blog_recent(intCount):
     strSetOutput += "1 chdir worked<br>"
     strCWD = os.getcwd()
     strSetOutput += f"2 current directory - [ {strCWD} ]<br>"
-    
-    lstFiles = filter(os.path.isfile, os.listdir(f"{strCWD}"))
+
     #lstFiles = filter(os.path.isfile, os.listdir())
     strSetOutput += f"3 filter worked<br>"
-
-    strSetOutput += f"4 files listing worked [ {lstFiles} ]<br><br>"
     
-    lstSortedFiles = [os.path.join(f"{strCWD}", f) for f in lstFiles]
+    strSetOutput += f"4 files listing worked [ {lstFiles} ]<br><br>"
+
     strSetOutput += f"5 path join worked [ {lstSortedFiles} ]<br><br>"
-    lstSortedFiles.sort(key=os.path.getmtime)
     strSetOutput += "6 sort worked<br>"
     strSetOutput += f"7 sort worked [ {lstSortedFiles} ]<br><br>"
-    
-  except Exception as e:
-      #could contain sensitive information in error message
-      strSetOutput += f"an unexpected error occurred during <b>BLOG RECENT</b>: {e}<br><br>"
-      return strSetOutput
   
-  return strSetOutput
+  '''
+  return
