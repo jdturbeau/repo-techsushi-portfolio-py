@@ -48,20 +48,22 @@ def blog_recent(intCount):
     strSetOutput += "1 chdir worked<br>"
     strCWD = os.getcwd()
     strSetOutput += f"2 current directory - [ {strCWD} ]<br>"
-    '''
+    
     lstFiles = filter(os.path.isfile, os.listdir(f"{strCWD}"))
     #lstFiles = filter(os.path.isfile, os.listdir())
-    strSetOutput += "2 filter worked<br>"
-    
+    strSetOutput += f"3 filter worked<br>"
+
+    strSetOutput += f"4 files listing worked [ {lstFiles} ]<br><br>"
     
     lstSortedFiles = [os.path.join(f"{strCWD}", f) for f in lstFiles]
-    strSetOutput += "3 pathjoin worked<br>"
+    strSetOutput += f"5 path join worked [ {lstSortedFiles} ]<br><br>"
     lstSortedFiles.sort(key=os.path.getmtime)
-    strSetOutput += "4 sort worked<br>"
-    '''
+    strSetOutput += "6 sort worked<br>"
+    strSetOutput += f"7 sort worked [ {lstSortedFiles} ]<br><br>"
+    
   except Exception as e:
       #could contain sensitive information in error message
-      strSetOutput += f"an unexpected error occurred during <b>BLOG RECENT</b>: {e}<br><br>" #{lstFiles}<br><br>"
+      strSetOutput += f"an unexpected error occurred during <b>BLOG RECENT</b>: {e}<br><br>"
       return strSetOutput
   
-  return strSetOutput #lstFiles
+  return strSetOutput
