@@ -1,6 +1,6 @@
 #from flask import (Flask, redirect, render_template, request, send_from_directory, url_for)
 #import requests
-import os #needed for chdir
+import os #needed for chdirand getcwd
 import markdown
 
 def blog_post(strPostFile):
@@ -23,9 +23,12 @@ def blog_recent(intCount):
   try:
     if not intCount:
       intCount = 5
-      
+    
+    strCWD = os.getcwd()
+    strSetOutput = f"0 current director - [ {strCWD} ]<br>"
     os.chdir("/_posts/")
-    strSetOutput = "1 chdir worked<br>"
+    strSetOutput += "1 chdir worked<br>"
+    strSetOutput = f"0 current director - [ {strCWD} ]<br>"
     #lstFiles = filter(os.path.isfile, os.listdir("/_posts/"))
     lstFiles = filter(os.path.isfile, os.listdir())
     strSetOutput += "2 filter worked<br>"
@@ -35,7 +38,7 @@ def blog_recent(intCount):
     strSetOutput += "4 sort worked<br>"
   except Exception as e:
       #could contain sensitive information in error message
-      strSetOutput += f"an unexpected error occurred during <b>BLOG RECENT</b>: {e}<br><br>"
+      strSetOutput += f"an unexpected error occurred during <b>BLOG RECENT</b>: {e}<br><br>{lstFiles}<br><br>"
       return strSetOutput
   
   return lstFiles
