@@ -2,6 +2,7 @@
 #import requests
 import os #needed for chdir and getcwd
 import markdown
+import re
 
 def blog_post(strPostFile):
   
@@ -52,8 +53,18 @@ def blog_recent(intCount):
   return strSetOutput
 
 def blog_postheader(strFile):
+
+  strPostContent = blog_post(strFile)
+  strPattern = r"(?<=title: ).*"   #gi - use re.ignorecase below
+
+  strTitle = re.search(strPattern, strPostContent, re.IGNORECASE)
   
-  return
+  # r"(?<=date: ).*"gi
+  # r"(?<=author: ).*"gi
+  # tags
+  # r"(?<=-----\n)[\s\S]*"gi
+  
+  return strTitle
 
 def blog_postformat(strContent):
 
