@@ -6,6 +6,7 @@ import re
 
 def blog_post(strPostFile):
   
+  '''
   try:
     #check if file string is not null, then check if file exists
     with open(f"_posts/{strPostFile}", "r") as p:
@@ -16,8 +17,8 @@ def blog_post(strPostFile):
       strSetOutput = f"an unexpected error occurred during <b>BLOG GET</b>: {e}<br><br>"
       return strSetOutput
   ##alt: return render_template("index.html", post_content=strHTML)
-
-  return strContent
+  '''
+  return #strContent
 
 def blog_recent(intCount):
 
@@ -34,44 +35,64 @@ def blog_recent(intCount):
     lstFiles = filter(os.path.isfile, os.listdir(f"{strAppPath}"))
     lstSortedFiles = [os.path.join(f"{strAppPath}", f) for f in lstFiles]
     lstSortedFiles.sort(key=os.path.getmtime) #modified
-    #lstSortedFiles.sort(key=os.path.getctime) #created windows?
     #lstSortedFiles.sort(key=os.path.getctime) #created linux?
     
     #respect intCount or less
-
-    for lstPostFile in lstSortedFiles:
-      #parse file results for article title, date, author, and formating
-      blog_postheader(lstPostFile)
-      #format results
     
+    strSetOutput = ""
+    
+    for strPostFile in lstSortedFiles:
+      #parse file results for article filename, title, date, author, (tags?), body, and formating
+      lstBlogAttrib = blog_postparse(strPostFile)
+      strBriefFormat = blog_briefformat(lstBlogAttrib)
+      strSetOutput += strBriefFormat
     
   except Exception as e:
       #could contain sensitive information in error message
-      strSetOutput += f"an unexpected error occurred during <b>BLOG RECENT</b>: {e}<br><br>"
+      strSetOutput = f"an unexpected error occurred during <b>BLOG RECENT Retrieve</b>: {e}<br><br>"
       return strSetOutput
   
   return strSetOutput
 
-def blog_postheader(strFile):
+def blog_postparse(strParseFile):
 
-  strPostContent = blog_post(strFile)
+  try:
+    #check if file string is not null
+    #  then check if file exists
+    with open(f"_posts/{strParseFile}", "r") as p:
+      strParseContent = p.read()
+    
+  except Exception as e:
+      #could contain sensitive information in error message
+      strSetOutput = f"an unexpected error occurred during <b>BLOG GET</b>: {e}<br><br>"
+      return strSetOutput
+  ##alt: return render_template("index.html", post_content=strHTML)
+  
   strPattern = r"(?<=title: ).*"   #gi - use re.ignorecase below
+  strTitle = re.search(strPattern, strParseContent, re.IGNORECASE
+  strPattern = r"(?<=date: ).*"   #gi - use re.ignorecase below
+  strDate = re.search(strPattern, strParseContent, re.IGNORECASE)
+  strPattern = r"(?<=author: ).*"   #gi - use re.ignorecase below
+  strAuthor = re.search(strPattern, strParseContent, re.IGNORECASE)
+  #future
+  #strPattern = r"(?<=tags: ).*"   #gi - use re.ignorecase below
+  #strTags = re.search(strPattern, strParseContent, re.IGNORECASE)
+  strPattern = r"(?<=-----\n)[\s\S]*"   #gi - use re.ignorecase below
+  strBody = re.search(strPattern, strParseContent, re.IGNORECASE)
 
-  strTitle = re.search(strPattern, strPostContent, re.IGNORECASE)
-  
-  # r"(?<=date: ).*"gi
-  # r"(?<=author: ).*"gi
-  # tags
-  # r"(?<=-----\n)[\s\S]*"gi
-  
-  return strTitle
+  dictParsed = {"File": strParseFile, "Title": strTitle, "Date": strDate, "Author": strAuthor, "Body": strBody}
+  return dictParsed
 
-def blog_postformat(strContent):
-
+def blog_postformat(dictPostAttribs):
+  #strHTML = markdown.markdown(strContent)
   return
 
-def blog_briefformat(strContent):
+def blog_briefformat(dictBriefAttribs):
 
+  #verify dictBriefAttribs first
+  #File for filename, may need to trim, used for crafting link
+  strBrief
+  
   return
 
   
