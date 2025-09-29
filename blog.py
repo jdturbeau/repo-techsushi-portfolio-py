@@ -59,22 +59,71 @@ def blog_formatpost(dictPostAttribs):
       strSetOutput = f"an unexpected error occurred during <b>BLOG FORMAT POST: dictionary variable invalid type: [ {strTypeOutput} ]</b><br><br>"
       return strSetOutput
     
-    #File for filename, may need to trim, used for crafting link
-    
   except Exception as e:
     #could contain sensitive information in error message
     strSetOutput = f"an unexpected error occurred during <b>BLOG PARSE FILE dictionary creation</b>: {e}<br><br>"
     return strSetOutput
-  
+
+  try:
     #strHTML = markdown.markdown(strContent)
-  return
+    
+    strFile = dictPostAttribs.File
+    #File for filename, may need to trim, used for crafting link
+    strAppPath = os.environ.get("APP_PATH", "/home/site/wwwroot")
+    strFile.replace(strAppPath,"")
+    
+    strTitle = dictPostAttribs.Title
+    strDate = dictPostAttribs.Date
+    strAuthor = dictPostAttribs.Author
+    strBody = dictPostAttribs.Body
+    
+    strSetOutput = f"<b><a href=""{strFile}"">{strTitle}</a></b><br>"
+    strSetOutput += f"{strDate}&nbsp;&nbsp;&nbsp;&nbsp;{strAuthor}<p>"
+    strSetOutput += f"<pre>{strBody}</pre>"
+
+  except Exception as e:
+    #could contain sensitive information in error message
+    strSetOutput = f"an unexpected error occurred during <b>BLOG FORMAT POST</b>: {e}<br><br>"
+    return strSetOutput
+    
+  return strSetOutput
 
 def blog_formatbrief(dictBriefAttribs):
 
   #verify dictBriefAttribs first
-  #File for filename, may need to trim, used for crafting link
+  try:
+    #verify dictBriefAttribs first
+    if not isinstance(dictBriefAttribs, dict):
+      strTypeOutput = type(dictBriefAttribs)
+      strSetOutput = f"an unexpected error occurred during <b>BLOG FORMAT BRIEF: dictionary variable invalid type: [ {strTypeOutput} ]</b><br><br>"
+      return strSetOutput
+    
+  except Exception as e:
+    #could contain sensitive information in error message
+    strSetOutput = f"an unexpected error occurred during <b>BLOG FORMAT BRIEF</b>: {e}<br><br>"
+    return strSetOutput
   
-  return
+  try:
+    strFile = dictBriefAttribs.File
+    #File for filename, may need to trim, used for crafting link
+    strAppPath = os.environ.get("APP_PATH", "/home/site/wwwroot")
+    strFile.replace(strAppPath,"")
+    
+    strTitle = dictBriefAttribs.Title
+    strDate = dictBriefAttribs.Date
+    strAuthor = dictBriefAttribs.Author
+    #strBody = dictPostAttribs.Body
+    
+    strSetOutput = f"<b><a href=""{strFile}"">{strTitle}</a></b>&nbsp;&nbsp;&nbsp;&nbsp;"
+    strSetOutput += f"{strDate}&nbsp;&nbsp;&nbsp;&nbsp;{strAuthor}<p>"
+    #strSetOutput += f"<pre>{strBody}</pre>"
+
+  except Exception as e:
+    #could contain sensitive information in error message
+    strSetOutput = f"an unexpected error occurred during <b>BLOG FORMAT BRIEF</b>: {e}<br><br>"
+    return strSetOutput
+  
+  return strSetOutput
   
 def blog_recent(intCount):
 
@@ -82,7 +131,7 @@ def blog_recent(intCount):
     if not intCount:
       intCount = 5
     
-    #app_path typically temp folder, such as '/tmp/8ddfd43c8909fcd'
+    #Azure: app_path typically temp folder, such as '/tmp/8ddfd43c8909fcd'
     strAppPath = os.environ.get("APP_PATH", "/home/site/wwwroot")
 
     #full path example '/tmp/8ddfd43c8909fcd/_posts/2025-0926-test.md'
@@ -102,6 +151,7 @@ def blog_recent(intCount):
       dictBlogAttrib = blog_parsefile(strPostFile)
       strBriefFormat = blog_formatbrief(dictBlogAttrib)
       strSetOutput += strBriefFormat
+      strSetOutput += "<br><br>"
     
   except Exception as e:
       #could contain sensitive information in error message
