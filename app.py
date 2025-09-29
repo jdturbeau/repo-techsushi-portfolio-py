@@ -136,9 +136,9 @@ def checktoken():
 @app.route("/displayblog")
 def displayblog():
    strPostFile = "_post/2025-0925-welcome.md"
-   #strPostContent = blog.blog_postheader(strPostFile)
-   dictBlogAttrib = blog_parsefile(strPostFile)
-   strPostFormat = blog_formatpost(dictBlogAttrib)
+   #strPostContent = blog.blog_parsefile(strPostFile)
+   dictBlogAttrib = blog.blog_parsefile(strPostFile)
+   strPostFormat = blog.blog_formatpost(dictBlogAttrib)
    strSetOutput = strPostFormat
    strSetOutput += "<br><br>"
    return strSetOutput
