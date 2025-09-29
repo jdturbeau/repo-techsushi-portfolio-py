@@ -2,7 +2,7 @@
 #import requests
 import os #needed for chdir and getcwd
 import markdown
-#import re
+import re  #import but no need to be in requirements.txt
 
 def blog_parsefile(strParseFile):
 
@@ -26,7 +26,7 @@ def blog_parsefile(strParseFile):
   
   try:
     strPattern = r"(?<=title: ).*"   #gi - use re.ignorecase below
-    strTitle = re.search(strPattern, strParseContent, re.IGNORECASE
+    strTitle = re.search(strPattern, strParseContent, re.IGNORECASE)
     strPattern = r"(?<=date: ).*"
     strDate = re.search(strPattern, strParseContent, re.IGNORECASE)
     strPattern = r"(?<=author: ).*"
