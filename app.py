@@ -135,9 +135,13 @@ def checktoken():
 
 @app.route("/displayblog")
 def displayblog():
-   strPostFile = "2025-0925-welcome.md"
-   strPostContent = blog.blog_postheader(strPostFile)
-   return strPostContent
+   strPostFile = "_post/2025-0925-welcome.md"
+   #strPostContent = blog.blog_postheader(strPostFile)
+   dictBlogAttrib = blog_parsefile(strPostFile)
+   strPostFormat = blog_formatpost(dictBlogAttrib)
+   strSetOutput = strPostFormat
+   strSetOutput += "<br><br>"
+   return strSetOutput
 
 @app.route("/displaytop")
 def displaytop():
