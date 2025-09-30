@@ -18,10 +18,13 @@ def blog_parsefile(strParseFile):
     with open(f"{strParseFile}", "r") as p:
       strParseContent = p.read()
     
+  except FileNotFoundError:
+    strSetOutput = f"an unexpected error occurred during <b>BLOG PARSE FILE read</b>: The file [ {strParseFile} ] does not exist.<br><br>"
+    return strSetOutput
   except Exception as e:
-      #could contain sensitive information in error message
-      strSetOutput = f"an unexpected error occurred during <b>BLOG PARSE FILE read</b>: {e}<br><br>"
-      return strSetOutput
+    #could contain sensitive information in error message
+    strSetOutput = f"an unexpected error occurred during <b>BLOG PARSE FILE read</b>: {e}<br><br>"
+    return strSetOutput
   ##alt: return render_template("index.html", post_content=strHTML)
   
   try:
