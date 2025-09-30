@@ -33,9 +33,11 @@ def display():
          #   retrieve
          #   successful
          #   format
+         strWebOutput = strBlogArticle
       else:
          #retrieve top 10 most recent?
          #   brief format
+         strWebOutput = strBlogArticle
          
    except Exception as e:
       #could contain sensitive information in error message
