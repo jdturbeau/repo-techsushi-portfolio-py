@@ -119,17 +119,17 @@ def blog_formatbrief(dictBriefAttribs):
     return strSetOutput
   
   try:
-    strFile = dictBriefAttribs.File
+    strFile = dictBriefAttribs["File"]
     #File for filename, may need to trim, used for crafting link
     strAppPath = os.environ.get("APP_PATH", "/home/site/wwwroot")
-    strFile.replace(strAppPath,"")
+    strFile.replace(strAppPath, "")
     
-    strTitle = dictBriefAttribs.Title
-    strDate = dictBriefAttribs.Date
-    strAuthor = dictBriefAttribs.Author
-    #strBody = dictPostAttribs.Body
+    strTitle = dictPostAttribs["Title"]
+    strDate = dictPostAttribs["Date"]
+    strAuthor = dictPostAttribs["Author"]
+    #strBody = dictPostAttribs["Body"]
     
-    strSetOutput = f"<b><a href=""{strFile}"">{strTitle}</a></b>&nbsp;&nbsp;&nbsp;&nbsp;"
+    strSetOutput = f"<b><a href=\"{strFile}\">{strTitle}</a></b>&nbsp;&nbsp;&nbsp;&nbsp;"
     strSetOutput += f"{strDate}&nbsp;&nbsp;&nbsp;&nbsp;{strAuthor}<p>"
     #strSetOutput += f"<pre>{strBody}</pre>"
 
