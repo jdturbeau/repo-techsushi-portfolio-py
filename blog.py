@@ -13,6 +13,10 @@ def blog_parsefile(strParseFile):
     
     #check if file string is not null
     #  then check if file exists
+    if not os.path.isfile(strParseFile):
+      strAppPath = os.environ.get("APP_PATH", "/home/site/wwwroot")
+      strParseFile = strAppPath + strParseFile
+      
     
     #consider "_posts/" if needed
     with open(f"{strParseFile}", "r") as p:
