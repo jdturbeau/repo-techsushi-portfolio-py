@@ -135,7 +135,7 @@ def checktoken():
 
 @app.route("/displayblog")
 def displayblog():
-   strPostFile = "_post/2025-0925-welcome.md"
+   strPostFile = "_posts/2025-0925-welcome.md"
    #strPostContent = blog.blog_parsefile(strPostFile)
    dictBlogAttrib = blog.blog_parsefile(strPostFile)
    if not isinstance(dictBlogAttrib, dict):
