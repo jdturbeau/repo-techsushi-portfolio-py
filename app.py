@@ -14,7 +14,7 @@ def index():
    strWebOutput += "Would you like to visit:<br><br>"
 
    strWebOutput += "<a href=\"/redmedia\">Reddit media retreiver</a><br><br>"
-   strWebOutput += "<a href=\"/blog\">MarkDown Blog landing page</a><br><br>"
+   strWebOutput += "<a href=\"/display\">MarkDown Blog landing page</a><br><br>"
    strWebOutput += "<a href=\"/displayblog\">MarkDown Blog - single article</a><br><br>"
    strWebOutput += "<a href=\"/displaytop\">Display Most Recent Blog Articles</a><br><br>"
    
