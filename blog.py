@@ -78,15 +78,15 @@ def blog_formatpost(dictPostAttribs):
   try:
     #strHTML = markdown.markdown(strContent)
     
-    strFile = dictPostAttribs.File
+    strFile = dictPostAttribs["File"]
     #File for filename, may need to trim, used for crafting link
     strAppPath = os.environ.get("APP_PATH", "/home/site/wwwroot")
     strFile.replace(strAppPath,"")
     
-    strTitle = dictPostAttribs.Title
-    strDate = dictPostAttribs.Date
-    strAuthor = dictPostAttribs.Author
-    strBody = dictPostAttribs.Body
+    strTitle = dictPostAttribs["Title"]
+    strDate = dictPostAttribs["Date"]
+    strAuthor = dictPostAttribs["Author"]
+    strBody = dictPostAttribs["Body"]
     
     strSetOutput = f"<b><a href=""{strFile}"">{strTitle}</a></b><br>"
     strSetOutput += f"{strDate}&nbsp;&nbsp;&nbsp;&nbsp;{strAuthor}<p>"
@@ -94,7 +94,7 @@ def blog_formatpost(dictPostAttribs):
 
   except Exception as e:
     #could contain sensitive information in error message
-    strSetOutput = f"an unexpected error occurred during <b>BLOG FORMAT POST</b>: {e}<br><br>"
+    strSetOutput = f"an unexpected error occurred during <b>BLOG FORMAT POST</b>: {e}<br>[ {dictPostAttribs} ]<br><br>"
     return strSetOutput
     
   return strSetOutput
