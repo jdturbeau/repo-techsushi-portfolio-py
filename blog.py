@@ -153,7 +153,7 @@ def blog_recent(intCount):
     strAppPath += "/_posts/"
     
     strSetOutput = f"{strAppPath}<br><br>"
-    lstFiles = filter(os.path.isfile, os.listdir(f"{strAppPath}"))
+    lstFiles = filter(os.path.isfile, os.listdir(strAppPath))
 
     strSetOutput += f"1 file list [ {lstFiles} ]<br><br>"
     
