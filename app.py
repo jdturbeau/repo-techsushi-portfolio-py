@@ -138,6 +138,10 @@ def displayblog():
    strPostFile = "_post/2025-0925-welcome.md"
    #strPostContent = blog.blog_parsefile(strPostFile)
    dictBlogAttrib = blog.blog_parsefile(strPostFile)
+   if not isinstance(dictBlogAttrib, dict):
+      strSetOutput = f"an unexpected error occurred during <b>BLOG FORMAT POST: dictionary variable invalid type: [ {dictBlogAttrib} ]</b><br><br>"
+      return strSetOutput
+   
    strPostFormat = blog.blog_formatpost(dictBlogAttrib)
    strSetOutput = strPostFormat
    strSetOutput += "<br><br>"
