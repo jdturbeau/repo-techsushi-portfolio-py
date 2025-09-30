@@ -14,13 +14,38 @@ def index():
    strWebOutput += "Would you like to visit:<br><br>"
 
    strWebOutput += "<a href=\"/redmedia\">Reddit media retreiver</a><br><br>"
-   strWebOutput += "<a href=\"/displayblog\">MarkDown Blog</a><br><br>"
+   strWebOutput += "<a href=\"/blog\">MarkDown Blog landing page</a><br><br>"
+   strWebOutput += "<a href=\"/displayblog\">MarkDown Blog - single article</a><br><br>"
    strWebOutput += "<a href=\"/displaytop\">Display Most Recent Blog Articles</a><br><br>"
    
    strWebOutput += redditmedia.app_dictionary("html_footer")
    
    return strWebOutput
 
+@app.route("/display")
+def display():
+
+   try:
+      strBlogArticle = request.form.get("post", "all")
+      if strBlogArticle != "all":
+         #specific post
+         #   does it exist?
+         #   retrieve
+         #   successful
+         #   format
+      else:
+         #retrieve top 10 most recent?
+         #   brief format
+         
+   except Exception as e:
+      #could contain sensitive information in error message
+      #   404 article not found?
+      strWebOutput += f"an unexpected error occurred during <b>RETRIEVE</b>: <font color=red>{e}</font><br><br>"
+      #raise strWebOutput
+      return strWebOutput
+   
+   return strWebOutput
+   
 @app.route("/redmedia", methods=['GET', 'POST'])
 def redmedia():
    
