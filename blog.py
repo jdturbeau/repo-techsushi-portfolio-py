@@ -150,23 +150,23 @@ def blog_recent(intCount):
     strAppPath = os.environ.get("APP_PATH", "/home/site/wwwroot")
 
     #full path example '/tmp/8ddfd43c8909fcd/_posts/2025-0926-test.md'
-    strAppPath += "/_posts"
+    strAppPath += "/_posts/"
     
     strSetOutput = f"{strAppPath}<br><br>"
     lstFiles = filter(os.path.isfile, os.listdir(f"{strAppPath}"))
 
-    strSetOutput += f"file list [ {lstFiles} ]<br><br>"
+    strSetOutput += f"1 file list [ {lstFiles} ]<br><br>"
     
     lstSortedFiles = [os.path.join(f"{strAppPath}", f) for f in lstFiles]
 
-    strSetOutput += f"file list [ {lstSortedFiles} ]<br><br>"
+    strSetOutput += f"2 file list [ {lstSortedFiles} ]<br><br>"
     
     lstSortedFiles.sort(key=os.path.getmtime) #modified
     #lstSortedFiles.sort(key=os.path.getctime) #created linux?
     
     #respect intCount or less
     
-    strSetOutput += f"file list [ {lstSortedFiles} ]<br><br>"
+    strSetOutput += f"3 file list [ {lstSortedFiles} ]<br><br>"
     
     for strPostFile in lstSortedFiles:
       #parse file results for article filename, title, date, author, (tags?), body, and formating
