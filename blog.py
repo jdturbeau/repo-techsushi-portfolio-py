@@ -37,16 +37,20 @@ def blog_parsefile(strParseFile):
   
   try:
     strPattern = r"(?<=title: ).*"   #gi - use re.ignorecase below
-    strTitle = re.search(strPattern, strParseContent, re.IGNORECASE)
+    objMatch = re.search(strPattern, strParseContent, re.IGNORECASE)
+    strTitle = objMatch.group()
     strPattern = r"(?<=date: ).*"
-    strDate = re.search(strPattern, strParseContent, re.IGNORECASE)
+    objMatch = re.search(strPattern, strParseContent, re.IGNORECASE)
+    strDate = objMatch.group()
     strPattern = r"(?<=author: ).*"
-    strAuthor = re.search(strPattern, strParseContent, re.IGNORECASE)
+    objMatch = re.search(strPattern, strParseContent, re.IGNORECASE)
+    strAuthor = objMatch.group()
     #future
     #strPattern = r"(?<=tags: ).*"
     #strTags = re.search(strPattern, strParseContent, re.IGNORECASE)
     strPattern = r"(?<=-----\n)[\s\S]*"
-    strBody = re.search(strPattern, strParseContent, re.IGNORECASE)
+    objMatch = re.search(strPattern, strParseContent, re.IGNORECASE)
+    strBody = objMatch.group()
   
     dictParsed = {"File": strParseFile, "Title": strTitle, "Date": strDate, "Author": strAuthor, "Body": strBody}
   except Exception as e:
@@ -81,14 +85,14 @@ def blog_formatpost(dictPostAttribs):
     strFile = dictPostAttribs["File"]
     #File for filename, may need to trim, used for crafting link
     strAppPath = os.environ.get("APP_PATH", "/home/site/wwwroot")
-    strFile.replace(strAppPath,"")
+    strFile.replace(strAppPath, "")
     
     strTitle = dictPostAttribs["Title"]
     strDate = dictPostAttribs["Date"]
     strAuthor = dictPostAttribs["Author"]
     strBody = dictPostAttribs["Body"]
     
-    strSetOutput = f"<b><a href=""{strFile}"">{strTitle}</a></b><br>"
+    strSetOutput = f"<b><a href=\"{strFile}\">{strTitle}</a></b><br>"
     strSetOutput += f"{strDate}&nbsp;&nbsp;&nbsp;&nbsp;{strAuthor}<p>"
     strSetOutput += f"<pre>{strBody}</pre>"
 
