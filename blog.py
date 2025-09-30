@@ -159,7 +159,7 @@ def blog_recent(intCount):
     
     #respect intCount or less
     
-    strSetOutput = ""
+    strSetOutput = f"file list [ {lstSortedFiles} ]<br><br>"
     
     for strPostFile in lstSortedFiles:
       #parse file results for article filename, title, date, author, (tags?), body, and formating
