@@ -42,7 +42,7 @@ def display():
          strWebOutput = strBlogArticle
          strWebOutput += "<br><br>"
 
-         strBlogArticle = strBlogDirectory
+         strBlogArticle = f"{strBlogDirectory}/{strBlogArticle}.md"
          dictPostAttribs = blog_parsefile(strBlogArticle)
          #confirm dict created or error
          strWebOutput = blog_formatpost(dictPostAttribs)
