@@ -2,6 +2,7 @@ from flask import (Flask, redirect, render_template, request, send_from_director
 import requests
 from azure.identity import DefaultAzureCredential
 from azure.keyvault.secrets import SecretClient
+import os
 import redditmedia
 import blog
 
