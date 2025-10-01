@@ -30,6 +30,8 @@ def index():
 @app.route("/display")
 def display():
 
+   strWebOutput = blog.blog_recent(5, strBlogDirectory)
+   '''
    try:
       strBlogArticle = request.form.get("post", "all")
       if strBlogArticle != "all":
@@ -61,7 +63,7 @@ def display():
       strWebOutput += f"an unexpected error occurred during <b>RETRIEVE</b>: <font color=red>{e}</font><br><br>"
       #raise strWebOutput
       return strWebOutput
-   
+   '''
    return strWebOutput
    
 @app.route("/redmedia", methods=['GET', 'POST'])
