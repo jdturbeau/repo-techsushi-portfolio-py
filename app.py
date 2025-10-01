@@ -7,6 +7,10 @@ import blog
 
 app = Flask(__name__)
 
+strBlogDirectory = os.environ.get("APP_PATH", "/home/site/wwwroot")
+#strBlogDirectory = os.path.join(app.root_path, "_posts") 
+strBlogDirectory = os.path.join(strBlogDirectory, "_posts") 
+
 @app.route("/")
 def index():
    #return render_template("index.html")
@@ -37,7 +41,12 @@ def display():
       else:
          #retrieve top 10 most recent?
          #   brief format
-         strWebOutput = strBlogArticle
+         #strWebOutput = strBlogArticle
+         strWebOutput = f"{strBlogDirectory}<br><br>"
+         lstFiles = filter(os.path.isfile, os.listdir(strBlogDirectory))
+         lstSortedFiles = [os.path.join(strBlogDirectory, f) for f in lstFiles]
+         lstSortedFiles.sort(key=os.path.getmtime)
+         strWebOutput += f"file list [ {lstSortedFiles} ]<br><br>"
          
    except Exception as e:
       #could contain sensitive information in error message
