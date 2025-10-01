@@ -44,8 +44,12 @@ def display():
          #   brief format
          #strWebOutput = strBlogArticle
          strWebOutput = f"{strBlogDirectory}<br><br>"
+         lstFiles = os.listdir(strBlogDirectory)
+         strWebOutput += f"{lstFiles}<br><br>"
          lstFiles = filter(os.path.isfile, os.listdir(strBlogDirectory))
+         strWebOutput += f"{lstFiles}<br><br>"
          lstSortedFiles = [os.path.join(strBlogDirectory, f) for f in lstFiles]
+         strWebOutput += f"{lstSortedFiles}<br><br>"
          lstSortedFiles.sort(key=os.path.getmtime)
          strWebOutput += f"file list [ {lstSortedFiles} ]<br><br>"
          
