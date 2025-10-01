@@ -46,12 +46,12 @@ def display():
          strWebOutput = f"{strBlogDirectory}<br><br>"
          lstFiles = os.listdir(strBlogDirectory)
          strWebOutput += f"{lstFiles}<br><br>"
-         lstFiles = filter(os.path.isfile, lstFiles)
+         lstPathFiles = [os.path.join(strBlogDirectory, f) for f in lstFiles]
+         strWebOutput += f"{lstPathFiles}<br><br>"
+         lstFiles = filter(os.path.isfile, lstPathFiles)
          strWebOutput += f"{lstFiles}<br><br>"
-         lstSortedFiles = [os.path.join(strBlogDirectory, f) for f in lstFiles]
-         strWebOutput += f"{lstSortedFiles}<br><br>"
-         lstSortedFiles.sort(key=os.path.getmtime)
-         strWebOutput += f"file list [ {lstSortedFiles} ]<br><br>"
+         lstFiles.sort(key=os.path.getmtime)
+         strWebOutput += f"file list [ {lstFiles} ]<br><br>"
          
    except Exception as e:
       #could contain sensitive information in error message
