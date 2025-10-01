@@ -31,7 +31,8 @@ def index():
 def display():
 
    try:
-      strBlogArticle = request.form.get("post", "all")
+      #strBlogArticle = request.form.get("post", "all")
+      strBlogArticle = request.args.get("post", "all")
       
       if strBlogArticle != "all":
          #specific post
