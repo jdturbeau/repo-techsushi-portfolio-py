@@ -30,10 +30,9 @@ def index():
 @app.route("/display")
 def display():
 
-   strWebOutput = blog.blog_recent(5, strBlogDirectory)
-   '''
    try:
       strBlogArticle = request.form.get("post", "all")
+      
       if strBlogArticle != "all":
          #specific post
          #   does it exist?
@@ -41,29 +40,24 @@ def display():
          #   successful
          #   format
          strWebOutput = strBlogArticle
+         strWebOutput += "<br><br>"
+
+         strBlogArticle = strBlogDirectory
+         dictPostAttribs = blog_parsefile(strBlogArticle)
+         #confirm dict created or error
+         strWebOutput = blog_formatpost(dictPostAttribs)
+         
       else:
          #retrieve top 10 most recent?
          #   brief format
-         #strWebOutput = strBlogArticle
-         strWebOutput = f"{strBlogDirectory}<br><br>"
-         lstFiles = os.listdir(strBlogDirectory)
-         strWebOutput += f"{lstFiles}<br><br>"
-         lstPathFiles = [os.path.join(strBlogDirectory, f) for f in lstFiles]
-         strWebOutput += f"{lstPathFiles}<br><br>"
-         
-         #lstFiles = filter(os.path.isfile, lstPathFiles)
-         lstFiles = [strFile for strFile in lstPathFiles if os.path.isfile(strFile)]
-         strWebOutput += f"{lstFiles}<br><br>"
-         lstFiles.sort(key=os.path.getmtime)
-         strWebOutput += f"file list [ {lstFiles} ]<br><br>"
+         strWebOutput = blog.blog_recent(5, strBlogDirectory)
          
    except Exception as e:
       #could contain sensitive information in error message
       #   404 article not found?
-      strWebOutput += f"an unexpected error occurred during <b>RETRIEVE</b>: <font color=red>{e}</font><br><br>"
-      #raise strWebOutput
+      strWebOutput += f"an unexpected error occurred during <b>DISPLAY</b>: <font color=red>{e}</font><br><br>"
       return strWebOutput
-   '''
+
    return strWebOutput
    
 @app.route("/redmedia", methods=['GET', 'POST'])
