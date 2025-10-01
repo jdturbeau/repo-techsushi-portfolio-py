@@ -122,11 +122,12 @@ def blog_formatbrief(dictBriefAttribs):
     return strSetOutput
   
   try:
+    
     strFile = dictBriefAttribs["File"]
     #File for filename, may need to trim, used for crafting link
     strAppPath = os.environ.get("APP_PATH", "/home/site/wwwroot")
     strFileOnly = strFile.replace(strAppPath, "")
-    
+        
     #do we want to trim off the .MD extension as well for URL usage - yes
     strFileOnly = strFileOnly.replace(".md", "")
     
@@ -140,7 +141,7 @@ def blog_formatbrief(dictBriefAttribs):
     #future - do we want tags as an MD attribute?
     
     #future - look at unique identifier instead of filename
-    strSetOutput = f"<b><a href=\"./display?post={strFile}\">{strTitle}</a></b>&nbsp;&nbsp;&nbsp;&nbsp;"
+    strSetOutput = f"<b><a href=\"./display?post={strFileOnly}\">{strTitle}</a></b>&nbsp;&nbsp;&nbsp;&nbsp;"
     strSetOutput += f"{strDate}&nbsp;&nbsp;&nbsp;&nbsp;{strAuthor}<p>"
     #strSetOutput += f"<pre>{strBody}</pre>"
 
@@ -168,6 +169,7 @@ def blog_recent(intCount, strBlogDir):
     #sort by file MODIFIED time
     lstFiles.sort(key=os.path.getmtime)
     #lstFiles.sort(key=os.path.getctime) #created linux?
+    #filenames.sort(reverse=True)        #alphabetically, descending
         
     strSetOutput = ""
     
