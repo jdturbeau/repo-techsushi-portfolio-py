@@ -143,35 +143,27 @@ def blog_formatbrief(dictBriefAttribs):
   
   return strSetOutput
   
-def blog_recent(intCount):
+def blog_recent(intCount, strBlogDir):
 
   try:
     if not intCount:
       intCount = 5
     
-    #Azure: app_path typically temp folder, such as '/tmp/8ddfd43c8909fcd'
-    strAppPath = os.environ.get("APP_PATH", "/home/site/wwwroot")
-
-    #full path example '/tmp/8ddfd43c8909fcd/_posts/2025-0926-test.md'
-    strAppPath += "/_posts/"
+    #check if strBlogDir path exists
     
-    strSetOutput = f"{strAppPath}<br><br>"
-    lstFiles = filter(os.path.isfile, os.listdir(strAppPath))
-
-    strSetOutput += f"1 file list [ {lstFiles} ]<br><br>"
-    
-    lstSortedFiles = [os.path.join(strAppPath, f) for f in lstFiles]
-
-    strSetOutput += f"2 file list [ {lstSortedFiles} ]<br><br>"
-    
-    lstSortedFiles.sort(key=os.path.getmtime) #modified
-    #lstSortedFiles.sort(key=os.path.getctime) #created linux?
-    
+    #lstSortedFiles = [os.path.join(strAppPath, f) for f in lstFiles]
+    lstFiles = os.listdir(strBlogDir)
+    lstPathFiles = [os.path.join(strBlogDir, f) for f in lstFiles]
+        
+    #lstFiles = filter(os.path.isfile, lstPathFiles)
+    lstFiles = [strFile for strFile in lstPathFiles if os.path.isfile(strFile)]
+    #sort by file MODIFIED time
+    lstFiles.sort(key=os.path.getmtime)
+    #lstFiles.sort(key=os.path.getctime) #created linux?
+        
     #respect intCount or less
     
-    strSetOutput += f"3 file list [ {lstSortedFiles} ]<br><br>"
-    
-    for strPostFile in lstSortedFiles:
+    for strPostFile in lstFiles:
       #parse file results for article filename, title, date, author, (tags?), body, and formating
       dictBlogAttrib = blog_parsefile(strPostFile)
       strBriefFormat = blog_formatbrief(dictBlogAttrib)
