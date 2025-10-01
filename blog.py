@@ -88,14 +88,16 @@ def blog_formatpost(dictPostAttribs):
     strFile = dictPostAttribs["File"]
     #File for filename, may need to trim, used for crafting link
     strAppPath = os.environ.get("APP_PATH", "/home/site/wwwroot")
-    strFile.replace(strAppPath, "")
+    strFile = strFile.replace(strAppPath, "")
+    strFile = strFile.replace("/_posts/", "")
+    strFile = strFile.replace(".md", "")
     
     strTitle = dictPostAttribs["Title"]
     strDate = dictPostAttribs["Date"]
     strAuthor = dictPostAttribs["Author"]
     strBody = dictPostAttribs["Body"]
     
-    strSetOutput = f"<b><a href=\"{strFile}\">{strTitle}</a></b><br>"
+    strSetOutput = f"<b><a href=\"./display?post={strFile}\">{strTitle}</a></b><br>"
     strSetOutput += f"{strDate}&nbsp;&nbsp;&nbsp;&nbsp;{strAuthor}<p>"
     strSetOutput += f"<pre>{strBody}</pre>"
 
@@ -127,7 +129,8 @@ def blog_formatbrief(dictBriefAttribs):
     #File for filename, may need to trim, used for crafting link
     strAppPath = os.environ.get("APP_PATH", "/home/site/wwwroot")
     strFileOnly = strFile.replace(strAppPath, "")
-        
+    strFileOnly = strFileOnly.replace("/_posts/", "")
+
     #do we want to trim off the .MD extension as well for URL usage - yes
     strFileOnly = strFileOnly.replace(".md", "")
     
