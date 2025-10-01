@@ -125,16 +125,22 @@ def blog_formatbrief(dictBriefAttribs):
     strFile = dictBriefAttribs["File"]
     #File for filename, may need to trim, used for crafting link
     strAppPath = os.environ.get("APP_PATH", "/home/site/wwwroot")
-    strFile.replace(strAppPath, "")
-
-    #do we want to trim off the .MD extension as well for URL usage
+    strFileOnly = strFile.replace(strAppPath, "")
+    
+    #do we want to trim off the .MD extension as well for URL usage - yes
+    strFileOnly = strFileOnly.replace(".md", "")
     
     strTitle = dictBriefAttribs["Title"]
     strDate = dictBriefAttribs["Date"]
     strAuthor = dictBriefAttribs["Author"]
     #strBody = dictBriefAttribs["Body"]
+
+    #future - do we want an image thumbnail as an MD attribute?
+    #future - do we want a short description as an MD attribute?
+    #future - do we want tags as an MD attribute?
     
-    strSetOutput = f"<b><a href=\"{strFile}\">{strTitle}</a></b>&nbsp;&nbsp;&nbsp;&nbsp;"
+    #future - look at unique identifier instead of filename
+    strSetOutput = f"<b><a href=\"./display?post={strFile}\">{strTitle}</a></b>&nbsp;&nbsp;&nbsp;&nbsp;"
     strSetOutput += f"{strDate}&nbsp;&nbsp;&nbsp;&nbsp;{strAuthor}<p>"
     #strSetOutput += f"<pre>{strBody}</pre>"
 
