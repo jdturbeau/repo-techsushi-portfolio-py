@@ -126,11 +126,13 @@ def blog_formatbrief(dictBriefAttribs):
     #File for filename, may need to trim, used for crafting link
     strAppPath = os.environ.get("APP_PATH", "/home/site/wwwroot")
     strFile.replace(strAppPath, "")
+
+    #do we want to trim off the .MD extension as well for URL usage
     
-    strTitle = dictPostAttribs["Title"]
-    strDate = dictPostAttribs["Date"]
-    strAuthor = dictPostAttribs["Author"]
-    #strBody = dictPostAttribs["Body"]
+    strTitle = dictBriefAttribs["Title"]
+    strDate = dictBriefAttribs["Date"]
+    strAuthor = dictBriefAttribs["Author"]
+    #strBody = dictBriefAttribs["Body"]
     
     strSetOutput = f"<b><a href=\"{strFile}\">{strTitle}</a></b>&nbsp;&nbsp;&nbsp;&nbsp;"
     strSetOutput += f"{strDate}&nbsp;&nbsp;&nbsp;&nbsp;{strAuthor}<p>"
@@ -168,6 +170,12 @@ def blog_recent(intCount, strBlogDir):
     for strPostFile in lstFiles:
       #parse file results for article filename, title, date, author, (tags?), body, and formating
       dictBlogAttrib = blog_parsefile(strPostFile)
+      
+      if not isinstance(dictBriefAttribs, dict):
+        strTypeOutput = type(dictBriefAttribs)
+        strSetOutput = f"an unexpected error occurred during <b>BLOG RECENT: dictionary variable invalid type: [ {strTypeOutput} ]</b><br><br>[ var: {dictBlogAttrib} ]<br><br>"
+        return strSetOutput
+        
       strBriefFormat = blog_formatbrief(dictBlogAttrib)
       strSetOutput += strBriefFormat
       strSetOutput += "<br><br>"
