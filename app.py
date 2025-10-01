@@ -40,13 +40,10 @@ def display():
          #   retrieve
          #   successful
          #   format
-         strWebOutput = strBlogArticle
-         strWebOutput += "<br><br>"
-
          strBlogArticle = f"{strBlogDirectory}/{strBlogArticle}.md"
-         dictPostAttribs = blog_parsefile(strBlogArticle)
+         dictPostAttribs = blog.blog_parsefile(strBlogArticle)
          #confirm dict created or error
-         strWebOutput = blog_formatpost(dictPostAttribs)
+         strWebOutput = blog.blog_formatpost(dictPostAttribs)
          
       else:
          #retrieve top 10 most recent?
