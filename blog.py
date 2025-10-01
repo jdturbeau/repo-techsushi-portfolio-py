@@ -161,6 +161,8 @@ def blog_recent(intCount, strBlogDir):
     lstFiles.sort(key=os.path.getmtime)
     #lstFiles.sort(key=os.path.getctime) #created linux?
         
+    strSetOutput = ""
+    
     #respect intCount or less
     
     for strPostFile in lstFiles:
