@@ -169,14 +169,14 @@ def blog_recent(intCount, strBlogDir):
     
     for strPostFile in lstFiles:
       #parse file results for article filename, title, date, author, (tags?), body, and formating
-      dictBlogAttrib = blog_parsefile(strPostFile)
+      dictBriefAttribs = blog_parsefile(strPostFile)
       
       if not isinstance(dictBriefAttribs, dict):
         strTypeOutput = type(dictBriefAttribs)
         strSetOutput = f"an unexpected error occurred during <b>BLOG RECENT: dictionary variable invalid type: [ {strTypeOutput} ]</b><br><br>[ var: {dictBlogAttrib} ]<br><br>"
         return strSetOutput
         
-      strBriefFormat = blog_formatbrief(dictBlogAttrib)
+      strBriefFormat = blog_formatbrief(dictBriefAttribs)
       strSetOutput += strBriefFormat
       strSetOutput += "<br><br>"
     
