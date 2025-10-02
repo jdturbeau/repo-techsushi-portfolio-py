@@ -97,6 +97,8 @@ def blog_formatpost(dictPostAttribs):
     strAuthor = dictPostAttribs["Author"]
     strBody = dictPostAttribs["Body"]
     
+    strBody = markdown.markdown(strBody)
+    
     strSetOutput = f"<b><a href=\"./display?post={strFile}\">{strTitle}</a></b><br>"
     strSetOutput += f"{strDate}&nbsp;&nbsp;&nbsp;&nbsp;{strAuthor}<p>"
     strSetOutput += f"<pre style=\"white-space: pre-wrap; word-break: keep-all;\">{strBody}</pre>"
