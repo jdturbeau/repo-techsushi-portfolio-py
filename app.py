@@ -49,7 +49,9 @@ def display():
          #retrieve top 10 most recent?
          #   brief format
          strWebOutput = blog.blog_recent(5, strBlogDirectory)
-         
+
+      strWebOutput += "<br><br>blog home link & techsushi home link<br><br>"
+      
    except Exception as e:
       #could contain sensitive information in error message
       #   404 article not found?
