@@ -16,13 +16,13 @@ It used to take decades or centuries for history to repeat itself before the ind
 tl;dr - Signal "leak" ~ Zoom-bombing
 
 Recent:
-https://www.forbes.com/sites/zakdoffman/2025/03/31/nsa-warns-iphone-android-users-change-message-settings/
+[NSA warning to change settings - Forbes](https://www.forbes.com/sites/zakdoffman/2025/03/31/nsa-warns-iphone-android-users-change-message-settings/)
 
 Historical:
-https://www.justice.gov/usao-edmi/pr/federal-state-and-local-law-enforcement-warn-against-teleconferencing-hacking-during
+[Federal, State, and Local Law Enforcement Warn Against Teleconferencing Hacking During Coronavirus Pandemic - US Attorney's Office](https://www.justice.gov/usao-edmi/pr/federal-state-and-local-law-enforcement-warn-against-teleconferencing-hacking-during)
 
 Signal FAQ:
-https://support.signal.org/hc/en-us/articles/7860719423002-How-to-create-and-share-call-links
+[Signal - How to create and share call links](https://support.signal.org/hc/en-us/articles/7860719423002-How-to-create-and-share-call-links)
 
 WhatsApp FAQ:
-https://faq.whatsapp.com/3242937609289432/?cms_platform=iphone&helpref=platform_switcher
+[WhatsApp - How to create and invite into a group](https://faq.whatsapp.com/3242937609289432/?cms_platform=iphone&helpref=platform_switcher)
