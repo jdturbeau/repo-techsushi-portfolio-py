@@ -172,9 +172,9 @@ def blog_recent(intCount, strBlogDir):
     #lstFiles = filter(os.path.isfile, lstPathFiles)
     lstFiles = [strFile for strFile in lstPathFiles if os.path.isfile(strFile)]
     #sort by file MODIFIED time
-    lstFiles.sort(key=os.path.getmtime)
+    #lstFiles.sort(key=os.path.getmtime)  #modified time?
     #lstFiles.sort(key=os.path.getctime) #created linux?
-    #filenames.sort(reverse=True)        #alphabetically, descending
+    lstFiles.sort(reverse=True)        #alphabetically, descending
         
     strSetOutput = ""
     
