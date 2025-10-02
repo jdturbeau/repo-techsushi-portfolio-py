@@ -5,7 +5,7 @@ Author: Jason
 -----
 Anyone groaning about having to re-take their company's cybersecurity training this week can thank this person.
 
-![Pete Hegseth, Secretary of Defense. Photo from New York Times.](https://static01.nyt.com/images/2025/01/13/multimedia/13dc-hegseth-background-gpbl/13dc-hegseth-background-gpbl-mediumSquareAt3X.jpg)
+<img src="https://static01.nyt.com/images/2025/01/13/multimedia/13dc-hegseth-background-gpbl/13dc-hegseth-background-gpbl-mediumSquareAt3X.jpg" width="60%" alt="Pete Hegseth, Secretary of Defense. Photo from New York Times">
 
 (detail without subscription)
 [The Trump Administration Accidentally Texted Me Its War Plans - Atlantic via MSN](https://www.msn.com/en-us/news/us/the-trump-administration-accidentally-texted-me-its-war-plans/ar-AA1ByMHr)
