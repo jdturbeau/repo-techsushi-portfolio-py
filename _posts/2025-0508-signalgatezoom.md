@@ -1,5 +1,5 @@
-Title: TemplateTitle https://www.markdownguide.org/cheat-sheet/
-Date: 2025-0101
+Title: Signalgate or Zoom-bombing 2.0
+Date: 2025-0508
 Author: Jason
 
 -----
