@@ -99,7 +99,7 @@ def blog_formatpost(dictPostAttribs):
     
     strSetOutput = f"<b><a href=\"./display?post={strFile}\">{strTitle}</a></b><br>"
     strSetOutput += f"{strDate}&nbsp;&nbsp;&nbsp;&nbsp;{strAuthor}<p>"
-    strSetOutput += f"<pre>{strBody}</pre>"
+    strSetOutput += f"<pre style=\"white-space: pre-wrap; word-break: keep-all;\">{strBody}</pre>"
 
   except Exception as e:
     #could contain sensitive information in error message
