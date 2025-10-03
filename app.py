@@ -22,6 +22,7 @@ def index():
    strWebOutput += "<a href=\"/display\">MarkDown Blog landing page</a><br><br>"
    strWebOutput += "<a href=\"/displayblog\">MarkDown Blog - single article</a><br><br>"
    strWebOutput += "<a href=\"/displaytop\">Display Most Recent Blog Articles</a><br><br>"
+   strWebOutput += "<a href=\"/home\">Home CSS Template Test</a><br><br>"
    
    strWebOutput += redditmedia.app_dictionary("html_footer")
    
@@ -192,6 +193,12 @@ def displaytop():
    strTopContent = blog.blog_recent(5)
    
    return strTopContent
+
+@app.route("/home")
+def home():
+   
+   #return render_template('index.html', user_agent = user_agent, client_ip = client_ip)
+   return render_template("index.html")
 
 if __name__ == '__main__':
    app.run(debug=True)
