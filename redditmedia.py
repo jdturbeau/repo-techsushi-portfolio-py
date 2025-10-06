@@ -180,7 +180,8 @@ def reddit_jsontohtml(jsonContent, lstMediaType, strDestURL):
          #"over_18": false
          #is_gallery
          
-         strThreadOutput = f"<font size=5><a href=\"https://www.reddit.com/{strThreadPermalink}\">{strThreadTitle}</a></font><br>"
+         #strThreadOutput = f"<font size=5><a href=\"https://www.reddit.com/{strThreadPermalink}\">{strThreadTitle}</a></font><br>"
+         strThreadOutput = f"<font size=5><a href=\"https://www.reddit.com{strThreadPermalink}\">{strThreadTitle}</a></font><br>"
          #regex work in progress
          strSubRedLink = strDestURL
          #"https://www.reddit.com/user/epicap232/submitted/"
