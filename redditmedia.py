@@ -186,7 +186,8 @@ def reddit_jsontohtml(jsonContent, lstMediaType, strDestURL):
          #"https://www.reddit.com/user/epicap232/submitted/"
          #/r/u_ExampleUser/new
          strAuthorLink = f"./redmedia?sub=u_{strThreadAuthor}"
-         strThreadOutput += f"<a href=\"{strSubRedLink}\">r/{strSubRed}</a> - <a href=\"{strAuthorLink}\"><b>{strThreadAuthor}</b></a> - {strThreadComments} Comment(s) / Post Type - {strThreadType}<br><p>"
+         #strThreadOutput += f"<a href=\"{strSubRedLink}\">r/{strSubRed}</a> - <a href=\"{strAuthorLink}\"><b>{strThreadAuthor}</b></a> - {strThreadComments} Comment(s) / Post Type - {strThreadType}<br><p>"
+         strThreadOutput += f"<a href=\"./redmedia?sub={strSubRed}\">r/{strSubRed}</a> - <a href=\"{strAuthorLink}\"><b>{strThreadAuthor}</b></a> - {strThreadComments} Comment(s) / Post Type - {strThreadType}<br><p>"
          
          #ThreadType : link, image, hosted:video, null, (gallery?)
          match strThreadType:
