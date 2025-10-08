@@ -69,9 +69,10 @@ def redmedia():
    
    try:
       strWebOutput = redditmedia.app_dictionary("html_header")
-      strWebOutput += redditmedia.html_form("redmedia")
+      #strWebOutput += redditmedia.html_form("redmedia")
       strMethod = request.method
-      
+
+      '''
       #Do these cases need to be separate?
       match strMethod:
          case "POST":
@@ -95,8 +96,20 @@ def redmedia():
             strSort = "new"
             strAfter = ""
             strLimit = "10"
+      '''
+
+      strSubReddit = request.form.get("sub", "all")
+      lstMediaType = request.form.getlist("mediatype")
+      strSort = request.form.get("sort", "new")
+      strAfter = request.args.get("after", "")
+      intLimit = request.args.get("limit", 10)
+      #need view type flag
+      #need over18 flag
+      
       if lstMediaType == []:
          lstMediaType = ["images, videos"]
+
+      strWebOutput += redditmedia.html_form("redmedia", strSubReddit, intLimit, strSort)
 
       #Should - Test if existing token works using known simple api call?
       
