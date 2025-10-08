@@ -98,7 +98,7 @@ def redmedia():
             strAfter = ""
             intLimit = 10
       
-'''
+      '''
       strSubReddit = request.form.get("sub", "all")
       lstMediaType = request.form.getlist("mediatype")
       strSort = request.form.get("sort", "new")
@@ -106,7 +106,8 @@ def redmedia():
       intLimit = request.args.get("limit", 10)
       #need view type flag
       #need over18 flag
-'''      
+      '''      
+      
       if lstMediaType == []:
          lstMediaType = ["images, videos"]
 
