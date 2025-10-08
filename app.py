@@ -219,13 +219,13 @@ def home():
 def jsonview():
 
    try:
-      if not strSubReddit:
+      if not 'strSubReddit' in locals():
          strSubReddit = "all"
-      if not intLimit:
+      if not 'intLimit' in locals():
          intLimit = 10
-      if not strSort:
+      if not 'strSort' in locals():
          strSort = "new"
-      if not lstMediaType:
+      if not 'lstMediaType' in locals():
          lstMediaType = ["images, videos"]
          
       strWebOutput = redditmedia.app_dictionary("html_header")
@@ -255,7 +255,7 @@ def jsonview():
       strWebOutput += dictResponse
    except Exception as e:
       #could contain sensitive information in error message
-      strWebOutput += f"an unexpected error occurred during <b>JSONVIEW TEST</b>: <font color=red>{e}</font><br><br>"
+      strWebOutput = f"an unexpected error occurred during <b>JSONVIEW TEST</b>: <font color=red>{e}</font><br><br>"
       return strWebOutput
    
    return strWebOutput
