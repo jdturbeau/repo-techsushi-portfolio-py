@@ -5,6 +5,7 @@ from azure.keyvault.secrets import SecretClient
 import os
 import redditmedia
 import blog
+import json
 
 app = Flask(__name__)
 
@@ -254,7 +255,7 @@ def jsonview():
    
       #strWebOutput += str(dictResponse)
       strPrettyJson = json.dumps(dictResponse, indent=4)
-      strWebOutput += strPrettyJson
+      strWebOutput += f"<pre>{strPrettyJson}</pre>"
    
    except Exception as e:
       #could contain sensitive information in error message
