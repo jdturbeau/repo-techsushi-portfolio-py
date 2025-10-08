@@ -214,7 +214,7 @@ def home():
    #return render_template('index.html', user_agent = user_agent, client_ip = client_ip)
    return render_template("index.html")
 
-@app.route("/jsonview")
+@app.route("/jsonview", methods=['GET', 'POST'])
 def jsonview():
 
    strWebOutput = redditmedia.app_dictionary("html_header")
@@ -234,13 +234,14 @@ def jsonview():
    strToken = redditmedia.app_dictionary("kv_token")
    strToken = redditmedia.kv_get(strVault, strToken)
    strURL = redditmedia.app_dictionary("url_oauth")
-   strURL += f"{strSubReddit}"
+   #strURL += f"{strSubReddit}"
    strURL += "/"
    strURL += f"{strSort}"
+   strURL = "all/new"
 
    dictResponse = redditmedia.reddit_getjson(strSubReddit, lstMediaType, strSort, strTokenType, strToken, strURL)
 
-   strWebOutput
+   strWebOutput += dictResponse
    
    return strWebOutput
 
