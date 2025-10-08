@@ -219,7 +219,36 @@ def home():
 @app.route("/jsonview", methods=['GET', 'POST'])
 def jsonview():
 
+   strMethod = request.method
    try:
+      
+      #Do these cases need to be separate? Yes, form.get vs args.get
+      match strMethod:
+         case "POST":
+            strSubReddit = request.form.get("sub", "all")
+            lstMediaType = request.form.getlist("mediatype")
+            strSort = request.form.get("sort", "new")
+            strAfter = request.args.get("after", "")
+            intLimit = request.args.get("limit", 10)
+         case "GET":
+            #handle first load
+            #handle next/after
+            strSubReddit = request.args.get("sub", "all")
+            lstMediaType = request.args.getlist("mediatype")
+            strSort = request.args.get("sort", "new")
+            strAfter = request.args.get("after", "")
+            intLimit = request.args.get("limit", 10)
+         case _:
+            #default or unknown 
+            strSubReddit = "all"
+            lstMediaType = ["images, videos"]
+            strSort = "new"
+            strAfter = ""
+            intLimit = 10
+      
+      if lstMediaType == []:
+         lstMediaType = ["images, videos"]
+
       if not 'strSubReddit' in locals():
          strSubReddit = "all"
       if not 'intLimit' in locals():
@@ -231,10 +260,6 @@ def jsonview():
          
       strWebOutput = redditmedia.app_dictionary("html_header")
       strWebOutput += redditmedia.html_form("jsonview", strSubReddit, intLimit, strSort)
-      strVault = redditmedia.app_dictionary("kv_name")
-      strRedditURL = redditmedia.app_dictionary("url_login")
-      strResult = redditmedia.kv_refreshtoken(strVault, strRedditURL)
-   
       strVault = redditmedia.app_dictionary("kv_name")
       strRedditURL = redditmedia.app_dictionary("url_login")
       strResult = redditmedia.kv_refreshtoken(strVault, strRedditURL)
