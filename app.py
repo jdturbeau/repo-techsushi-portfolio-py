@@ -218,31 +218,45 @@ def home():
 @app.route("/jsonview", methods=['GET', 'POST'])
 def jsonview():
 
-   strWebOutput = redditmedia.app_dictionary("html_header")
-   strWebOutput += redditmedia.html_form("jsonview", strSubReddit, intLimit, strSort)
-   strVault = redditmedia.app_dictionary("kv_name")
-   strRedditURL = redditmedia.app_dictionary("url_login")
-   strResult = redditmedia.kv_refreshtoken(strVault, strRedditURL)
-
-   strVault = redditmedia.app_dictionary("kv_name")
-   strRedditURL = redditmedia.app_dictionary("url_login")
-   strResult = redditmedia.kv_refreshtoken(strVault, strRedditURL)
-
-   #Should - Test if subreddit exists
+   try:
+      if not strSubReddit:
+         strSubReddit = "all"
+      if not intLimit:
+         intLimit = 10
+      if not strSort:
+         strSort = "new"
+      if not lstMediaType:
+         lstMediaType = ["images, videos"]
+         
+      strWebOutput = redditmedia.app_dictionary("html_header")
+      strWebOutput += redditmedia.html_form("jsonview", strSubReddit, intLimit, strSort)
+      strVault = redditmedia.app_dictionary("kv_name")
+      strRedditURL = redditmedia.app_dictionary("url_login")
+      strResult = redditmedia.kv_refreshtoken(strVault, strRedditURL)
    
-   strTokenType = redditmedia.app_dictionary("kv_tokentype")
-   strTokenType = redditmedia.kv_get(strVault, strTokenType)
-   strToken = redditmedia.app_dictionary("kv_token")
-   strToken = redditmedia.kv_get(strVault, strToken)
-   strURL = redditmedia.app_dictionary("url_oauth")
-   #strURL += f"{strSubReddit}"
-   strURL += "/"
-   strURL += f"{strSort}"
-   strURL = "all/new"
-
-   dictResponse = redditmedia.reddit_getjson(strSubReddit, lstMediaType, strSort, strTokenType, strToken, strURL)
-
-   strWebOutput += dictResponse
+      strVault = redditmedia.app_dictionary("kv_name")
+      strRedditURL = redditmedia.app_dictionary("url_login")
+      strResult = redditmedia.kv_refreshtoken(strVault, strRedditURL)
+   
+      #Should - Test if subreddit exists
+      
+      strTokenType = redditmedia.app_dictionary("kv_tokentype")
+      strTokenType = redditmedia.kv_get(strVault, strTokenType)
+      strToken = redditmedia.app_dictionary("kv_token")
+      strToken = redditmedia.kv_get(strVault, strToken)
+      strURL = redditmedia.app_dictionary("url_oauth")
+      #strURL += f"{strSubReddit}"
+      strURL += "/"
+      strURL += f"{strSort}"
+      #strURL = "all/new"
+   
+      dictResponse = redditmedia.reddit_getjson(strSubReddit, lstMediaType, strSort, strTokenType, strToken, strURL)
+   
+      strWebOutput += dictResponse
+   except Exception as e:
+      #could contain sensitive information in error message
+      strWebOutput += f"an unexpected error occurred during <b>JSONVIEW TEST</b>: <font color=red>{e}</font><br><br>"
+      return strWebOutput
    
    return strWebOutput
 
