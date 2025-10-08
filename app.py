@@ -252,7 +252,7 @@ def jsonview():
    
       dictResponse = redditmedia.reddit_getjson(strSubReddit, lstMediaType, strSort, strTokenType, strToken, strURL)
    
-      strWebOutput += dictResponse
+      strWebOutput += str(dictResponse)
    except Exception as e:
       #could contain sensitive information in error message
       strWebOutput = f"an unexpected error occurred during <b>JSONVIEW TEST</b>: <font color=red>{e}</font><br><br>"
