@@ -252,16 +252,17 @@ def html_crafturl(strSub, strSort, lstMediaType, strAfter, strLimit):
    
    return
 
-def html_form(strDestination):
+def html_form(strDestination, strSub="all", intLimit=10, strSortBy="new", strView="list", bolNSFW=True):
+   #need to add input for mediatype in parameters above
    
    #possible additions
    # option to hide header lines (image only)   
    strFormOutput = f"<form action=\"/{strDestination}\" method=\"post\"><!-- Form elements go here -->"
-   strFormOutput += f"<label for=\"name\">Subreddit: </label><input type=\"text\" id=\"subreddit\" name=\"sub\" placeholder=\"all\" autocomplete=\"off\">"
+   strFormOutput += f"<label for=\"name\">Subreddit: </label><input type=\"text\" id=\"subreddit\" name=\"sub\" placeholder=\"{strSub}\" autocomplete=\"off\">"
    strFormOutput += f"<input type=\"checkbox\" id=\"images\" name=\"mediatype\" value=\"images\" checked><label for=\"images\" disabled>Images</label>"
    strFormOutput += f"<input type=\"checkbox\" id=\"videos\" name=\"mediatype\" value=\"videos\" checked><label for=\"videos\" disabled>Videos</label>"
    strFormOutput += f"<br><br>"
-   strFormOutput += f"<label for=\"count\">Result Count: </label><input type=\"text\" id=\"count\" name=\"count\" placeholder=\"10\" autocomplete=\"off\" disabled>"
+   strFormOutput += f"<label for=\"count\">Result Count: </label><input type=\"text\" id=\"count\" name=\"count\" placeholder=\"{intLimit}\" autocomplete=\"off\" disabled>"
    strFormOutput += f"<label for=\"sort\"> Sort by: </label><select id=\"sort\" name=\"sort\" disabled>"
    strFormOutput += f"<option value=\"new\" selected=\"true\">New</option>"
    strFormOutput += f"<option value=\"hot\">Hot</option>"
@@ -273,7 +274,7 @@ def html_form(strDestination):
    strFormOutput += f"<br><br>"
    strFormOutput += f"<input type=\"radio\" id=\"list\" name=\"view\" value=\"list\" checked disabled><label for=\"list\">List View</label>"
    strFormOutput += f"<input type=\"radio\" id=\"gallery\" name=\"view\" value=\"gallery\" disabled><label for=\"gallery\">Gallery View</label>"
-   strFormOutput += f"<input type=\"checkbox\" id=\"nsfw\" name=\"nsfw\" value=\"nsfw\" disabled><label for=\"nsfw\">Allow over_18 flag?</label>"
+   strFormOutput += f"<input type=\"checkbox\" id=\"nsfw\" name=\"nsfw\" value=\"nsfw\" checked disabled><label for=\"nsfw\">Over_18?</label>"
    strFormOutput += f"<br><br>"
    strFormOutput += f"<button type=\"submit\">Browse Media</button></form><br><br>"
    #add (media by) username
