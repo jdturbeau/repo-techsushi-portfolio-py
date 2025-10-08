@@ -245,7 +245,7 @@ def jsonview():
       strToken = redditmedia.app_dictionary("kv_token")
       strToken = redditmedia.kv_get(strVault, strToken)
       strURL = redditmedia.app_dictionary("url_oauth")
-      #strURL += f"{strSubReddit}"
+      strURL += f"{strSubReddit}"
       strURL += "/"
       strURL += f"{strSort}"
       #strURL = "all/new"
