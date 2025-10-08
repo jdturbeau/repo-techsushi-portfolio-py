@@ -23,6 +23,7 @@ def index():
    strWebOutput += "<a href=\"/displayblog\">MarkDown Blog - single article</a><br><br>"
    strWebOutput += "<a href=\"/displaytop\">Display Most Recent Blog Articles</a><br><br>"
    strWebOutput += "<a href=\"/home\">Home CSS Template Test</a><br><br>"
+   strWebOutput += "<a href=\"/jsonview\">Reddit JSON Viewer</a><br><br>"
    
    strWebOutput += redditmedia.app_dictionary("html_footer")
    
@@ -72,15 +73,15 @@ def redmedia():
       #strWebOutput += redditmedia.html_form("redmedia")
       strMethod = request.method
 
-      '''
-      #Do these cases need to be separate?
+      
+      #Do these cases need to be separate? Yes, form.get vs args.get
       match strMethod:
          case "POST":
             strSubReddit = request.form.get("sub", "all")
             lstMediaType = request.form.getlist("mediatype")
             strSort = request.form.get("sort", "new")
             strAfter = request.args.get("after", "")
-            strLimit = request.args.get("limit", "10")
+            intLimit = request.args.get("limit", 10)
          case "GET":
             #handle first load
             #handle next/after
@@ -88,16 +89,16 @@ def redmedia():
             lstMediaType = request.args.getlist("mediatype")
             strSort = request.args.get("sort", "new")
             strAfter = request.args.get("after", "")
-            strLimit = request.args.get("limit", "10")
+            intLimit = request.args.get("limit", 10)
          case _:
             #default or unknown 
             strSubReddit = "all"
             lstMediaType = ["images, videos"]
             strSort = "new"
             strAfter = ""
-            strLimit = "10"
-      '''
-
+            intLimit = 10
+      
+'''
       strSubReddit = request.form.get("sub", "all")
       lstMediaType = request.form.getlist("mediatype")
       strSort = request.form.get("sort", "new")
@@ -105,7 +106,7 @@ def redmedia():
       intLimit = request.args.get("limit", 10)
       #need view type flag
       #need over18 flag
-      
+'''      
       if lstMediaType == []:
          lstMediaType = ["images, videos"]
 
@@ -212,6 +213,36 @@ def home():
    
    #return render_template('index.html', user_agent = user_agent, client_ip = client_ip)
    return render_template("index.html")
+
+@app.route("/jsonview")
+def jsonview():
+
+   strWebOutput = redditmedia.app_dictionary("html_header")
+   strWebOutput += redditmedia.html_form("jsonview", strSubReddit, intLimit, strSort)
+   strVault = redditmedia.app_dictionary("kv_name")
+   strRedditURL = redditmedia.app_dictionary("url_login")
+   strResult = redditmedia.kv_refreshtoken(strVault, strRedditURL)
+
+   strVault = redditmedia.app_dictionary("kv_name")
+   strRedditURL = redditmedia.app_dictionary("url_login")
+   strResult = redditmedia.kv_refreshtoken(strVault, strRedditURL)
+
+   #Should - Test if subreddit exists
+   
+   strTokenType = redditmedia.app_dictionary("kv_tokentype")
+   strTokenType = redditmedia.kv_get(strVault, strTokenType)
+   strToken = redditmedia.app_dictionary("kv_token")
+   strToken = redditmedia.kv_get(strVault, strToken)
+   strURL = redditmedia.app_dictionary("url_oauth")
+   strURL += f"{strSubReddit}"
+   strURL += "/"
+   strURL += f"{strSort}"
+
+   dictResponse = redditmedia.reddit_getjson(strSubReddit, lstMediaType, strSort, strTokenType, strToken, strURL)
+
+   strWebOutput
+   
+   return strWebOutput
 
 if __name__ == '__main__':
    app.run(debug=True)
