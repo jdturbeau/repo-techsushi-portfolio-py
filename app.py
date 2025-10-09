@@ -25,6 +25,7 @@ def index():
    strWebOutput += "<a href=\"/displaytop\">Display Most Recent Blog Articles</a><br><br>"
    strWebOutput += "<a href=\"/home\">Home CSS Template Test</a><br><br>"
    strWebOutput += "<a href=\"/jsonview\">Reddit JSON Viewer</a><br><br>"
+   strWebOutput += "<a href=\"/career\">Career Path Suggestions</a><br><br>"
    
    strWebOutput += redditmedia.app_dictionary("html_footer")
    
@@ -74,6 +75,8 @@ def redmedia():
       #strWebOutput += redditmedia.html_form("redmedia")
       strMethod = request.method
 
+      intMediaFound = 0
+      intRun = 0   #used to avoid hang/loop cycle for subreddit that may not have any media
       
       #Do these cases need to be separate? Yes, form.get vs args.get
       match strMethod:
@@ -134,22 +137,53 @@ def redmedia():
       if strAfter:
          strURL += f"?after={strAfter}"
 
+      
+      
       #strLimit is intended for display limit, not retrieval limit - may not always retrieve media for each thread
+
+      while true:
+         
+         
+         #Next - make this "after" change
+         #dictResponse = redditmedia.reddit_getjson(strSubReddit, lstMediaType, strSort, strTokenType, strToken, strURL, strAfter)
+         #dictResponse = redditmedia.reddit_getjson(strSubReddit, lstMediaType, strSort, strTokenType, strToken, strURL, strLimit, strAfter)
+         dictResponse = redditmedia.reddit_getjson(strSubReddit, lstMediaType, strSort, strTokenType, strToken, strURL)
+         
+         #strWebOutput += f"... get json result... [ {dictResponse} ]<br>"
+         #strWebOutput += f"... attempting to convert JSON to HTML...<br>"
+         
+
+   
+   
+         
+         strDestURL = f"/redmedia?sub={strSubReddit}&sort={strSort}" #&after={strAfter}
+         strBody = redditmedia.reddit_jsontohtml(dictResponse, lstMediaType, strDestURL)
+         #strWebOutput += f"Body [ {strBody} ]<br>"
+         #strWebOutput += f"... JSON to HTML conversion successful...<br>"
+         
+         strWebOutput += strBody
+
+            
+         strAfter = dictResponse["data"]["after"]
+         if not strAfterURL:
+            strAfterURL = ""
+         else:
+            strAfterURL = f"&after={strAfterURL}"
+         strJSON = str(dictResponse)
+         intFound = strJSON.count("\"post_hint\":")
+         intMediaFound += intFound
+         intRun += 1
+
+         if intMediaFound >= intLimit:
+            break
+         if intRun >= 4:
+            #prevent undesired loop runaway for subreddits that may not have much or any media
+            break
+
       
-      #Next - make this "after" change
-      #dictResponse = redditmedia.reddit_getjson(strSubReddit, lstMediaType, strSort, strTokenType, strToken, strURL, strAfter)
-      #dictResponse = redditmedia.reddit_getjson(strSubReddit, lstMediaType, strSort, strTokenType, strToken, strURL, strLimit, strAfter)
-      dictResponse = redditmedia.reddit_getjson(strSubReddit, lstMediaType, strSort, strTokenType, strToken, strURL)
-      
-      #strWebOutput += f"... get json result... [ {dictResponse} ]<br>"
-      #strWebOutput += f"... attempting to convert JSON to HTML...<br>"
-      
-      strDestURL = f"/redmedia?sub={strSubReddit}&sort={strSort}" #&after={strAfter}
-      strBody = redditmedia.reddit_jsontohtml(dictResponse, lstMediaType, strDestURL)
-      #strWebOutput += f"Body [ {strBody} ]<br>"
-      #strWebOutput += f"... JSON to HTML conversion successful...<br>"
-      
-      strWebOutput += strBody
+      #how to handle AFTER link embedded in strWebOutput as it is incremented?
+
+
       
       strWebOutput += redditmedia.app_dictionary("html_footer")
    except Exception as e:
@@ -288,6 +322,21 @@ def jsonview():
       return strWebOutput
    
    return strWebOutput
+
+@app.route("/career")
+def career():
+
+   #remember to import career.py when ready
+   
+   try:
+      strWebCareer = "coming soon"
+
+   except Exception as e:
+      #could contain sensitive information in error message
+      strWebOutput = f"an unexpected error occurred during <b>CAREERPATH</b>: <font color=red>{e}</font><br><br>"
+      return strWebCareer
+   
+   return strWebCareer
 
 if __name__ == '__main__':
    app.run(debug=True)
