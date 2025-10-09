@@ -6,12 +6,18 @@ import os
 import redditmedia
 import blog
 import json
+import re  #import but no need to be in requirements.txt
 
 app = Flask(__name__)
 
 strBlogDirectory = os.environ.get("APP_PATH", "/home/site/wwwroot")
 #strBlogDirectory = os.path.join(app.root_path, "_posts") 
 strBlogDirectory = os.path.join(strBlogDirectory, "_posts") 
+
+#clear variables after use
+#   del strVarName
+#force garbage collect, usually not required, but helpful for intense or high utilization
+#   gc.collect()
 
 @app.route("/")
 def index():
@@ -74,9 +80,6 @@ def redmedia():
       strWebOutput = redditmedia.app_dictionary("html_header")
       #strWebOutput += redditmedia.html_form("redmedia")
       strMethod = request.method
-
-      intMediaFound = 0
-      intRun = 0   #used to avoid hang/loop cycle for subreddit that may not have any media
       
       #Do these cases need to be separate? Yes, form.get vs args.get
       match strMethod:
@@ -115,6 +118,16 @@ def redmedia():
       if lstMediaType == []:
          lstMediaType = ["images, videos"]
 
+      
+      
+      #need to CAP intLIMIT to avoid malicious use (perhaps 30?)
+      if intLimit > 30:
+         intLimit = 30
+      intMediaFound = 0   #measure found media items against limit desired
+      intRun = 0   #used to avoid hang/loop cycle for subreddit that may not have any media
+
+      
+      
       strWebOutput += redditmedia.html_form("redmedia", strSubReddit, intLimit, strSort)
 
       #Should - Test if existing token works using known simple api call?
@@ -141,7 +154,7 @@ def redmedia():
       
       #strLimit is intended for display limit, not retrieval limit - may not always retrieve media for each thread
 
-      while true:
+      while True:
          
          
          #Next - make this "after" change
@@ -168,6 +181,18 @@ def redmedia():
          if not strAfterURL:
             strAfterURL = ""
          else:
+            # NOTE
+            #remove existing AFTER param from URL
+            #craft new AFTER param for URL
+            #also need to ensure other parameters carry from URL
+            #   perhaps a function to craft and strip URLs
+            # NOTE
+
+            strPattern = r"(?<=after=).*"   #gi - use re.ignorecase below
+            #maybe ?& too
+            objMatch = re.search(strPattern, strParseContent, re.IGNORECASE)
+            strTitle = objMatch.group()
+            
             strAfterURL = f"&after={strAfterURL}"
          strJSON = str(dictResponse)
          intFound = strJSON.count("\"post_hint\":")
