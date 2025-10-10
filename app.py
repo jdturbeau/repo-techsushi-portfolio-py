@@ -119,6 +119,8 @@ def redmedia():
          lstMediaType = ["images, videos"]
 
       
+      #   ensure distinction before API results LIMIT and app defined DISPLAY LIMIT
+      #      50 results returned may not equal 50 displayed media items
       
       #need to CAP intLIMIT to avoid malicious use (perhaps 30?)
       if intLimit > 30:
