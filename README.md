@@ -8,6 +8,7 @@
 >
 > 1. Include "BACK" or "BEFORE" link (opposite of "NEXT" or "AFTER" link)
 > 2. Count image/videos retrieved for display - ensure AT LEAST (limit), over is better than under
+> 3. human? required checkbox to allow clicking browse media
 >
 
 * Blog
