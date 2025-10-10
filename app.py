@@ -212,7 +212,7 @@ def redmedia():
       #   potential regex expression:
       #   (?<=after\=)(.*?)(?=&)
       #      and
-      #   something
+      #   ((?<=after\=)(.*?)(?=&))|((?<=after\=).*)
       #   OR alternatively, split string at & and ? into dict/list and rebuild/replace
       #      using dedicated function in redditmedia.py module
 
