@@ -207,7 +207,8 @@ def redmedia():
             #prevent undesired loop runaway for subreddits that may not have much or any media
             break
 
-      
+      # unrelated - r/u_USER likely different than all posts by USER, unsure of URL to query
+      #   blankspace
       #how to handle AFTER link embedded in strWebOutput as it is incremented?
       #   potential regex expression:
       #   (?<=after\=)(.*?)(?=&)
