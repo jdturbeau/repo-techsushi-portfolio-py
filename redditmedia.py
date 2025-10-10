@@ -133,34 +133,34 @@ def reddit_getjson(strGjSubReddit, lstGjMediaType, strGjSort, strGjTokenType, st
       roGjReceived = requests.get(strGjURL, headers=dictGjHeader)
       
       strGjReqStatus = roGjReceived.status_code
-      match strGkReqStatus:
+      match strGjReqStatus:
          case "403":
-            strJsonOutput = f"<b>GETJSON</b>, status code: [ {roReceived.status_code} ]<br>Token type [ {strTokenType} ]<br> Unable to proceed!<br>"
+            strGjJsonOutput = html_crafterror("GETJSON", f"Unable to proceed!<br>Status Code: {strGjReqStatus}<br>Token type: {strGjTokenType}")
             #unsure why RAISE does not work as expected
             #raise RuntimeError(strJsonOutput)
-            return strJsonOutput
+            return strGjJsonOutput
          case _:
-            dictJson = roReceived.json()
-      if not dictJson:
-         strJsonOutput = f"JSON response is null. status code: [ {roReceived.status_code} ]<br>Token type [ {strTokenType} ]<br> Unable to proceed!<br>"
-         return strJsonOutput
+            dictGjJson = roGjReceived.json()
+      if not dictGjJson:
+         strGjJsonOutput = html_crafterror("GETJSON", f"JSON response is null!<br>Status Code: {strGjReqStatus}<br>Token type: {strGjTokenType}")
+         return strGjJsonOutput
       
    except Exception as e:
       #could contain sensitive information in error message
-      strJsonOutput = f"Trouble with <b>GETJSON</b>, status code: {roReceived.status_code}<br> review: {e}<br>URL [ {strURL} ]<br>Token Type [ {strTokenType} ]<br><br>"
-      return strJsonOutput
+      strGjJsonOutput = html_crafterror("GETJSON", f"{e}<br>URL: {strGjURL}<br>Status Code: {strGjReqStatus}<br>Token type: {strGjTokenType}")
+      return strGjJsonOutput
 
-   return dictJson
+   return dictGjJson
 
-def reddit_jsontohtml(jsonContent, lstMediaType, strDestURL):
+def reddit_jsontohtml(jsonHtmlContent, lstHtmlMediaType, strHtmlDestURL):
    
    #consider [], [images], [videos], [images, videos], (other/unknown)
    #consider new, hot, rising, controversial, top
    #consider table view for alignment
 
    try:
-      if not jsonContent:
-         strHtmlOutput = "Error: JSON provided is empty/null!"
+      if not jsonHtmlContent:
+         strHtmlOutput = html_crafterror("JSONtoHTML", f"JSON response provided is null!")
          return strHtmlOutput
       
       
@@ -237,11 +237,12 @@ def reddit_jsontohtml(jsonContent, lstMediaType, strDestURL):
          
       # consider moving this addition outside of the function
       #   some cases may require running this function multiple times to meet Display Limit setting
-      strHtmlOutput += f"<p align=\"right\"><a href=\"{strDestURL}\">Next Posts</a></p>"
+      strHtmlOutput += f"<p align=\"right\"><a href=\"{strHtmlDestURL}\">Next Posts</a></p>"
 
    except Exception as e:
       #could contain sensitive information in error message
       strHtmlOutput = f"Trouble with <b>JSONtoHTML</b>, review: {e}<br><br>{dictThreads}<br><br>"
+      strHtmlOutput = html_crafterror("JSONtoHTML", e)
       return strHtmlOutput
 
    return strHtmlOutput
