@@ -114,6 +114,7 @@ def reddit_getjson(strSubReddit, lstMediaType, strSort, strTokenType, strToken, 
    # result count - this likely belongs in jsontohtml function
    # list view / gallery view
    # over_18 flag
+   #   AFTER attribute? could be built into strURL when passed or have seperate function that accepts params to craft URLs
    
    #check if subreddit exists
    #handle [], [pictures], [videos], [pictures, videos], (gallery?), (other/unknown)
@@ -156,6 +157,11 @@ def reddit_jsontohtml(jsonContent, lstMediaType, strDestURL):
       if not jsonContent:
          strHtmlOutput = "Error: JSON provided is empty/null!"
          return strHtmlOutput
+      
+      
+      
+      #perhaps handle AFTER crafting in a separate function after this function
+      #   how to handle or what to expect from strDestURL here then?
       strAfterURL = jsonContent["data"]["after"]
       if not strAfterURL:
          strAfterURL = ""
@@ -163,6 +169,9 @@ def reddit_jsontohtml(jsonContent, lstMediaType, strDestURL):
          strAfterURL = f"&after={strAfterURL}"
          strDestURL += strAfterURL
          
+      
+      
+      
       dictThreads = jsonContent["data"]["children"]
       
       strHtmlOutput = "<br>"
@@ -221,6 +230,8 @@ def reddit_jsontohtml(jsonContent, lstMediaType, strDestURL):
                strThreadOutput = ""
          strHtmlOutput += strThreadOutput
          
+      # consider moving this addition outside of the function
+      #   some cases may require running this function multiple times to meet Display Limit setting
       strHtmlOutput += f"<p align=\"right\"><a href=\"{strDestURL}\">Next Posts</a></p>"
 
    except Exception as e:
@@ -231,6 +242,10 @@ def reddit_jsontohtml(jsonContent, lstMediaType, strDestURL):
    return strHtmlOutput
 
 def html_crafturl(strSub, strSort, lstMediaType, strAfter, strLimit):
+
+   #add a parameter for URL base
+   #   may be able to use this function for reddit api calls
+   #   AND local URL format
 
    strBase = redditmedia.app_dictionary("url_oauth")
    strBase += f"{strSub}/{strSort}?"
@@ -249,6 +264,8 @@ def html_crafturl(strSub, strSort, lstMediaType, strAfter, strLimit):
       if strAfter:
          strURL += f"?after={strAfter}"
    '''
+
+   # need to add parameter to return
    
    return
 
@@ -277,6 +294,10 @@ def html_form(strDestination, strSub="all", intLimit=10, strSortBy="new", strVie
    strFormOutput += f"<input type=\"checkbox\" id=\"nsfw\" name=\"nsfw\" value=\"nsfw\" checked disabled><label for=\"nsfw\">Over_18?</label>"
    strFormOutput += f"<br><br>"
    strFormOutput += f"<button type=\"submit\">Browse Media</button></form><br><br>"
+
+   #   need to add HUMAN? style checkbox here, required before allowing submit, bot stopper-ish
+   #      also likely do not want to show results and "next" link on first load - bot could continue w/o human checkbox
+   
    #add (media by) username
    #consider single stream vs gallery view
   
