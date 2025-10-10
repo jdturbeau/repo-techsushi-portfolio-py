@@ -9,6 +9,7 @@
 > 1. Include "BACK" or "BEFORE" link (opposite of "NEXT" or "AFTER" link)
 > 2. Count image/videos retrieved for display - ensure AT LEAST (limit), over is better than under
 > 3. human? required checkbox to allow clicking browse media
+> 4. data regex sanitization of subreddit text field azAZ0-9 dash underscore etc
 >
 
 * Blog
@@ -25,7 +26,7 @@
 > 2. Something else
 >
 
-* Project 3
+* General Website
 
 >
 > 1. Something
