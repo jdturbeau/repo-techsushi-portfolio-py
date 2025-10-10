@@ -7,111 +7,116 @@ from azure.keyvault.secrets import SecretClient
 # https://www.reddit.com/dev/api/
 # POST /api/search_subreddits
 
-def app_dictionary(strLabel):
-   match strLabel:
+def html_crafterror(strCraftSource, strFuncError):
+   
+   # try...except
+   #   or verify variables contain values
+   strCraftError = f"An unexpected error occurred in <b><u>REDDITMEDIA</u></b> during action [ <b><u>{strCraftSource}</u></b> ]: <font color=red>{strFuncError}</font><br><br>"
+   
+   return strCraftError
+   
+def app_dictionary(strDictLabel):
+   
+   match strDictLabel:
       case "kv_name":
-         strValue = "kv-techsushi-site"
+         strDictValue = "kv-techsushi-site"
       case "kv_token":
-         strValue = "api-reddit-token"
+         strDictValue = "api-reddit-token"
       case "kv_tokentype":
-         strValue = "api-reddit-tokentype"
+         strDictValue = "api-reddit-tokentype"
       case "kv_id":
-         strValue = "api-reddit-id"
+         strDictValue = "api-reddit-id"
       case "kv_secret":
-         strValue = "api-reddit-secret"
+         strDictValue = "api-reddit-secret"
       case "url_login":
-         strValue = "https://www.reddit.com/api/v1/access_token"
+         strDictValue = "https://www.reddit.com/api/v1/access_token"
       case "url_oauth":
          #to capture user data, may need to move the /r/ out
          # /user/username/submitted
-         strValue = "https://oauth.reddit.com/r/"
+         strDictValue = "https://oauth.reddit.com/r/"
       case "txt_useragent":
-         strValue = "imgdupedetect v0.3 by orbut8888"
+         strDictValue = "imgdupedetect v0.4 by orbut8888"
       case "html_header":
-         strValue = "<head>"
-         strValue += "<title>TechSushi - Portfolio</title>"
-         #strValue += "<base href=\"https://www.reddit.com/\" target=\"_blank\">"#
-         strValue += "<meta name=\"viewport\" content=\"width=device-width, initial-scale=1\">"
-         strValue += "<meta name=\"description\" content=\"A brief description of my webpage for search engines.\">"
-         strValue += "</head>"
-         strValue += "<body>Welcome to the TechSushi - Portfolio page<br><br><br>"
+         strDictValue = "<head>"
+         strDictValue += "<title>TechSushi - Portfolio</title>"
+         #strDictValue += "<base href=\"https://www.reddit.com/\" target=\"_blank\">"#
+         strDictValue += "<meta name=\"viewport\" content=\"width=device-width, initial-scale=1\">"
+         strDictValue += "<meta name=\"description\" content=\"A brief description of my webpage for search engines.\">"
+         strDictValue += "</head>"
+         strDictValue += "<body>Welcome to the TechSushi - Portfolio page<br><br><br>"
       case "html_footer":
-         strValue = "Run through version [1.3.0]</body>"
+         strDictValue = "Run through version [1.4.0]</body>"
       case _:
          #default unknown
-         strValue = f"Unrecognized value: [ {strLabel} ]"
+         strDictValue = f"Unrecognized value: [ {strDictLabel} ]"
    
-   return strValue
+   return strDictValue
    
-def kv_set(strVault, strName, strValue):
+def kv_set(strSetVault, strSetName, strSetValue):
    
    #Only expected to be used during initial Reddit API and Azure KeyVault set up
    #From the Azure WebApp, ensure you have enabled System Identity (WebApp > Settings > Identity > On > Save)
    #From the Azure KeyVault, ensure you assign (Key Vault Secrets Officer?) role to the Azure WebApp identity named above
    try:
       credential = DefaultAzureCredential()
-      secret_client = SecretClient(vault_url=f"https://{strVault}.vault.azure.net/", credential=credential) #kv-techsushi-site
-      secret = secret_client.set_secret(strName, strValue) #api-reddit-id
+      secret_client = SecretClient(vault_url=f"https://{strSetVault}.vault.azure.net/", credential=credential) #kv-techsushi-site
+      secret = secret_client.set_secret(strSetName, strSetValue) #api-reddit-id
    except Exception as e:
       #could contain sensitive information in error message
-      strSetOutput = f"an unexpected error occurred during <b>SET</b>: {e}<br><br>"
-      #raise strSetOutput
+      strSetOutput = html_crafterror("KV_SET", e)
       return strSetOutput
    
    return
    
-def kv_get(strVault, strName):
+def kv_get(strGetVault, strGetName):
    
    try:
       credential = DefaultAzureCredential()
-      secret_client = SecretClient(vault_url=f"https://{strVault}.vault.azure.net/", credential=credential)
-      secret = secret_client.get_secret(strName)
-      strValue = secret.value
+      secret_client = SecretClient(vault_url=f"https://{strGetVault}.vault.azure.net/", credential=credential)
+      secret = secret_client.get_secret(strGetName)
+      strGetValue = secret.value
    except Exception as e:
-      strGetOutput = f"an unexpected error occurred during <b>GET</b>: {e}<br><br>"
-      #raise strGetOutput
-      return strGetOutput
-
-   return strValue
+      #could contain sensitive information in error message
+      strGetValue = html_crafterror("KV_GET", e)
+      return strGetValue
+      
+   return strGetValue
    
-def kv_refreshtoken(strVault, strRedditURL):
+def kv_refreshtoken(strRefVault, strRefRedditURL):
    
    #https://www.reddit.com/api/v1/access_token
    try:
-      strID = kv_get(strVault, "api-reddit-id") #kv-techsushi-site
-      strSecret = kv_get(strVault, "api-reddit-secret")
+      strRefIDLabel = app_dictionary("kv_id")
+      strRefID = kv_get(strRefVault, strRefIDLabel) #kv-techsushi-site
+      strRefSecretLabel = app_dictionary("kv_secret")
+      strRefSecret = kv_get(strRefVault, strRefSecretLabel)
       
-      #kv_get(strVault, "api-reddit-tokentype")
-      #kv_get(strVault, "api-reddit-token")
+      objRefClientAuth = (strRefID, strRefSecret)
+      dictRefPostData = { "grant_type": "client_credentials" }
+      strRefUserAgent = app_dictionary("txt_useragent")
+      dictRefHeader = { "User-Agent": strRefUserAgent }
+      roRefReceived = requests.post(strRefRedditURL, auth=objRefClientAuth, data=dictRefPostData, headers=dictRefHeader)
       
-      objClientAuth = (strID, strSecret)
-      dictPostData = { "grant_type": "client_credentials" }
-      strUserAgent = app_dictionary("txt_useragent")
-      dictHeader = { "User-Agent": strUserAgent }
-      roReceived = requests.post(strRedditURL, auth=objClientAuth, data=dictPostData, headers=dictHeader)
+      dictRefReceived = roRefReceived.json()      
+      strRefToken = dictRefReceived["access_token"]
+      strRefTokenType = dictRefReceived["token_type"]
+
+      strRefTokenLabel = app_dictionary("kv_token")
+      kv_set(strRefVault, strRefTokenLabel, strRefToken)
+      strRefTokenTypeLabel = app_dictionary("kv_tokentype")
+      kv_set(strRefVault, strRefTokenTypeLabel, strRefTokenType)
       
-      #strRefreshOutput += f"{roReceived.status_code}<br><br>{roReceived.text}<br><br>{roReceived.content}<br><br>{roReceived.headers}<br><br>"
-      #strRefreshOutput += f"Attempting to parse response for JSON...<br><br>"
-      dictReceived = roReceived.json()      
-      strToken = dictReceived["access_token"]
-      strTokenType = dictReceived["token_type"]
-      #strRefreshOutput += f"Attempting to store token...<br><br>"
-      kv_set(strVault, "api-reddit-token", strToken)
-      kv_set(strVault, "api-reddit-tokentype", strTokenType)
-      
-      #strRefreshOutput += f"new token stored!<br><br>{strToken}<br><br>{strTokenType}<br><br>"
    except Exception as e:
       #could contain sensitive information in error message
-      strRefreshOutput = f"Trouble with <b>REFRESH</b>, review {e}<br><br>{roReceived}<br><br>"
-      #raise strRefreshOutput
+      strRefGetValue = html_crafterror("KV_REFRESHTOKEN", f"{e}<br><br>{roRefReceived}<br><br>")
       return strRefreshOutput
       
    return
 
-def reddit_getjson(strSubReddit, lstMediaType, strSort, strTokenType, strToken, strURL):
+def reddit_getjson(strGjSubReddit, lstGjMediaType, strGjSort, strGjTokenType, strGjToken, strGjURL):
 
    #add params for:
-   # result count - this likely belongs in jsontohtml function
+   # result count (display limit) - this likely belongs in jsontohtml function
    # list view / gallery view
    # over_18 flag
    #   AFTER attribute? could be built into strURL when passed or have seperate function that accepts params to craft URLs
@@ -122,13 +127,13 @@ def reddit_getjson(strSubReddit, lstMediaType, strSort, strTokenType, strToken, 
    #check POST vs GET (request.method ==
    
    try:
-      strUserAgent = app_dictionary("txt_useragent")
-      dictHeader = { "Authorization": f"{strTokenType} {strToken}", "User-Agent": strUserAgent }
+      strGjUserAgent = app_dictionary("txt_useragent")
+      dictGjHeader = { "Authorization": f"{strGjTokenType} {strGjToken}", "User-Agent": strGjUserAgent }
       
-      roReceived = requests.get(strURL, headers=dictHeader)
+      roGjReceived = requests.get(strGjURL, headers=dictGjHeader)
       
-      strReqStatus = roReceived.status_code
-      match strReqStatus:
+      strGjReqStatus = roGjReceived.status_code
+      match strGkReqStatus:
          case "403":
             strJsonOutput = f"<b>GETJSON</b>, status code: [ {roReceived.status_code} ]<br>Token type [ {strTokenType} ]<br> Unable to proceed!<br>"
             #unsure why RAISE does not work as expected
@@ -243,7 +248,7 @@ def reddit_jsontohtml(jsonContent, lstMediaType, strDestURL):
 
 def html_crafturl(strSub, strSort, lstMediaType, strAfter, strLimit):
 
-   #add a parameter for URL base
+   # add a parameter for URL base
    #   may be able to use this function for reddit api calls
    #   AND local URL format
 
