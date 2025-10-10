@@ -209,6 +209,12 @@ def redmedia():
 
       
       #how to handle AFTER link embedded in strWebOutput as it is incremented?
+      #   potential regex expression:
+      #   (?<=after\=)(.*?)(?=&)
+      #      and
+      #   something
+      #   OR alternatively, split string at & and ? into dict/list and rebuild/replace
+      #      using dedicated function in redditmedia.py module
 
 
       
