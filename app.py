@@ -182,9 +182,11 @@ def redmedia():
             #strPattern = r"(?<=after=).*"   #gi - use re.ignorecase below
             strPattern = r"((?<=after\=)(.*?)(?=&))|((?<=after\=).*)"
             #objMatch = re.sub(strPattern, strAfter strURL, count=1, re.IGNORECASE)
-            #strURL = re.sub(strPattern, strAfter, strURL, count=1, flags=re.IGNORECASE)
             strURL = re.sub(strPattern, strAfter, strURL, flags=re.IGNORECASE)
-            #strTitle = objMatch.group()
+            strDestURL = re.sub(strPattern, strAfter, strDestURL, flags=re.IGNORECASE)
+            
+            if not strAfter in strDestURL:
+               strDestURL += f"?after={strAfter}"
             if not strAfter in strURL:
                strURL += f"?after={strAfter}"
             
@@ -227,7 +229,7 @@ def redmedia():
       #   OR alternatively, split string at & and ? into dict/list and rebuild/replace
       #      using dedicated function in redditmedia.py module
 
-      strWebOutput += f"<p align=\"right\"><a href=\"{strURL}\">Next Posts</a></p>"
+      strWebOutput += f"<p align=\"right\"><a href=\"{strDestURL}\">Next Posts</a></p>"
       
       strWebOutput += redditmedia.app_dictionary("html_footer")
    except Exception as e:
