@@ -298,9 +298,10 @@ def html_form(strFormDestination, strFormSub="all", intFormLimit=10, strSortBy="
    strFormOutput += f"<input type=\"radio\" id=\"list\" name=\"view\" value=\"list\" checked disabled><label for=\"list\">List View</label>"
    strFormOutput += f"<input type=\"radio\" id=\"gallery\" name=\"view\" value=\"gallery\" disabled><label for=\"gallery\">Gallery View</label>"
    strFormOutput += f"<input type=\"checkbox\" id=\"nsfw\" name=\"nsfw\" value=\"nsfw\" checked disabled><label for=\"nsfw\">Over_18?</label><br>"
-   strFormOutput += f"<input type=\"checkbox\" id=\"human\" name=\"human\" value=\"human\" required><label for=\"human\">Are you human?</label>"
    strFormOutput += f"<br><br>"
-   strFormOutput += f"<button type=\"submit\">Browse Media</button></form><br><br>"
+   strFormOutput += f"<button type=\"submit\">Browse Media</button>"
+   strFormOutput += f"<input type=\"checkbox\" id=\"human\" name=\"human\" value=\"human\" required><label for=\"human\">Are you human?</label>"
+   strFormOutput += f"</form><br><br>"
 
    #   need to add HUMAN? style checkbox here, required before allowing submit, bot stopper-ish
    #      also likely do not want to show results and "next" link on first load - bot could continue w/o human checkbox
