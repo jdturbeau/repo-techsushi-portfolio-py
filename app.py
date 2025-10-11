@@ -186,8 +186,10 @@ def redmedia():
             strDestURL = re.sub(strPattern, strAfter, strDestURL, flags=re.IGNORECASE)
             
             if not strAfter in strDestURL:
-               strDestURL += f"?after={strAfter}"
+               #to craft Next Posts link
+               strDestURL += f"&after={strAfter}"
             if not strAfter in strURL:
+               #to craft API url for next batch
                strURL += f"?after={strAfter}"
             
 
