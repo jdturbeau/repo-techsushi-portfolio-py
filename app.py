@@ -178,7 +178,7 @@ def redmedia():
          strAfter = dictResponse["data"]["after"]
          if not strAfter:
             strAfter = ""
-         else
+         else:
             #strPattern = r"(?<=after=).*"   #gi - use re.ignorecase below
             strPattern = r"((?<=after\=)(.*?)(?=&))|((?<=after\=).*)"
             #objMatch = re.sub(strPattern, strAfter strURL, count=1, re.IGNORECASE)
