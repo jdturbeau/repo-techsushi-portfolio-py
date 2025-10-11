@@ -88,7 +88,7 @@ def redmedia():
             lstMediaType = request.form.getlist("mediatype")
             strSort = request.form.get("sort", "new")
             strAfter = request.args.get("after", "")
-            intLimit = request.args.get("limit", 10)
+            intLimit = request.form.get("limit", 10)
          case "GET":
             #handle first load
             #handle next/after
@@ -164,24 +164,31 @@ def redmedia():
          #dictResponse = redditmedia.reddit_getjson(strSubReddit, lstMediaType, strSort, strTokenType, strToken, strURL, strLimit, strAfter)
          dictResponse = redditmedia.reddit_getjson(strSubReddit, lstMediaType, strSort, strTokenType, strToken, strURL)
          
-         #strWebOutput += f"... get json result... [ {dictResponse} ]<br>"
-         #strWebOutput += f"... attempting to convert JSON to HTML...<br>"
-         
 
    
    
          
          strDestURL = f"/redmedia?sub={strSubReddit}&sort={strSort}" #&after={strAfter}
-         strBody = redditmedia.reddit_jsontohtml(dictResponse, lstMediaType, strDestURL)
-         #strWebOutput += f"Body [ {strBody} ]<br>"
-         #strWebOutput += f"... JSON to HTML conversion successful...<br>"
+         strBody = redditmedia.reddit_jsontohtml(dictResponse, lstMediaType)
+
          
          strWebOutput += strBody
 
             
          strAfter = dictResponse["data"]["after"]
-         if not strAfterURL:
-            strAfterURL = ""
+         if not strAfter:
+            strAfter = ""
+         else
+            #strPattern = r"(?<=after=).*"   #gi - use re.ignorecase below
+            strPattern = r"((?<=after\=)(.*?)(?=&))|((?<=after\=).*)"
+            #objMatch = re.sub(strPattern, strAfter strURL, count=1, re.IGNORECASE)
+            strURL = re.sub(strPattern, strAfter strURL, count=1, re.IGNORECASE)
+            #strTitle = objMatch.group()
+            if not strAfter in strURL:
+               strURL += f"?after={strAfter}"
+            
+
+         '''
          else:
             # NOTE
             #remove existing AFTER param from URL
@@ -195,7 +202,9 @@ def redmedia():
             objMatch = re.search(strPattern, strParseContent, re.IGNORECASE)
             strTitle = objMatch.group()
             
-            strAfterURL = f"&after={strAfterURL}"
+            strAfterURL = f"&after={strAfter}"
+         '''
+         
          strJSON = str(dictResponse)
          intFound = strJSON.count("\"post_hint\":")
          intMediaFound += intFound
@@ -217,13 +226,14 @@ def redmedia():
       #   OR alternatively, split string at & and ? into dict/list and rebuild/replace
       #      using dedicated function in redditmedia.py module
 
-
+      strWebOutput += f"<p align=\"right\"><a href=\"{strURL}\">Next Posts</a></p>"
       
       strWebOutput += redditmedia.app_dictionary("html_footer")
    except Exception as e:
       #could contain sensitive information in error message
-      strWebOutput += f"an unexpected error occurred during <b>RETRIEVE</b>: <font color=red>{e}</font><br><br>"
+      #strWebOutput += f"an unexpected error occurred during <b>RETRIEVE</b>: <font color=red>{e}</font><br><br>"
       #raise strWebOutput
+      strWebOutput += redditmedia.html_crafterror("APP REDMEDIA", e)
       return strWebOutput
    return strWebOutput
 
