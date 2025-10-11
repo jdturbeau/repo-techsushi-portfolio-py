@@ -164,7 +164,7 @@ def reddit_jsontohtml(jsonHtmlContent, lstHtmlMediaType, strHtmlDestURL):
          return strHtmlOutput
       
       
-      
+      '''
       #perhaps handle AFTER crafting in a separate function after this function
       #   how to handle or what to expect from strDestURL here then?
       strAfterURL = jsonContent["data"]["after"]
@@ -173,75 +173,73 @@ def reddit_jsontohtml(jsonHtmlContent, lstHtmlMediaType, strHtmlDestURL):
       else:
          strAfterURL = f"&after={strAfterURL}"
          strDestURL += strAfterURL
-         
+      '''
       
       
       
-      dictThreads = jsonContent["data"]["children"]
+      dictHtmlThreads = jsonHtmlContent["data"]["children"]
       
       strHtmlOutput = "<br>"
       
-      for dictSingle in dictThreads:
-         strSubRed = dictSingle["data"]["subreddit"]
-         strThreadTitle = dictSingle["data"]["title"]
-         strThreadAuthor = dictSingle["data"]["author"]
-         strThreadPermalink = dictSingle["data"]["permalink"]
-         strThreadComments = dictSingle["data"]["num_comments"]
-         strThreadURL = dictSingle["data"]["url"]
-         strThreadMedia = dictSingle["data"]["media"]
-         strThreadType = dictSingle.get("data", {}).get("post_hint", "Missing")
+      for dictHtmlSingle in dictHtmlThreads:
+         strSubRed = dictHtmlSingle["data"]["subreddit"]
+         strThreadTitle = dictHtmlSingle["data"]["title"]
+         strThreadAuthor = dictHtmlSingle["data"]["author"]
+         strThreadPermalink = dictHtmlSingle["data"]["permalink"]
+         strThreadComments = dictHtmlSingle["data"]["num_comments"]
+         strThreadURL = dictHtmlSingle["data"]["url"]
+         strThreadMedia = dictHtmlSingle["data"]["media"]
+         strThreadType = dictHtmlSingle.get("data", {}).get("post_hint", "Missing")
          
          #"over_18": false
          #is_gallery
          
-         #strThreadOutput = f"<font size=5><a href=\"https://www.reddit.com/{strThreadPermalink}\">{strThreadTitle}</a></font><br>"
-         strThreadOutput = f"<font size=5><a href=\"https://www.reddit.com{strThreadPermalink}\">{strThreadTitle}</a></font><br>"
+         strHtmlThreadOutput = f"<font size=5><a href=\"https://www.reddit.com{strThreadPermalink}\">{strThreadTitle}</a></font><br>"
          #regex work in progress
-         strSubRedLink = strDestURL
+         #strSubRedLink = strDestURL
          #"https://www.reddit.com/user/epicap232/submitted/"
          #/r/u_ExampleUser/new
-         strAuthorLink = f"./redmedia?sub=u_{strThreadAuthor}"
-         #strThreadOutput += f"<a href=\"{strSubRedLink}\">r/{strSubRed}</a> - <a href=\"{strAuthorLink}\"><b>{strThreadAuthor}</b></a> - {strThreadComments} Comment(s) / Post Type - {strThreadType}<br><p>"
-         strThreadOutput += f"<a href=\"./redmedia?sub={strSubRed}\">r/{strSubRed}</a> - <a href=\"{strAuthorLink}\"><b>{strThreadAuthor}</b></a> - {strThreadComments} Comment(s) / Post Type - {strThreadType}<br><p>"
+         #   there is likely a different link for POSTED BY vs u_(user) sub
+         #      need to explore this
+         strHtmlAuthorLink = f"./redmedia?sub=u_{strThreadAuthor}"
+         #strHtmlThreadOutput += f"<a href=\"{strSubRedLink}\">r/{strSubRed}</a> - <a href=\"{strAuthorLink}\"><b>{strThreadAuthor}</b></a> - {strThreadComments} Comment(s) / Post Type - {strThreadType}<br><p>"
+         strHtmlThreadOutput += f"<a href=\"./redmedia?sub={strSubRed}\">r/{strSubRed}</a> - <a href=\"{strAuthorLink}\"><b>{strThreadAuthor}</b></a> - {strThreadComments} Comment(s) / Post Type - {strThreadType}<br><p>"
          
          #ThreadType : link, image, hosted:video, null, (gallery?)
          match strThreadType:
             case "image":
-               strThreadOutput += f"<a href=\"{strThreadURL}\" target=\"_blank\"><img src =\"{strThreadURL}\" width=\"60%\"></img></a><p>"
+               strHtmlThreadOutput += f"<a href=\"{strThreadURL}\" target=\"_blank\"><img src =\"{strThreadURL}\" width=\"60%\"></img></a><p>"
             case "rich:video":
-               strThreadEmbed = strThreadMedia["oembed"]["html"]
-               strThreadEmbed = strThreadEmbed.replace("&lt;","<")
-               strThreadEmbed = strThreadEmbed.replace("&gt;",">")
-               strThreadEmbed = strThreadEmbed.replace("\"100%\"","\"60%\"")
-               strThreadEmbed = strThreadEmbed.replace("position:absolute;","")
-               strThreadOutput += f"{strThreadEmbed}<br><p>"
+               strHtmlThreadEmbed = strThreadMedia["oembed"]["html"]
+               strHtmlThreadEmbed = strHtmlThreadEmbed.replace("&lt;","<")
+               strHtmlThreadEmbed = strHtmlThreadEmbed.replace("&gt;",">")
+               strHtmlThreadEmbed = strHtmlThreadEmbed.replace("\"100%\"","\"60%\"")
+               strHtmlThreadEmbed = strHtmlThreadEmbed.replace("position:absolute;","")
+               strHtmlThreadOutput += f"{strHtmlThreadEmbed}<br><p>"
             case "hosted:video":   
                #*********
-               strThreadOutput = ""
+               strHtmlThreadOutput = ""
                #strHostedVid = dictSingle["data"]["secure_media"]["fallback_url"]
                #*********
-               #strThreadEmbed = strThreadMedia["oembed"]["html"]
-               #strThreadEmbed = strThreadEmbed.replace("&lt;","<")
-               #strThreadEmbed = strThreadEmbed.replace("&gt;",">")
-               #strThreadEmbed = strThreadEmbed.replace("\"100%\"","\"60%\"")
-               #strThreadEmbed = strThreadEmbed.replace("position:absolute;","")
-               #strThreadOutput += f"{strThreadEmbed}<br><p>"
             #case "link":
-               #strThreadOutput = ""
+               #strHtmlThreadOutput = ""
             #"is_video": true
             #"is_gallery": true
             case _:
-               #strThreadOutput += f"<font color=red>unexpected MediaType experienced [ {strThreadType} ]</font><p>"
-               strThreadOutput = ""
-         strHtmlOutput += strThreadOutput
+               #strHtmlThreadOutput += f"<font color=red>unexpected MediaType experienced [ {strThreadType} ]</font><p>"
+               strHtmlThreadOutput = ""
+         strHtmlOutput += strHtmlThreadOutput
          
+      '''
       # consider moving this addition outside of the function
       #   some cases may require running this function multiple times to meet Display Limit setting
       strHtmlOutput += f"<p align=\"right\"><a href=\"{strHtmlDestURL}\">Next Posts</a></p>"
+      '''
 
    except Exception as e:
       #could contain sensitive information in error message
-      strHtmlOutput = f"Trouble with <b>JSONtoHTML</b>, review: {e}<br><br>{dictThreads}<br><br>"
+      #strHtmlOutput = f"Trouble with <b>JSONtoHTML</b>, review: {e}<br><br>{dictThreads}<br><br>"
+      #strHtmlOutput = html_crafterror("JSONtoHTML", f"{e}<br>URL: {strGjURL}<br>Status Code: {strGjReqStatus}<br>Token type: {strGjTokenType}")
       strHtmlOutput = html_crafterror("JSONtoHTML", e)
       return strHtmlOutput
 
@@ -275,13 +273,15 @@ def html_crafturl(strSub, strSort, lstMediaType, strAfter, strLimit):
    
    return
 
-def html_form(strDestination, strSub="all", intLimit=10, strSortBy="new", strView="list", bolNSFW=True):
+def html_form(strFormDestination, strFormSub="all", intFormLimit=10, strSortBy="new", strView="list", bolNSFW=True):
    #need to add input for mediatype in parameters above
+   # intFormLimit = minimum number of media items to return
+   #   not related to results requested from single API call
    
    #possible additions
    # option to hide header lines (image only)   
-   strFormOutput = f"<form action=\"/{strDestination}\" method=\"post\"><!-- Form elements go here -->"
-   strFormOutput += f"<label for=\"name\">Subreddit: </label><input type=\"text\" id=\"subreddit\" name=\"sub\" placeholder=\"{strSub}\" autocomplete=\"off\">"
+   strFormOutput = f"<form action=\"/{strFormDestination}\" method=\"post\"><!-- Form elements go here -->"
+   strFormOutput += f"<label for=\"name\">Subreddit: </label><input type=\"text\" id=\"subreddit\" name=\"sub\" placeholder=\"{strFormSub}\" autocomplete=\"off\">"
    strFormOutput += f"<input type=\"checkbox\" id=\"images\" name=\"mediatype\" value=\"images\" checked><label for=\"images\" disabled>Images</label>"
    strFormOutput += f"<input type=\"checkbox\" id=\"videos\" name=\"mediatype\" value=\"videos\" checked><label for=\"videos\" disabled>Videos</label>"
    strFormOutput += f"<br><br>"
@@ -297,7 +297,8 @@ def html_form(strDestination, strSub="all", intLimit=10, strSortBy="new", strVie
    strFormOutput += f"<br><br>"
    strFormOutput += f"<input type=\"radio\" id=\"list\" name=\"view\" value=\"list\" checked disabled><label for=\"list\">List View</label>"
    strFormOutput += f"<input type=\"radio\" id=\"gallery\" name=\"view\" value=\"gallery\" disabled><label for=\"gallery\">Gallery View</label>"
-   strFormOutput += f"<input type=\"checkbox\" id=\"nsfw\" name=\"nsfw\" value=\"nsfw\" checked disabled><label for=\"nsfw\">Over_18?</label>"
+   strFormOutput += f"<input type=\"checkbox\" id=\"nsfw\" name=\"nsfw\" value=\"nsfw\" checked disabled><label for=\"nsfw\">Over_18?</label><br>"
+   strFormOutput += f"<input type=\"checkbox\" id=\"human\" name=\"human\" value=\"human\" required><label for=\"human\">Human?</label>"
    strFormOutput += f"<br><br>"
    strFormOutput += f"<button type=\"submit\">Browse Media</button></form><br><br>"
 
