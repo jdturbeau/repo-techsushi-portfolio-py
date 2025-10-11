@@ -152,7 +152,7 @@ def reddit_getjson(strGjSubReddit, lstGjMediaType, strGjSort, strGjTokenType, st
 
    return dictGjJson
 
-def reddit_jsontohtml(jsonHtmlContent, lstHtmlMediaType, strHtmlDestURL):
+def reddit_jsontohtml(jsonHtmlContent, lstHtmlMediaType):
    
    #consider [], [images], [videos], [images, videos], (other/unknown)
    #consider new, hot, rising, controversial, top
