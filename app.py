@@ -233,6 +233,12 @@ def redmedia():
 
       strWebOutput += f"<p align=\"right\"><a href=\"{strDestURL}\">Next Posts</a></p>"
       
+      # need to remove after= entry
+      strPattern = r"(\&after\=)(.*?)(?=&)|(\&after\=).*"
+      strReturnURL = re.sub(strPattern, "", strDestURL, flags=re.IGNORECASE)
+                                      
+      strWebOutput += f"<p align=\"right\"><a href=\"{strReturnURL}\">Reload From Beginning</a></p>"
+      
       strWebOutput += redditmedia.app_dictionary("html_footer")
    except Exception as e:
       #could contain sensitive information in error message
