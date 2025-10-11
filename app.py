@@ -182,7 +182,7 @@ def redmedia():
             #strPattern = r"(?<=after=).*"   #gi - use re.ignorecase below
             strPattern = r"((?<=after\=)(.*?)(?=&))|((?<=after\=).*)"
             #objMatch = re.sub(strPattern, strAfter strURL, count=1, re.IGNORECASE)
-            strURL = re.sub(strPattern, strAfter strURL, count=1, re.IGNORECASE)
+            strURL = re.sub(strPattern, strAfter, strURL, count=1, re.IGNORECASE)
             #strTitle = objMatch.group()
             if not strAfter in strURL:
                strURL += f"?after={strAfter}"
