@@ -55,7 +55,7 @@ def app_dictionary(strDictLabel):
          strDictValue += "</head>"
          strDictValue += "<body>Welcome to the TechSushi - Portfolio page<br><br><br>"
       case "html_footer":
-         strDictValue = "Run through version [1.4.0]</body>"
+         strDictValue = "Run through version [1.5.0]</body>"
       case _:
          #default unknown
          strDictValue = f"Unrecognized value: [ {strDictLabel} ]"
@@ -316,8 +316,8 @@ def html_form(strFormDestination, strFormSub="all", intFormLimit=10, strSortBy="
    strFormOutput += f"<input type=\"radio\" id=\"gallery\" name=\"view\" value=\"gallery\" disabled><label for=\"gallery\">Gallery View</label>"
    strFormOutput += f"<input type=\"checkbox\" id=\"nsfw\" name=\"nsfw\" value=\"nsfw\" checked disabled><label for=\"nsfw\">Over_18?</label><br>"
    strFormOutput += f"<br><br>"
-   strFormOutput += f"<button type=\"submit\">Browse Media</button>"
-   strFormOutput += f"<input type=\"checkbox\" id=\"human\" name=\"human\" value=\"human\" required><label for=\"human\">Are you human?</label>"
+   strFormOutput += f"<input type=\"checkbox\" id=\"human\" name=\"human\" value=\"human\" required><label for=\"human\">Are you <font color=red>human</font>?<font color=red>*</font></label><br>"
+   strFormOutput += f"<button type=\"submit\">Browse Media</button>"   
    strFormOutput += f"</form><br><br>"
 
    #   need to add HUMAN? style checkbox here, required before allowing submit, bot stopper-ish
@@ -328,7 +328,7 @@ def html_form(strFormDestination, strFormSub="all", intFormLimit=10, strSortBy="
   
    return strFormOutput
 
-def app_main_getmedia(strGmBaseDestURL, strGmSubReddit="all", lstGmMediaType=["images, videos"], intGmLimit=10, strGmSort="new", strGmView="list", strGmO18=True, strAfter=""):
+def app_main_getmedia(strGmBaseDestURL, strGmSubReddit="all", lstGmMediaType=["images, videos"], intGmLimit=10, strGmSort="new", strGmView="list", bolNSFW=True, strAfter=""):
 
    # do not care about method and using match case
    
@@ -349,7 +349,8 @@ def app_main_getmedia(strGmBaseDestURL, strGmSubReddit="all", lstGmMediaType=["i
 
       
       strGmOutput += redditmedia.html_form(strGmBaseDestURL, strGmSubReddit, intGmLimit, strSort)
-      # (strGmBaseDestURL, strGmSubReddit="all", lstGmMediaType=["images, videos"], intGmLimit=10, strGmSort="new", strGmView="list", strGmO18=True, strAfter="")
+      # html_form(strFormDestination, strFormSub="all", intFormLimit=10, strSortBy="new", strView="list", bolNSFW=True)
+      # (strGmBaseDestURL, strGmSubReddit="all", lstGmMediaType=["images, videos"], intGmLimit=10, strGmSort="new", strGmView="list", bolNSFW=True, strAfter="")
 
       #Should - Test if existing token works using known simple api call?
       
@@ -358,6 +359,30 @@ def app_main_getmedia(strGmBaseDestURL, strGmSubReddit="all", lstGmMediaType=["i
       strResult = redditmedia.kv_refreshtoken(strVault, strRedditURL)
 
       #Should - Test if subreddit exists
+      '''
+      {
+      invalid subreddit
+    "kind": "Listing",
+    "data": {
+        "after": null,
+        "dist": 0,
+        "modhash": "",
+        "geo_filter": "",
+        "children": [],
+        "before": null
+       }
+      }
+      '''
+      '''
+      valid subreddit
+          "kind": "Listing",
+          "data": {
+        "after": "t3_1o1cnhp",
+        "dist": 25,
+        "modhash": "",
+        "geo_filter": "",
+        "children": [
+      '''
       
       strTokenType = redditmedia.app_dictionary("kv_tokentype")
       strTokenType = redditmedia.kv_get(strVault, strTokenType)
@@ -385,8 +410,9 @@ def app_main_getmedia(strGmBaseDestURL, strGmSubReddit="all", lstGmMediaType=["i
          #Next - make this "after" change
          #dictResponse = redditmedia.reddit_getjson(strSubReddit, lstMediaType, strSort, strTokenType, strToken, strURL, strAfter)
          #dictResponse = redditmedia.reddit_getjson(strSubReddit, lstMediaType, strSort, strTokenType, strToken, strURL, strLimit, strAfter)
-         dictGmResponse = redditmedia.reddit_getjson(strSubReddit, lstMediaType, strSort, strTokenType, strToken, strURL)
          
+         # (strGmBaseDestURL, strGmSubReddit="all", lstGmMediaType=["images, videos"], intGmLimit=10, strGmSort="new", strGmView="list", bolNSFW=True, strAfter="")
+         dictGmResponse = redditmedia.reddit_getjson(strSubReddit, lstMediaType, strSort, strTokenType, strToken, strURL)
 
    
    
