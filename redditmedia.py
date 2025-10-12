@@ -321,7 +321,7 @@ def html_form(strFormDestination, strFormSub="all", intFormLimit=10, strSortBy="
   
    return strFormOutput
 
-def app_main_getmedia(strGmBaseDestURL, strGmSubReddit="all", lstGmMediaType=["images, videos"], intGmLimit=10, strGmSort="new", strGmView="list", strGmO18=True, strAfter="")
+def app_main_getmedia(strGmBaseDestURL, strGmSubReddit="all", lstGmMediaType=["images, videos"], intGmLimit=10, strGmSort="new", strGmView="list", strGmO18=True, strAfter=""):
 
    # do not care about method and using match case
    
