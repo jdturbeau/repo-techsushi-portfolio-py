@@ -2,7 +2,7 @@ from flask import (Flask, redirect, render_template, request, send_from_director
 import requests
 from azure.identity import DefaultAzureCredential
 from azure.keyvault.secrets import SecretClient
-#import re
+import re
 
 # https://www.reddit.com/dev/api/
 # POST /api/search_subreddits
@@ -15,6 +15,16 @@ def html_crafterror(strCraftSource, strFuncError):
    
    return strCraftError
    
+def app_sanitize(strToSanitize):
+
+   #[a-zA-Z0-9]+|[\+\_]
+   # inverse - [^a-zA-Z0-9\_\+]+
+   strPattern = r"[^a-zA-Z0-9\_\+]+"
+   #strSanitized = re.sub(strPattern, "", strToSanitize, flags=re.IGNORECASE)
+   strSanitized = re.sub(strPattern, "", strToSanitize)
+   
+   return strSanitized
+
 def app_dictionary(strDictLabel):
    
    match strDictLabel:
@@ -310,3 +320,146 @@ def html_form(strFormDestination, strFormSub="all", intFormLimit=10, strSortBy="
    #consider single stream vs gallery view
   
    return strFormOutput
+
+def app_main_getmedia(strGmBaseDestURL, strGmSubReddit="all", lstGmMediaType=["images, videos"], intGmLimit=10, strGmSort="new", strGmView="list", strGmO18=True, strAfter="")
+
+   # do not care about method and using match case
+   
+   #table with
+   #   overview, what, technologies involved,
+   
+   try:
+      strGmOutput = redditmedia.app_dictionary("html_header")
+      
+      #   ensure distinction before API results LIMIT and app defined DISPLAY LIMIT
+      #      50 results returned may not equal 50 displayed media items
+      
+      #need to CAP intLIMIT to avoid malicious use (perhaps 30?)
+      if intGmLimit > 30:
+         intGmLimit = 30
+      intGmMediaFound = 0   #measure found media items against limit desired
+      intGmRun = 0   #used to avoid hang/loop cycle for subreddit that may not have any media
+
+      
+      strGmOutput += redditmedia.html_form(strGmBaseDestURL, strGmSubReddit, intGmLimit, strSort)
+      # (strGmBaseDestURL, strGmSubReddit="all", lstGmMediaType=["images, videos"], intGmLimit=10, strGmSort="new", strGmView="list", strGmO18=True, strAfter="")
+
+      #Should - Test if existing token works using known simple api call?
+      
+      strVault = redditmedia.app_dictionary("kv_name")
+      strRedditURL = redditmedia.app_dictionary("url_login")
+      strResult = redditmedia.kv_refreshtoken(strVault, strRedditURL)
+
+      #Should - Test if subreddit exists
+      
+      strTokenType = redditmedia.app_dictionary("kv_tokentype")
+      strTokenType = redditmedia.kv_get(strVault, strTokenType)
+      strToken = redditmedia.app_dictionary("kv_token")
+      strToken = redditmedia.kv_get(strVault, strToken)
+      strURL = redditmedia.app_dictionary("url_oauth")
+      strURL += f"{strSubReddit}"
+      strURL += "/"
+      strURL += f"{strSort}"
+      #determine ? versus &
+      if strAfter:
+         strURL += f"?after={strAfter}"
+
+
+      
+      #review ended here... 2025-1012
+
+
+      
+      #strLimit is intended for display limit, not retrieval limit - may not always retrieve media for each thread
+      
+      while True:
+         
+         
+         #Next - make this "after" change
+         #dictResponse = redditmedia.reddit_getjson(strSubReddit, lstMediaType, strSort, strTokenType, strToken, strURL, strAfter)
+         #dictResponse = redditmedia.reddit_getjson(strSubReddit, lstMediaType, strSort, strTokenType, strToken, strURL, strLimit, strAfter)
+         dictGmResponse = redditmedia.reddit_getjson(strSubReddit, lstMediaType, strSort, strTokenType, strToken, strURL)
+         
+
+   
+   
+         
+         strDestURL = f"/redmedia?sub={strGmSubReddit}&sort={strGmSort}" #&after={strAfter}
+         strBody = redditmedia.reddit_jsontohtml(dictGmResponse, lstGmMediaType)
+
+         
+         strWebOutput += strBody
+
+            
+         strAfter = dictResponse["data"]["after"]
+         if not strAfter:
+            strAfter = ""
+         else:
+            #strPattern = r"(?<=after=).*"   #gi - use re.ignorecase below
+            strPattern = r"((?<=after\=)(.*?)(?=&))|((?<=after\=).*)"
+            #objMatch = re.sub(strPattern, strAfter strURL, count=1, re.IGNORECASE)
+            strURL = re.sub(strPattern, strAfter, strURL, flags=re.IGNORECASE)
+            strDestURL = re.sub(strPattern, strAfter, strDestURL, flags=re.IGNORECASE)
+            
+            if not strAfter in strDestURL:
+               #to craft Next Posts link
+               strDestURL += f"&after={strAfter}"
+            if not strAfter in strURL:
+               #to craft API url for next batch
+               strURL += f"?after={strAfter}"
+            
+
+         '''
+         else:
+            # NOTE
+            #remove existing AFTER param from URL
+            #craft new AFTER param for URL
+            #also need to ensure other parameters carry from URL
+            #   perhaps a function to craft and strip URLs
+            # NOTE
+
+            strPattern = r"(?<=after=).*"   #gi - use re.ignorecase below
+            #maybe ?& too
+            objMatch = re.search(strPattern, strParseContent, re.IGNORECASE)
+            strTitle = objMatch.group()
+            
+            strAfterURL = f"&after={strAfter}"
+         '''
+         
+         strJSON = str(dictResponse)
+         intFound = strJSON.count("\"post_hint\":")
+         intMediaFound += intFound
+         intRun += 1
+
+         if intMediaFound >= intLimit:
+            break
+         if intRun >= 4:
+            #prevent undesired loop runaway for subreddits that may not have much or any media
+            break
+
+      # unrelated - r/u_USER likely different than all posts by USER, unsure of URL to query
+      #   blankspace
+      #how to handle AFTER link embedded in strWebOutput as it is incremented?
+      #   potential regex expression:
+      #   (?<=after\=)(.*?)(?=&)
+      #      and
+      #   ((?<=after\=)(.*?)(?=&))|((?<=after\=).*)
+      #   OR alternatively, split string at & and ? into dict/list and rebuild/replace
+      #      using dedicated function in redditmedia.py module
+
+      strWebOutput += f"<p align=\"right\"><a href=\"{strDestURL}\">Next Posts</a></p>"
+      
+      # need to remove after= entry
+      strPattern = r"(\&after\=)(.*?)(?=&)|(\&after\=).*"
+      strReturnURL = re.sub(strPattern, "", strDestURL, flags=re.IGNORECASE)
+                                      
+      strWebOutput += f"<p align=\"right\"><a href=\"{strReturnURL}\">Reload From Beginning</a></p>"
+      
+      strWebOutput += redditmedia.app_dictionary("html_footer")
+   except Exception as e:
+      #could contain sensitive information in error message
+      #strWebOutput += f"an unexpected error occurred during <b>RETRIEVE</b>: <font color=red>{e}</font><br><br>"
+      #raise strWebOutput
+      strWebOutput += redditmedia.html_crafterror("APP REDMEDIA", e)
+      return strWebOutput
+   return strWebOutput
