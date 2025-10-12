@@ -69,7 +69,37 @@ def display():
       return strWebOutput
 
    return strWebOutput
+
+
+
+@app.route("/rmrhome")
+def rmrhome():
    
+   # Home call, display search criteria, header/navbar/footer
+   # Would not expect any POST here
+
+   strWebOutput = redditmedia.app_dictionary("html_header")
+   # (strGmBaseDestURL, strGmSubReddit="all", lstGmMediaType=["images, videos"], intGmLimit=10, strGmSort="new", strGmView="list", bolNSFW=True, strAfter="")
+   strWebOutput += redditmedia.html_form("rmrresults", "all", 10, "new")
+   strWebOutput = redditmedia.app_dictionary("html_footer")
+   
+   return
+
+@app.route("/rmrresults", methods=['GET', 'POST'])
+def rmrresults():
+
+   # Search results with header/navbar/forms/results/footer
+   # Could receive GET or POST here
+   
+   strWebOutput = redditmedia.app_dictionary("html_header")
+   # (strGmBaseDestURL, strGmSubReddit="all", lstGmMediaType=["images, videos"], intGmLimit=10, strGmSort="new", strGmView="list", bolNSFW=True, strAfter="")
+   strWebOutput += redditmedia.html_form("rmrresults", "all", 10, "new")
+   strWebOutput = redditmedia.app_dictionary("html_footer")
+   
+   return
+
+
+
 @app.route("/redmedia", methods=['GET', 'POST'])
 def redmedia():
    
