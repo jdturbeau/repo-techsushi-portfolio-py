@@ -283,6 +283,13 @@ def html_crafturl(strSub, strSort, lstMediaType, strAfter, strLimit):
    
    return
 
+def html_parseurl(strPuURL):
+   
+   # input - URL
+   # output - dictionary with named parameters
+   
+   return
+   
 def html_form(strFormDestination, strFormSub="all", intFormLimit=10, strSortBy="new", strView="list", bolNSFW=True):
    #need to add input for mediatype in parameters above
    # intFormLimit = minimum number of media items to return
