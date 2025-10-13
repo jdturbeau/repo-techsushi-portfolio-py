@@ -84,7 +84,7 @@ def rmrhome():
    strWebOutput += redditmedia.html_form("rmrresults", "all", 10, "new")
    strWebOutput = redditmedia.app_dictionary("html_footer")
    
-   return
+   return strWebOutput
 
 @app.route("/rmrresults", methods=['GET', 'POST'])
 def rmrresults():
