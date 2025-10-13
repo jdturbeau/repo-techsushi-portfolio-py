@@ -259,7 +259,7 @@ def html_crafturl(strCraftBaseURL, strCraftSub="all", lstCraftMediaType=["images
 
    # May use this function for reddit api calls AND local URL format
    
-   #strBase = redditmedia.app_dictionary("url_oauth")
+   #strBase = app_dictionary("url_oauth")
    # check if strCraftBaseURL ends with a / or append if necessary
    # confirm variables have values as expected - or if we need try except here
    
@@ -351,7 +351,7 @@ def app_main_getmedia(strGmBaseDestURL, strGmSubReddit="all", lstGmMediaType=["i
    #   overview, what, technologies involved,
    
    try:
-      strGmOutput = redditmedia.app_dictionary("html_header")
+      strGmOutput = app_dictionary("html_header")
       
       # ensure distinction between API RESULTS LIMIT and app defined DISPLAY LIMIT
       #    Example - 50 results returned may not equal 50 displayed media items
@@ -363,7 +363,7 @@ def app_main_getmedia(strGmBaseDestURL, strGmSubReddit="all", lstGmMediaType=["i
       intGmMediaFound = 0   #measure found media items against limit desired
       intGmRun = 0   #used to avoid hang/loop cycle for subreddit that may not have any media
       
-      strGmOutput += redditmedia.html_form(strGmBaseDestURL, strGmSubReddit, lstGmMediaType, intGmLimit, strSort, strGmView, bolNSFW)
+      strGmOutput += html_form(strGmBaseDestURL, strGmSubReddit, lstGmMediaType, intGmLimit, strSort, strGmView, bolNSFW)
 
       
 
@@ -373,9 +373,9 @@ def app_main_getmedia(strGmBaseDestURL, strGmSubReddit="all", lstGmMediaType=["i
       
       #Should - Test if existing token works using known simple api call?
       
-      strVault = redditmedia.app_dictionary("kv_name")
-      strRedditURL = redditmedia.app_dictionary("url_login")
-      strResult = redditmedia.kv_refreshtoken(strVault, strRedditURL)
+      strVault = app_dictionary("kv_name")
+      strRedditURL = app_dictionary("url_login")
+      strResult = kv_refreshtoken(strVault, strRedditURL)
 
       #Should - Test if subreddit exists
       '''
@@ -403,11 +403,11 @@ def app_main_getmedia(strGmBaseDestURL, strGmSubReddit="all", lstGmMediaType=["i
         "children": [
       '''
       
-      strTokenType = redditmedia.app_dictionary("kv_tokentype")
-      strTokenType = redditmedia.kv_get(strVault, strTokenType)
-      strToken = redditmedia.app_dictionary("kv_token")
-      strToken = redditmedia.kv_get(strVault, strToken)
-      strURL = redditmedia.app_dictionary("url_oauth")
+      strTokenType = app_dictionary("kv_tokentype")
+      strTokenType = kv_get(strVault, strTokenType)
+      strToken = app_dictionary("kv_token")
+      strToken = kv_get(strVault, strToken)
+      strURL = app_dictionary("url_oauth")
       
       '''
       strURL += f"{strSubReddit}"
@@ -428,17 +428,18 @@ def app_main_getmedia(strGmBaseDestURL, strGmSubReddit="all", lstGmMediaType=["i
          
          
          #Next - make this "after" change
-         #dictResponse = redditmedia.reddit_getjson(strSubReddit, lstMediaType, strSort, strTokenType, strToken, strURL, strAfter)
-         #dictResponse = redditmedia.reddit_getjson(strSubReddit, lstMediaType, strSort, strTokenType, strToken, strURL, strLimit, strAfter)
+         #dictResponse = reddit_getjson(strSubReddit, lstMediaType, strSort, strTokenType, strToken, strURL, strAfter)
+         #dictResponse = reddit_getjson(strSubReddit, lstMediaType, strSort, strTokenType, strToken, strURL, strLimit, strAfter)
          
          # (strGmBaseDestURL, strGmSubReddit="all", lstGmMediaType=["images, videos"], intGmLimit=10, strGmSort="new", strGmView="list", bolNSFW=True, strAfter="")
-         dictGmResponse = redditmedia.reddit_getjson(strSubReddit, lstMediaType, strSort, strTokenType, strToken, strURL)
+         dictGmResponse = reddit_getjson(strSubReddit, lstMediaType, strSort, strTokenType, strToken, strURL)
 
    
    
+         # Dest URL to be handled outside of function
+         #strDestURL = f"/redmedia?sub={strGmSubReddit}&sort={strGmSort}" #&after={strAfter}
          
-         strDestURL = f"/redmedia?sub={strGmSubReddit}&sort={strGmSort}" #&after={strAfter}
-         strBody = redditmedia.reddit_jsontohtml(dictGmResponse, lstGmMediaType)
+         strBody = reddit_jsontohtml(dictGmResponse, lstGmMediaType)
 
          
          strWebOutput += strBody
@@ -508,11 +509,11 @@ def app_main_getmedia(strGmBaseDestURL, strGmSubReddit="all", lstGmMediaType=["i
                                       
       strWebOutput += f"<p align=\"right\"><a href=\"{strReturnURL}\">Reload From Beginning</a></p>"
       
-      strWebOutput += redditmedia.app_dictionary("html_footer")
+      strWebOutput += app_dictionary("html_footer")
    except Exception as e:
       #could contain sensitive information in error message
       #strWebOutput += f"an unexpected error occurred during <b>RETRIEVE</b>: <font color=red>{e}</font><br><br>"
       #raise strWebOutput
-      strWebOutput += redditmedia.html_crafterror("APP REDMEDIA", e)
+      strWebOutput += html_crafterror("APP REDMEDIA", e)
       return strWebOutput
    return strWebOutput
