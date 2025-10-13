@@ -514,6 +514,6 @@ def app_main_getmedia(strGmBaseDestURL, strGmSubReddit="all", lstGmMediaType=["i
       #could contain sensitive information in error message
       #strWebOutput += f"an unexpected error occurred during <b>RETRIEVE</b>: <font color=red>{e}</font><br><br>"
       #raise strWebOutput
-      strWebOutput += html_crafterror("APP REDMEDIA", e)
+      strWebOutput = html_crafterror("APP REDMEDIA", e)
       return strWebOutput
    return strWebOutput
