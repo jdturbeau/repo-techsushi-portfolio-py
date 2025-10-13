@@ -343,7 +343,7 @@ def html_form(strFormDestination, strFormSub="all", lstFormMediaType=["images, v
   
    return strFormOutput
 
-def app_main_getmedia(strGmBaseDestURL, strGmSubReddit="all", lstGmMediaType=["images, videos"], intGmLimit=10, strGmSort="new", strGmView="list", bolNSFW=True, strAfter=""):
+def app_main_getmedia(strGmBaseDestURL, strGmSubReddit="all", lstGmMediaType=["images, videos"], intGmLimit=10, strGmSort="new", strGmView="list", bolGmNSFW=True, strAfter=""):
 
    # do not care about method and using match case
    
@@ -363,7 +363,7 @@ def app_main_getmedia(strGmBaseDestURL, strGmSubReddit="all", lstGmMediaType=["i
       intGmMediaFound = 0   #measure found media items against limit desired
       intGmRun = 0   #used to avoid hang/loop cycle for subreddit that may not have any media
       
-      strGmOutput += html_form(strGmBaseDestURL, strGmSubReddit, lstGmMediaType, intGmLimit, strSort, strGmView, bolNSFW)
+      strGmOutput += html_form(strGmBaseDestURL, strGmSubReddit, lstGmMediaType, intGmLimit, strGmSort, strGmView, bolGmNSFW)
 
       
 
@@ -431,18 +431,18 @@ def app_main_getmedia(strGmBaseDestURL, strGmSubReddit="all", lstGmMediaType=["i
          #dictResponse = reddit_getjson(strSubReddit, lstMediaType, strSort, strTokenType, strToken, strURL, strAfter)
          #dictResponse = reddit_getjson(strSubReddit, lstMediaType, strSort, strTokenType, strToken, strURL, strLimit, strAfter)
          
-         # (strGmBaseDestURL, strGmSubReddit="all", lstGmMediaType=["images, videos"], intGmLimit=10, strGmSort="new", strGmView="list", bolNSFW=True, strAfter="")
-         dictGmResponse = reddit_getjson(strSubReddit, lstMediaType, strSort, strTokenType, strToken, strURL)
+         # (strGmBaseDestURL, strGmSubReddit="all", lstGmMediaType=["images, videos"], intGmLimit=10, strGmSort="new", strGmView="list", bolGmNSFW=True, strAfter="")
+         dictGmResponse = reddit_getjson(strGmSubReddit, lstGmMediaType, intGmLimit, strGmSort, strGmView, bolGmNSFW, strAfter, strTokenType, strToken, strURL)
 
    
    
          # Dest URL to be handled outside of function
          #strDestURL = f"/redmedia?sub={strGmSubReddit}&sort={strGmSort}" #&after={strAfter}
          
-         strBody = reddit_jsontohtml(dictGmResponse, lstGmMediaType)
+         strGmBody = reddit_jsontohtml(dictGmResponse, lstGmMediaType)
 
          
-         strWebOutput += strBody
+         strWebOutput += strGmBody
 
             
          strAfter = dictResponse["data"]["after"]
