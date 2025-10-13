@@ -81,8 +81,8 @@ def rmrhome():
 
    strWebOutput = redditmedia.app_dictionary("html_header")
    # (strGmBaseDestURL, strGmSubReddit="all", lstGmMediaType=["images, videos"], intGmLimit=10, strGmSort="new", strGmView="list", bolNSFW=True, strAfter="")
-   strWebOutput += redditmedia.html_form("rmrresults", "all", 10, "new")
-   strWebOutput = redditmedia.app_dictionary("html_footer")
+   strWebOutput += redditmedia.html_form("rmrresults") # other defaults auto populate in function
+   strWebOutput += redditmedia.app_dictionary("html_footer")
    
    return strWebOutput
 
