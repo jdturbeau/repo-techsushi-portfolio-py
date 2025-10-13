@@ -25,7 +25,8 @@ def index():
    strWebOutput = redditmedia.app_dictionary("html_header")
    strWebOutput += "Would you like to visit:<br><br>"
 
-   strWebOutput += "<a href=\"/redmedia\">Reddit media retreiver</a><br><br>"
+   strWebOutput += "<a href=\"/rmrhome\">Reddit Media Retreiver - Home</a><br><br>"
+   strWebOutput += "<a href=\"/redmedia\">Reddit media retreiver - v1</a><br><br>"
    strWebOutput += "<a href=\"/display\">MarkDown Blog landing page</a><br><br>"
    strWebOutput += "<a href=\"/displayblog\">MarkDown Blog - single article</a><br><br>"
    strWebOutput += "<a href=\"/displaytop\">Display Most Recent Blog Articles</a><br><br>"
@@ -90,13 +91,45 @@ def rmrresults():
 
    # Search results with header/navbar/forms/results/footer
    # Could receive GET or POST here
+   strMethod = request.method
    
-   strWebOutput = redditmedia.app_dictionary("html_header")
-   # (strGmBaseDestURL, strGmSubReddit="all", lstGmMediaType=["images, videos"], intGmLimit=10, strGmSort="new", strGmView="list", bolNSFW=True, strAfter="")
-   strWebOutput += redditmedia.html_form("rmrresults", "all", 10, "new")
-   strWebOutput = redditmedia.app_dictionary("html_footer")
+   # Do these cases need to be separate? Yes, form.get vs args.get
+   match strMethod:
+      case "POST":
+         strSubReddit = request.form.get("sub", "all")
+         lstMediaType = request.form.getlist("mediatype")
+         intLimit = request.form.get("limit", 10)
+         strSort = request.form.get("sort", "new")
+         strView = request.form.get("view", "list")
+         bolNSFW = request.form.get("nsfw", True)
+         strAfter = request.args.get("after", "")
+         
+      case "GET":
+         strSubReddit = request.args.get("sub", "all")
+         lstMediaType = request.args.getlist("mediatype")
+         intLimit = request.args.get("limit", 10)
+         strSort = request.args.get("sort", "new")
+         strView = request.args.get("view", "list")
+         bolNSFW = request.args.get("nsfw", True)
+         strAfter = request.args.get("after", "")
+
+      case _:
+         # defaults or unknown 
+         strSubReddit = "all"
+         lstMediaType = ["images, videos"]
+         intLimit = 10
+         strSort = "new"
+         strView = "list"
+         bolNSFW = True
+         strAfter = ""
+
+   #if lstMediaType == []:
+   if not lstMediaType:
+      lstMediaType = ["images, videos"]
    
-   return
+   strWebOutput = redditmedia.app_main_getmedia("rmrresults", strSubReddit, lstMediaType, intLimit, strSort, strView, bolNSFW, strAfter)
+   
+   return strWebOutput
 
 
 
