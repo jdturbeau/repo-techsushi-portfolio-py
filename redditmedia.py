@@ -255,33 +255,40 @@ def reddit_jsontohtml(jsonHtmlContent, lstHtmlMediaType):
 
    return strHtmlOutput
 
-def html_crafturl(strSub, strSort, lstMediaType, strAfter, strLimit):
+def html_crafturl(strCraftBaseURL, strCraftSub="all", lstCraftMediaType=["images, videos"], intCraftLimit=10, strCraftSort="new", strCraftView="list", bolCraftNSFW=True, strCraftAfter=""):
 
-   # add a parameter for URL base
-   #   may be able to use this function for reddit api calls
-   #   AND local URL format
-
-   strBase = redditmedia.app_dictionary("url_oauth")
-   strBase += f"{strSub}/{strSort}?"
-   if lstMediaType:
-      strBase += ""
-   if strAfter:
-      strBase += f"after={strAfter}"
-   if strLimit:
-      strBase += ""
+   # May use this function for reddit api calls AND local URL format
    
-   '''
-    strURL += f"{strSubReddit}"
-      strURL += "/"
-      strURL += f"{strSort}"
-      #determine ? versus &
-      if strAfter:
-         strURL += f"?after={strAfter}"
-   '''
-
-   # need to add parameter to return
+   #strBase = redditmedia.app_dictionary("url_oauth")
+   # check if strCraftBaseURL ends with a / or append if necessary
+   # confirm variables have values as expected - or if we need try except here
    
-   return
+   strCraftURL = strCraftBaseURL # should end with /
+   strCraftURL += f"{strCraftSub}/{strCraftSort}?"
+   
+   if lstCraftMediaType:
+      # This needs to be handled during JSONtoHTML function
+      # cautious 
+      strCraftURL += ""
+   
+   # need to verify if an & (ampersand) is required between each attribute or if it is just one time change
+   
+   if intCraftLimit:
+      # This is a media object limit, handled during JSONtoHTML function
+      strCraftURL += ""
+
+   if strCraftView:
+      # handle media object display format - handled during JSONtoHTML function - list or gallery
+      strCraftURL += ""
+      
+   if bolCraftNSFW:
+      # handle media object display NSFW - handled during JSONtoHTML function - list or gallery
+      strCraftURL += ""
+      
+   if strCraftAfter:
+      strCraftURL += f"after={strAfter}"
+   
+   return strCraftURL
 
 def html_parseurl(strPuURL):
    
@@ -290,7 +297,7 @@ def html_parseurl(strPuURL):
    
    return
    
-def html_form(strFormDestination, strFormSub="all", intFormLimit=10, strSortBy="new", strView="list", bolNSFW=True):
+def html_form(strFormDestination, strFormSub="all", lstFormMediaType=["images, videos"], intFormLimit=10, strFormSort="new", strFormView="list", bolFormNSFW=True):
    #need to add input for mediatype in parameters above
    # intFormLimit = minimum number of media items to return
    #   not related to results requested from single API call
@@ -299,10 +306,14 @@ def html_form(strFormDestination, strFormSub="all", intFormLimit=10, strSortBy="
    # option to hide header lines (image only)   
    strFormOutput = f"<form action=\"/{strFormDestination}\" method=\"post\"><!-- Form elements go here -->"
    strFormOutput += f"<label for=\"name\">Subreddit: </label><input type=\"text\" id=\"subreddit\" name=\"sub\" placeholder=\"{strFormSub}\" autocomplete=\"off\">"
+   
+   # translate
    strFormOutput += f"<input type=\"checkbox\" id=\"images\" name=\"mediatype\" value=\"images\" checked><label for=\"images\" disabled>Images</label>"
    strFormOutput += f"<input type=\"checkbox\" id=\"videos\" name=\"mediatype\" value=\"videos\" checked><label for=\"videos\" disabled>Videos</label>"
    strFormOutput += f"<br><br>"
    strFormOutput += f"<label for=\"count\">Result Count: </label><input type=\"text\" id=\"count\" name=\"count\" placeholder=\"{intFormLimit}\" autocomplete=\"off\" disabled>"
+
+   # translate strFormSort into drop down selection
    strFormOutput += f"<label for=\"sort\"> Sort by: </label><select id=\"sort\" name=\"sort\" disabled>"
    strFormOutput += f"<option value=\"new\" selected=\"true\">New</option>"
    strFormOutput += f"<option value=\"hot\">Hot</option>"
@@ -312,17 +323,21 @@ def html_form(strFormDestination, strFormSub="all", intFormLimit=10, strSortBy="
    #strFormOutput += f"<option value=\"random\">Random</option>" #invalid option
    strFormOutput += f"</select>"
    strFormOutput += f"<br><br>"
+   
+   # translate strFormView by checked radio
    strFormOutput += f"<input type=\"radio\" id=\"list\" name=\"view\" value=\"list\" checked disabled><label for=\"list\">List View</label>"
    strFormOutput += f"<input type=\"radio\" id=\"gallery\" name=\"view\" value=\"gallery\" disabled><label for=\"gallery\">Gallery View</label>"
+
+   # translate bolFormNSFW into check
    strFormOutput += f"<input type=\"checkbox\" id=\"nsfw\" name=\"nsfw\" value=\"nsfw\" checked disabled><label for=\"nsfw\">Over_18?</label><br>"
+   
    strFormOutput += f"<br><br>"
+   #   need to add HUMAN? style checkbox here, required before allowing submit, bot stopper-ish
+   #      also likely do not want to show results and "next" link on first load - bot could continue w/o human checkbox
    strFormOutput += f"<input type=\"checkbox\" id=\"human\" name=\"human\" value=\"human\" required><label for=\"human\">Are you <font color=red>human</font>?<font color=red>*</font></label><br>"
    strFormOutput += f"<button type=\"submit\">Browse Media</button>"   
    strFormOutput += f"</form><br><br>"
 
-   #   need to add HUMAN? style checkbox here, required before allowing submit, bot stopper-ish
-   #      also likely do not want to show results and "next" link on first load - bot could continue w/o human checkbox
-   
    #add (media by) username
    #consider single stream vs gallery view
   
@@ -338,20 +353,24 @@ def app_main_getmedia(strGmBaseDestURL, strGmSubReddit="all", lstGmMediaType=["i
    try:
       strGmOutput = redditmedia.app_dictionary("html_header")
       
-      #   ensure distinction before API results LIMIT and app defined DISPLAY LIMIT
-      #      50 results returned may not equal 50 displayed media items
+      # ensure distinction between API RESULTS LIMIT and app defined DISPLAY LIMIT
+      #    Example - 50 results returned may not equal 50 displayed media items
       
       #need to CAP intLIMIT to avoid malicious use (perhaps 30?)
       if intGmLimit > 30:
          intGmLimit = 30
+      
       intGmMediaFound = 0   #measure found media items against limit desired
       intGmRun = 0   #used to avoid hang/loop cycle for subreddit that may not have any media
+      
+      strGmOutput += redditmedia.html_form(strGmBaseDestURL, strGmSubReddit, lstGmMediaType, intGmLimit, strSort, strGmView, bolNSFW)
 
       
-      strGmOutput += redditmedia.html_form(strGmBaseDestURL, strGmSubReddit, intGmLimit, strSort)
-      # html_form(strFormDestination, strFormSub="all", intFormLimit=10, strSortBy="new", strView="list", bolNSFW=True)
-      # (strGmBaseDestURL, strGmSubReddit="all", lstGmMediaType=["images, videos"], intGmLimit=10, strGmSort="new", strGmView="list", bolNSFW=True, strAfter="")
 
+      # review stopped here - 2025-1012
+
+      
+      
       #Should - Test if existing token works using known simple api call?
       
       strVault = redditmedia.app_dictionary("kv_name")
@@ -389,14 +408,15 @@ def app_main_getmedia(strGmBaseDestURL, strGmSubReddit="all", lstGmMediaType=["i
       strToken = redditmedia.app_dictionary("kv_token")
       strToken = redditmedia.kv_get(strVault, strToken)
       strURL = redditmedia.app_dictionary("url_oauth")
+      
+      '''
       strURL += f"{strSubReddit}"
       strURL += "/"
       strURL += f"{strSort}"
       #determine ? versus &
       if strAfter:
          strURL += f"?after={strAfter}"
-
-
+      '''
       
       #review ended here... 2025-1012
 
