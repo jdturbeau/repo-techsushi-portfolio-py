@@ -436,14 +436,14 @@ def app_main_getmedia(strGmBaseDestURL, strGmSubReddit="all", lstGmMediaType=["i
 
          # is dictGmResponse empty / null / data.dist = 0 / data.before==data.after
          if not dictGmResponse:
-            strWebOutput = html_crafterror("APP MAIN GETMEDIA", f"{e}<br>URL: {strGjURL}<br>Status Code: {strGjReqStatus}<br>Token type: {strGjTokenType}")
-            return strWebOutput
+            strGmOutput = html_crafterror("APP MAIN GETMEDIA", f"{e}<br>URL: {strGjURL}<br>Status Code: {strGjReqStatus}<br>Token type: {strGjTokenType}")
+            return strGmOutput
          
          strGmBody = reddit_jsontohtml(dictGmResponse, lstGmMediaType)
 
          # how to check if strGmBody contains HTML vs error
          
-         strWebOutput += strGmBody
+         strGmOutput += strGmBody
             
          strAfter = dictResponse["data"]["after"]
          if not strAfter:
@@ -477,16 +477,16 @@ def app_main_getmedia(strGmBaseDestURL, strGmSubReddit="all", lstGmMediaType=["i
             break
 
       # should use function to craft internal URL
-      strWebOutput += f"<p align=\"right\"><a href=\"{strGmBaseDestURL}\">Next Posts</a></p>"
+      strGmOutput += f"<p align=\"right\"><a href=\"{strGmBaseDestURL}\">Next Posts</a></p>"
       
       # need to remove after= entry
       strGmPattern = r"(\&after\=)(.*?)(?=&)|(\&after\=).*"
       strGmReturnURL = re.sub(strGmPattern, "", strGmBaseDestURL, flags=re.IGNORECASE)
       # should use function to craft internal URL
-      strWebOutput += f"<p align=\"right\"><a href=\"{strGmReturnURL}\">Reload From Beginning</a></p>"
+      strGmOutput += f"<p align=\"right\"><a href=\"{strGmReturnURL}\">Reload From Beginning</a></p>"
       
-      strWebOutput += app_dictionary("html_footer")
+      strGmOutput += app_dictionary("html_footer")
    except Exception as e:
-      strWebOutput = html_crafterror("APP MAIN GETMEDIA", e)
-      return strWebOutput
+      strGmOutput = html_crafterror("APP MAIN GETMEDIA", e)
+      return strGmOutput
    return strWebOutput
