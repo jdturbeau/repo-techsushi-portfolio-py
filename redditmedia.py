@@ -295,7 +295,7 @@ def html_crafturl(strCraftBaseURL, strCraftSub="all", lstCraftMediaType=["images
          strCraftSuffix += f"after={strCraftAfter}"
          
       #check if last character is ampersand
-      if strCraftSuffix[-1] = "&":
+      if strCraftSuffix[-1] == "&":
          strCraftSuffix = strCraftSuffix[:-1]
       if len(strCraftSuffix) > 0:
          strCraftURL += "?{strCraftSuffix}"
@@ -312,10 +312,10 @@ def html_parseurl(strPuURL):
 def html_form(strFormDestination, strFormSub="all", lstFormMediaType=["images, videos"], intFormLimit=10, strFormSort="new", strFormView="list", bolFormNSFW=True):
    
    # intFormLimit = minimum number of media items to return
-   #   not related to results requested from single API call
+   #    not related to results requested from single API call
    
-   #possible additions
-   # option to hide header lines (image only)   
+   # possible additions
+   #    option to hide header lines (image only)   
    strFormOutput = f"<form action=\"/{strFormDestination}\" method=\"post\"><!-- Form elements go here -->"
    strFormOutput += f"<label for=\"name\">Subreddit: </label><input type=\"text\" id=\"subreddit\" name=\"sub\" placeholder=\"{strFormSub}\" autocomplete=\"off\">"
    
@@ -323,7 +323,7 @@ def html_form(strFormDestination, strFormSub="all", lstFormMediaType=["images, v
    strFormOutput += f"<input type=\"checkbox\" id=\"images\" name=\"mediatype\" value=\"images\" checked><label for=\"images\" disabled>Images</label>"
    strFormOutput += f"<input type=\"checkbox\" id=\"videos\" name=\"mediatype\" value=\"videos\" checked><label for=\"videos\" disabled>Videos</label>"
    strFormOutput += f"<br><br>"
-   strFormOutput += f"<label for=\"count\">Result Count: </label><input type=\"text\" id=\"count\" name=\"count\" placeholder=\"{intFormLimit}\" autocomplete=\"off\" disabled>"
+   strFormOutput += f"<label for=\"count\">Minimum Display Limit: </label><input type=\"text\" id=\"count\" name=\"count\" placeholder=\"{intFormLimit}\" autocomplete=\"off\" disabled>"
 
    # translate strFormSort into drop down selection
    strFormOutput += f"<label for=\"sort\"> Sort by: </label><select id=\"sort\" name=\"sort\" disabled>"
@@ -358,6 +358,10 @@ def html_form(strFormDestination, strFormSub="all", lstFormMediaType=["images, v
 
 def app_main_getmedia(strGmBaseDestURL, strGmSubReddit="all", lstGmMediaType=["images, videos"], intGmLimit=10, strGmSort="new", strGmView="list", bolGmNSFW=True, strAfter=""):
 
+   #
+   # future: Use DICT object instead of multiple variables for parameters
+   #
+   
    # strGmBaseDestURL is local app url to craft the NEXT/AFTER link to continue viewing results
    # do not care about method and using match case
    
@@ -429,8 +433,15 @@ def app_main_getmedia(strGmBaseDestURL, strGmSubReddit="all", lstGmMediaType=["i
          # strGmBaseDestURL - local app url
          # strGmApiURL - reddit api url
          # Dest URL to be handled outside of function
-                  
+
+         # is dictGmResponse empty / null / data.dist = 0 / data.before==data.after
+         if not dictGmResponse:
+            strWebOutput = html_crafterror("APP MAIN GETMEDIA", f"{e}<br>URL: {strGjURL}<br>Status Code: {strGjReqStatus}<br>Token type: {strGjTokenType}")
+            return strWebOutput
+         
          strGmBody = reddit_jsontohtml(dictGmResponse, lstGmMediaType)
+
+         # how to check if strGmBody contains HTML vs error
          
          strWebOutput += strGmBody
             
@@ -444,39 +455,34 @@ def app_main_getmedia(strGmBaseDestURL, strGmSubReddit="all", lstGmMediaType=["i
             # strGmDestURL - local app url
             strGmBaseDestURL = re.sub(strGmPattern, strAfter, strGmBaseDestURL, flags=re.IGNORECASE)
             
-            
-            
-            
             #verify if below is necessary
             
-            if not strAfter in strDestURL:
+            if not strAfter in strGmBaseDestURL:
                #to craft Next Posts link
                strDestURL += f"&after={strAfter}"
-            if not strAfter in strURL:
+            if not strAfter in strGmApiURL:
                #to craft API url for next batch
-               strURL += f"?after={strAfter}"
+               strGmApiURL += f"?after={strAfter}"
          
-         
-         
-         
-         strGmJSON = str(dictResponse)
-         intFound = strGmJSON.count("\"post_hint\":")
-         intGmMediaFound += intFound
+         strGmJSON = str(dictGmResponse)
+         intGmFound = strGmJSON.count("\"post_hint\":")
+         intGmMediaFound += intGmFound
          intGmRun += 1
 
-         if intMediaFound >= intLimit:
+         if intGmMediaFound >= intGmLimit:
             # count media results returned, break out of while loop if equal or over limit
             break
          if intRun >= 4:
             #prevent undesired loop runaway for subreddits that may not have much or any media
             break
 
+      # should use function to craft internal URL
       strWebOutput += f"<p align=\"right\"><a href=\"{strGmBaseDestURL}\">Next Posts</a></p>"
       
       # need to remove after= entry
       strGmPattern = r"(\&after\=)(.*?)(?=&)|(\&after\=).*"
       strGmReturnURL = re.sub(strGmPattern, "", strGmBaseDestURL, flags=re.IGNORECASE)
-                                      
+      # should use function to craft internal URL
       strWebOutput += f"<p align=\"right\"><a href=\"{strGmReturnURL}\">Reload From Beginning</a></p>"
       
       strWebOutput += app_dictionary("html_footer")
