@@ -265,6 +265,7 @@ def html_crafturl(strCraftBaseURL, strCraftSub="all", lstCraftMediaType=["images
 
    strCraftURL = strCraftBaseURL # should end with /
    # check if need to add / in between
+   # check if url passed has parameters already to strip off first
    
    strCraftContains = ".reddit.com/"
    if strCraftContains.lower() in strCraftBaseURL.lower():
@@ -309,7 +310,7 @@ def html_parseurl(strPuURL):
    return
    
 def html_form(strFormDestination, strFormSub="all", lstFormMediaType=["images, videos"], intFormLimit=10, strFormSort="new", strFormView="list", bolFormNSFW=True):
-   #need to add input for mediatype in parameters above
+   
    # intFormLimit = minimum number of media items to return
    #   not related to results requested from single API call
    
@@ -357,6 +358,7 @@ def html_form(strFormDestination, strFormSub="all", lstFormMediaType=["images, v
 
 def app_main_getmedia(strGmBaseDestURL, strGmSubReddit="all", lstGmMediaType=["images, videos"], intGmLimit=10, strGmSort="new", strGmView="list", bolGmNSFW=True, strAfter=""):
 
+   # strGmBaseDestURL is local app url to craft the NEXT/AFTER link to continue viewing results
    # do not care about method and using match case
    
    #table with
@@ -368,18 +370,16 @@ def app_main_getmedia(strGmBaseDestURL, strGmSubReddit="all", lstGmMediaType=["i
       # ensure distinction between API RESULTS LIMIT and app defined DISPLAY LIMIT
       #    Example - 50 results returned may not equal 50 displayed media items
       
-      #need to CAP intLIMIT to avoid malicious use (perhaps 30?)
+      # need to CAP intLIMIT to avoid malicious use (perhaps 30?)
+      #    intLimit is intended for display limit, not retrieval limit - may not always retrieve media for each thread
       if intGmLimit > 30:
          intGmLimit = 30
       
-      intGmMediaFound = 0   #measure found media items against limit desired
-      intGmRun = 0   #used to avoid hang/loop cycle for subreddit that may not have any media
+      intGmMediaFound = 0   #m easure found media items against limit desired
+      intGmRun = 0   # used to avoid hang/loop cycle for subreddit that may not have any media
       
       strGmOutput += html_form(strGmBaseDestURL, strGmSubReddit, lstGmMediaType, intGmLimit, strGmSort, strGmView, bolGmNSFW)
-
-      
-      
-      
+            
       #Should - Test if existing token works using known simple api call?
       
       strVault = app_dictionary("kv_name")
@@ -416,53 +416,38 @@ def app_main_getmedia(strGmBaseDestURL, strGmSubReddit="all", lstGmMediaType=["i
       strTokenType = kv_get(strVault, strTokenType)
       strToken = app_dictionary("kv_token")
       strToken = kv_get(strVault, strToken)
-      strURL = app_dictionary("url_oauth")
+      #strURL = app_dictionary("url_oauth")
+      strGmURL = app_dictionary("url_oauth")
       
-      '''
-      strURL += f"{strSubReddit}"
-      strURL += "/"
-      strURL += f"{strSort}"
-      #determine ? versus &
-      if strAfter:
-         strURL += f"?after={strAfter}"
-      '''
-      
-      #review ended here... 2025-1012
-
-
-      
-      #strLimit is intended for display limit, not retrieval limit - may not always retrieve media for each thread
+      # Use function to craft URL to pass to API
+      #    strGmApiURL is API URL with subreddit, sort, after params
+      strGmApiURL = html_crafturl(strGmURL, strGmSubReddit, lstGmMediaType, intGmLimit, strGmSort, strGmView, bolGmNSFW, strAfter)
       
       while True:
          
-         
-         #Next - make this "after" change
-         #dictResponse = reddit_getjson(strSubReddit, lstMediaType, strSort, strTokenType, strToken, strURL, strAfter)
-         #dictResponse = reddit_getjson(strSubReddit, lstMediaType, strSort, strTokenType, strToken, strURL, strLimit, strAfter)
-         
-         # (strGmBaseDestURL, strGmSubReddit="all", lstGmMediaType=["images, videos"], intGmLimit=10, strGmSort="new", strGmView="list", bolGmNSFW=True, strAfter="")
-         dictGmResponse = reddit_getjson(strGmSubReddit, lstGmMediaType, intGmLimit, strGmSort, strGmView, bolGmNSFW, strAfter, strTokenType, strToken, strURL)
-
-   
-   
+         dictGmResponse = reddit_getjson(strGmSubReddit, lstGmMediaType, intGmLimit, strGmSort, strGmView, bolGmNSFW, strAfter, strTokenType, strToken, strGmApiURL)
+         # strGmBaseDestURL - local app url
+         # strGmApiURL - reddit api url
          # Dest URL to be handled outside of function
-         #strDestURL = f"/redmedia?sub={strGmSubReddit}&sort={strGmSort}" #&after={strAfter}
-         
+                  
          strGmBody = reddit_jsontohtml(dictGmResponse, lstGmMediaType)
-
          
          strWebOutput += strGmBody
-
             
          strAfter = dictResponse["data"]["after"]
          if not strAfter:
             strAfter = ""
          else:
-            #strPattern = r"(?<=after=).*"   #gi - use re.ignorecase below
-            strPattern = r"((?<=after\=)(.*?)(?=&))|((?<=after\=).*)"
-            #objMatch = re.sub(strPattern, strAfter strURL, count=1, re.IGNORECASE)
-            strURL = re.sub(strPattern, strAfter, strURL, flags=re.IGNORECASE)
-            strDestURL = re.sub(strPattern, strAfter, strDestURL, flags=re.IGNORECASE)
+            strGmPattern = r"((?<=after\=)(.*?)(?=&))|((?<=after\=).*)"
+            # strGmApiURL - reddit api url
+            strGmApiURL = re.sub(strGmPattern, strAfter, strGmApiURL, flags=re.IGNORECASE)
+            # strGmDestURL - local app url
+            strGmBaseDestURL = re.sub(strGmPattern, strAfter, strGmBaseDestURL, flags=re.IGNORECASE)
+            
+            
+            
+            
+            #verify if below is necessary
             
             if not strAfter in strDestURL:
                #to craft Next Posts link
@@ -470,59 +455,32 @@ def app_main_getmedia(strGmBaseDestURL, strGmSubReddit="all", lstGmMediaType=["i
             if not strAfter in strURL:
                #to craft API url for next batch
                strURL += f"?after={strAfter}"
-            
-
-         '''
-         else:
-            # NOTE
-            #remove existing AFTER param from URL
-            #craft new AFTER param for URL
-            #also need to ensure other parameters carry from URL
-            #   perhaps a function to craft and strip URLs
-            # NOTE
-
-            strPattern = r"(?<=after=).*"   #gi - use re.ignorecase below
-            #maybe ?& too
-            objMatch = re.search(strPattern, strParseContent, re.IGNORECASE)
-            strTitle = objMatch.group()
-            
-            strAfterURL = f"&after={strAfter}"
-         '''
          
-         strJSON = str(dictResponse)
-         intFound = strJSON.count("\"post_hint\":")
-         intMediaFound += intFound
-         intRun += 1
+         
+         
+         
+         strGmJSON = str(dictResponse)
+         intFound = strGmJSON.count("\"post_hint\":")
+         intGmMediaFound += intFound
+         intGmRun += 1
 
          if intMediaFound >= intLimit:
+            # count media results returned, break out of while loop if equal or over limit
             break
          if intRun >= 4:
             #prevent undesired loop runaway for subreddits that may not have much or any media
             break
 
-      # unrelated - r/u_USER likely different than all posts by USER, unsure of URL to query
-      #   blankspace
-      #how to handle AFTER link embedded in strWebOutput as it is incremented?
-      #   potential regex expression:
-      #   (?<=after\=)(.*?)(?=&)
-      #      and
-      #   ((?<=after\=)(.*?)(?=&))|((?<=after\=).*)
-      #   OR alternatively, split string at & and ? into dict/list and rebuild/replace
-      #      using dedicated function in redditmedia.py module
-
-      strWebOutput += f"<p align=\"right\"><a href=\"{strDestURL}\">Next Posts</a></p>"
+      strWebOutput += f"<p align=\"right\"><a href=\"{strGmBaseDestURL}\">Next Posts</a></p>"
       
       # need to remove after= entry
-      strPattern = r"(\&after\=)(.*?)(?=&)|(\&after\=).*"
-      strReturnURL = re.sub(strPattern, "", strDestURL, flags=re.IGNORECASE)
+      strGmPattern = r"(\&after\=)(.*?)(?=&)|(\&after\=).*"
+      strGmReturnURL = re.sub(strGmPattern, "", strGmBaseDestURL, flags=re.IGNORECASE)
                                       
-      strWebOutput += f"<p align=\"right\"><a href=\"{strReturnURL}\">Reload From Beginning</a></p>"
+      strWebOutput += f"<p align=\"right\"><a href=\"{strGmReturnURL}\">Reload From Beginning</a></p>"
       
       strWebOutput += app_dictionary("html_footer")
    except Exception as e:
-      #could contain sensitive information in error message
-      #strWebOutput += f"an unexpected error occurred during <b>RETRIEVE</b>: <font color=red>{e}</font><br><br>"
-      #raise strWebOutput
-      strWebOutput = html_crafterror("APP REDMEDIA", e)
+      strWebOutput = html_crafterror("APP MAIN GETMEDIA", e)
       return strWebOutput
    return strWebOutput
