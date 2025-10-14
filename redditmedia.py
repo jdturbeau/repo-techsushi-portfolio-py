@@ -487,7 +487,7 @@ def app_main_getmedia(strGmBaseDestURL, strGmSubReddit="all", lstGmMediaType=["i
       strGmOutput += f"<p align=\"right\"><a href=\"{strGmReturnURL}\">Reload From Beginning</a></p>"
       
       strGmOutput += app_dictionary("html_footer")
-   except Exception as e:
-      strGmOutput = html_crafterror("APP MAIN GETMEDIA", e)
-      return strGmOutput
+   #except Exception as e:
+      #strGmOutput = html_crafterror("APP MAIN GETMEDIA", e)
+      #return strGmOutput
    return strWebOutput
