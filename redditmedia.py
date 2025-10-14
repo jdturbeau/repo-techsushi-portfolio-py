@@ -323,7 +323,7 @@ def html_form(strFormDestination, strFormSub="all", lstFormMediaType=["images, v
    strFormOutput += f"<input type=\"checkbox\" id=\"images\" name=\"mediatype\" value=\"images\" checked><label for=\"images\" disabled>Images</label>"
    strFormOutput += f"<input type=\"checkbox\" id=\"videos\" name=\"mediatype\" value=\"videos\" checked><label for=\"videos\" disabled>Videos</label>"
    strFormOutput += f"<br><br>"
-   strFormOutput += f"<label for=\"count\">Minimum Display Limit: </label><input type=\"number\" id=\"count\" name=\"count\" min=\"1\" max=\"30"\ step=\"1\" placeholder=\"{intFormLimit}\" autocomplete=\"off\" disabled>"
+   strFormOutput += f"<label for=\"count\">Minimum Display Limit: </label><input type=\"number\" id=\"count\" name=\"count\" min=\"1\" max=\"30\" step=\"1\" placeholder=\"{intFormLimit}\" autocomplete=\"off\" disabled>"
 
    # translate strFormSort into drop down selection
    strFormOutput += f"<label for=\"sort\"> Sort by: </label><select id=\"sort\" name=\"sort\" disabled>"
