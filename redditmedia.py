@@ -323,7 +323,7 @@ def html_form(strFormDestination, strFormSub="all", lstFormMediaType=["images, v
    strFormOutput += f"<input type=\"checkbox\" id=\"images\" name=\"mediatype\" value=\"images\" checked><label for=\"images\" disabled>Images</label>"
    strFormOutput += f"<input type=\"checkbox\" id=\"videos\" name=\"mediatype\" value=\"videos\" checked><label for=\"videos\" disabled>Videos</label>"
    strFormOutput += f"<br><br>"
-   strFormOutput += f"<label for=\"count\">Minimum Display Limit: </label><input type=\"text\" id=\"count\" name=\"count\" placeholder=\"{intFormLimit}\" autocomplete=\"off\" disabled>"
+   strFormOutput += f"<label for=\"count\">Minimum Display Limit: </label><input type=\"number\" id=\"count\" name=\"count\" min=\"1\" max=\"30"\ step=\"1\" placeholder=\"{intFormLimit}\" autocomplete=\"off\" disabled>"
 
    # translate strFormSort into drop down selection
    strFormOutput += f"<label for=\"sort\"> Sort by: </label><select id=\"sort\" name=\"sort\" disabled>"
@@ -347,7 +347,8 @@ def html_form(strFormDestination, strFormSub="all", lstFormMediaType=["images, v
    #   need to add HUMAN? style checkbox here, required before allowing submit, bot stopper-ish
    #      also likely do not want to show results and "next" link on first load - bot could continue w/o human checkbox
    strFormOutput += "Are you <font color=red>human</font>?<font color=red>*</font>"
-   strFormOutput += f"<input type=\"checkbox\" id=\"human\" name=\"human\" value=\"human\" required><label for=\"human\">Yes</label><br>"
+   #strFormOutput += f"<input type=\"checkbox\" id=\"human\" name=\"human\" value=\"human\" required><label for=\"human\">Yes</label><br>"
+   strFormOutput += f"<input type=\"checkbox\" id=\"human\" name=\"human\" value=\"human\" required><label for=\"human\">Yes</label>"
    strFormOutput += f"<button type=\"submit\">Browse Media</button>"   
    strFormOutput += f"</form><br><br>"
 
@@ -445,7 +446,7 @@ def app_main_getmedia(strGmBaseDestURL, strGmSubReddit="all", lstGmMediaType=["i
          
          strGmOutput += strGmBody
             
-         strAfter = dictResponse["data"]["after"]
+         strAfter = dictGmResponse["data"]["after"]
          if not strAfter:
             strAfter = ""
          else:
