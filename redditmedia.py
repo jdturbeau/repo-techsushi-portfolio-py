@@ -123,7 +123,7 @@ def kv_refreshtoken(strRefVault, strRefRedditURL):
       
    return
 
-def reddit_getjson(strGjSubReddit, lstGjMediaType, strGjSort, strGjTokenType, strGjToken, strGjURL):
+def reddit_getjson(strGjSubReddit, lstGjMediaType, intGjLimit, strGjSort, strGjView, bolGjNSFW, strAfter, strGjTokenType, strGjToken, strGjURL):
 
    #add params for:
    # result count (display limit) - this likely belongs in jsontohtml function
@@ -135,6 +135,8 @@ def reddit_getjson(strGjSubReddit, lstGjMediaType, strGjSort, strGjTokenType, st
    #handle [], [pictures], [videos], [pictures, videos], (gallery?), (other/unknown)
    #handle new, hot, rising, controversial, top
    #check POST vs GET (request.method ==
+
+   # function  to craft request URL
    
    try:
       strGjUserAgent = app_dictionary("txt_useragent")
@@ -146,8 +148,6 @@ def reddit_getjson(strGjSubReddit, lstGjMediaType, strGjSort, strGjTokenType, st
       match strGjReqStatus:
          case "403":
             strGjJsonOutput = html_crafterror("GETJSON", f"Unable to proceed!<br>Status Code: {strGjReqStatus}<br>Token type: {strGjTokenType}")
-            #unsure why RAISE does not work as expected
-            #raise RuntimeError(strJsonOutput)
             return strGjJsonOutput
          case _:
             dictGjJson = roGjReceived.json()
@@ -262,32 +262,43 @@ def html_crafturl(strCraftBaseURL, strCraftSub="all", lstCraftMediaType=["images
    #strBase = app_dictionary("url_oauth")
    # check if strCraftBaseURL ends with a / or append if necessary
    # confirm variables have values as expected - or if we need try except here
-   
-   strCraftURL = strCraftBaseURL # should end with /
-   strCraftURL += f"{strCraftSub}/{strCraftSort}?"
-   
-   if lstCraftMediaType:
-      # This needs to be handled during JSONtoHTML function
-      # cautious 
-      strCraftURL += ""
-   
-   # need to verify if an & (ampersand) is required between each attribute or if it is just one time change
-   
-   if intCraftLimit:
-      # This is a media object limit, handled during JSONtoHTML function
-      strCraftURL += ""
 
-   if strCraftView:
-      # handle media object display format - handled during JSONtoHTML function - list or gallery
-      strCraftURL += ""
-      
-   if bolCraftNSFW:
-      # handle media object display NSFW - handled during JSONtoHTML function - list or gallery
-      strCraftURL += ""
-      
-   if strCraftAfter:
-      strCraftURL += f"after={strAfter}"
+   strCraftURL = strCraftBaseURL # should end with /
+   # check if need to add / in between
    
+   strCraftContains = ".reddit.com/"
+   if strCraftContains.lower() in strCraftBaseURL.lower():
+      # oauth or token refresh - can ignore app handled parameters
+      strCraftURL += f"{strCraftSub}/{strCraftSort}"
+      if len(strCraftAfter) > 0:
+         strCraftURL += f"?after={strCraftAfter}"
+   else:
+      # likely local URL - include app handled parameters
+      #strCraftURL += f""
+      strCraftSufix = ""
+      if len(strCraftSub) > 0:
+         strCraftSuffix += f"sub={strCraftSub}&"
+      if len(lstCraftMediaType) > 0:
+         strCraftSuffix += f"mediatype={strCraftSub}&"
+      if intCraftLimit > 0:
+         strCraftSuffix += f"limit={intCraftLimit}&"
+      if len(strCraftSort) > 0:
+         strCraftSuffix += f"sort={strCraftSort}&"
+      if len(strCraftView) > 0:
+         strCraftSuffix += f"view={strCraftView}&"
+      if bolCraftNSFW:
+         strCraftSuffix += f"nsfw=1&"
+      else:
+         strCraftSuffix += f"nsfw=0&"
+      if len(strCraftAfter) > 0:
+         strCraftSuffix += f"after={strCraftAfter}"
+         
+      #check if last character is ampersand
+      if strCraftSuffix[-1] = "&":
+         strCraftSuffix = strCraftSuffix[:-1]
+      if len(strCraftSuffix) > 0:
+         strCraftURL += "?{strCraftSuffix}"
+         
    return strCraftURL
 
 def html_parseurl(strPuURL):
@@ -329,12 +340,13 @@ def html_form(strFormDestination, strFormSub="all", lstFormMediaType=["images, v
    strFormOutput += f"<input type=\"radio\" id=\"gallery\" name=\"view\" value=\"gallery\" disabled><label for=\"gallery\">Gallery View</label>"
 
    # translate bolFormNSFW into check
-   strFormOutput += f"<input type=\"checkbox\" id=\"nsfw\" name=\"nsfw\" value=\"nsfw\" checked disabled><label for=\"nsfw\">Over_18?</label><br>"
+   strFormOutput += f"<input type=\"checkbox\" id=\"nsfw\" name=\"nsfw\" value=\"nsfw\" checked disabled><label for=\"nsfw\">Allow 18+ Content?</label><br>"
    
    strFormOutput += f"<br><br>"
    #   need to add HUMAN? style checkbox here, required before allowing submit, bot stopper-ish
    #      also likely do not want to show results and "next" link on first load - bot could continue w/o human checkbox
-   strFormOutput += f"<input type=\"checkbox\" id=\"human\" name=\"human\" value=\"human\" required><label for=\"human\">Are you <font color=red>human</font>?<font color=red>*</font></label><br>"
+   strFormOutput += "Are you <font color=red>human</font>?<font color=red>*</font>"
+   strFormOutput += f"<input type=\"checkbox\" id=\"human\" name=\"human\" value=\"human\" required><label for=\"human\">Yes</label><br>"
    strFormOutput += f"<button type=\"submit\">Browse Media</button>"   
    strFormOutput += f"</form><br><br>"
 
@@ -366,9 +378,6 @@ def app_main_getmedia(strGmBaseDestURL, strGmSubReddit="all", lstGmMediaType=["i
       strGmOutput += html_form(strGmBaseDestURL, strGmSubReddit, lstGmMediaType, intGmLimit, strGmSort, strGmView, bolGmNSFW)
 
       
-
-      # review stopped here - 2025-1012
-
       
       
       #Should - Test if existing token works using known simple api call?
