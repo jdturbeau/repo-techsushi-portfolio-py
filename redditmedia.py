@@ -280,7 +280,7 @@ def html_crafturl(strCraftBaseURL, strCraftSub="all", lstCraftMediaType=["images
       if len(strCraftSub) > 0:
          strCraftSuffix += f"sub={strCraftSub}&"
       if len(lstCraftMediaType) > 0:
-         strCraftSuffix += f"mediatype={strCraftSub}&"
+         strCraftSuffix += f"mediatype={lstCraftMediaType}&"
       if intCraftLimit > 0:
          strCraftSuffix += f"limit={intCraftLimit}&"
       if len(strCraftSort) > 0:
@@ -348,7 +348,7 @@ def html_form(strFormDestination, strFormSub="all", lstFormMediaType=["images, v
    #      also likely do not want to show results and "next" link on first load - bot could continue w/o human checkbox
    strFormOutput += "Are you <font color=red>human</font>?<font color=red>*</font>"
    #strFormOutput += f"<input type=\"checkbox\" id=\"human\" name=\"human\" value=\"human\" required><label for=\"human\">Yes</label><br>"
-   strFormOutput += f"<input type=\"checkbox\" id=\"human\" name=\"human\" value=\"human\" required><label for=\"human\">Yes</label>"
+   strFormOutput += f"<input type=\"checkbox\" id=\"human\" name=\"human\" value=\"human\" required><label for=\"human\">Yes&emsp;</label>"
    strFormOutput += f"<button type=\"submit\">Browse Media</button>"   
    strFormOutput += f"</form><br><br>"
 
