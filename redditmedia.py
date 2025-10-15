@@ -488,7 +488,7 @@ def app_main_getmedia(strGmBaseDestURL, strGmSubReddit="all", lstGmMediaType=["i
          if intGmMediaFound >= intGmLimit:
             # count media results returned, break out of while loop if equal or over limit
             break
-         if intRun >= 4:
+         if intGmRun >= 4:
             #prevent undesired loop runaway for subreddits that may not have much or any media
             break
    
