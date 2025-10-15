@@ -471,10 +471,11 @@ def app_main_getmedia(strGmBaseDestURL, strGmSubReddit="all", lstGmMediaType=["i
 
 
          '''
-         if not strAfter:
-            strAfter = ""
-         else:
-            strGmPattern = r"((?<=after\=)(.*?)(?=&))|((?<=after\=).*)"
+         #if not strAfter:
+            #strAfter = ""
+         #else:
+            # re.escape equal sign does not need escape character
+            #strGmPattern = r"((?<=after=)(.*?)(?=&))|((?<=after=).*)"
             # strGmApiURL - reddit api url
             strGmApiURL = re.sub(strGmPattern, strAfter, strGmApiURL, flags=re.IGNORECASE)
             # strGmDestURL - local app url
@@ -506,7 +507,7 @@ def app_main_getmedia(strGmBaseDestURL, strGmSubReddit="all", lstGmMediaType=["i
       strGmOutput += f"<p align=\"right\"><a href=\"{strGmNextURL}\">Next Posts</a></p>"
       
       # need to remove after= entry
-      #strGmPattern = r"(\&after\=)(.*?)(?=&)|(\&after\=).*"
+      #strGmPattern = r"(\&after=)(.*?)(?=&)|(\&after=).*"
       #strGmReturnURL = re.sub(strGmPattern, "", strGmBaseDestURL, flags=re.IGNORECASE)
       # should use function to craft internal URL
       strGmRefreshURL = html_crafturl(strGmBaseDestURL, strGmSubReddit, lstGmMediaType, intGmLimit, strGmSort, strGmView, bolGmNSFW, "")
