@@ -475,7 +475,7 @@ def app_main_getmedia(strGmBaseDestURL, strGmSubReddit="all", lstGmMediaType=["i
             
             if not strAfter in strGmBaseDestURL:
                #to craft Next Posts link
-               strDestURL += f"&after={strAfter}"
+               strGmBaseDestURL += f"&after={strAfter}"
             if not strAfter in strGmApiURL:
                #to craft API url for next batch
                strGmApiURL += f"?after={strAfter}"
