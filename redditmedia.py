@@ -124,8 +124,16 @@ def kv_refreshtoken(strRefVault, strRefRedditURL):
       
    return
 
-def reddit_getjson(strGjSubReddit, lstGjMediaType, intGjLimit, strGjSort, strGjView, bolGjNSFW, strAfter, strGjTokenType, strGjToken, strGjURL):
+def reddit_getjson(strGjTokenType, strGjToken, strGjURL, strGjSort, strAfter):
 
+   # reddit_getjson(strGjSubReddit, lstGjMediaType, intGjLimit, strGjSort, strGjView, bolGjNSFW, strAfter, strGjTokenType, strGjToken, strGjURL):
+   #    to be handled / used in jsontohtml
+   #      strGjSubReddit
+   #      lstGjMediaType
+   #      intGjLimit
+   #      strGjView
+   #      bolGjNSFW
+   
    #add params for:
    # result count (display limit) - this likely belongs in jsontohtml function
    # list view / gallery view
@@ -164,6 +172,8 @@ def reddit_getjson(strGjSubReddit, lstGjMediaType, intGjLimit, strGjSort, strGjV
    return dictGjJson
 
 def reddit_jsontohtml(jsonHtmlContent, lstHtmlMediaType):
+
+   #reddit_getjson(strGjSubReddit, lstGjMediaType, intGjLimit, strGjSort, strGjView, bolGjNSFW, strAfter, strGjTokenType, strGjToken, strGjURL):
    
    #consider [], [images], [videos], [images, videos], (other/unknown)
    #consider new, hot, rising, controversial, top
@@ -271,13 +281,16 @@ def html_crafturl(strCraftBaseURL, strCraftSub="all", lstCraftMediaType=["images
    strCraftContains = ".reddit.com/"
    if strCraftContains.lower() in strCraftBaseURL.lower():
       # oauth or token refresh - can ignore app handled parameters
-      strCraftURL += f"{strCraftSub}/{strCraftSort}"
+      if len(strCraftSub) > 0:
+         strCraftURL += f"{strCraftSub}/{strCraftSort}"
+      else:
+         strCraftURL += f"all/{strCraftSort}"
       if len(strCraftAfter) > 0:
          strCraftURL += f"?after={strCraftAfter}"
    else:
       # likely local URL - include app handled parameters
       #strCraftURL += f""
-      strCraftSufix = ""
+      strCraftSuffix = ""
       if len(strCraftSub) > 0:
          strCraftSuffix += f"sub={strCraftSub}&"
       if len(lstCraftMediaType) > 0:
@@ -430,7 +443,9 @@ def app_main_getmedia(strGmBaseDestURL, strGmSubReddit="all", lstGmMediaType=["i
       
       while True:
          
-         dictGmResponse = reddit_getjson(strGmSubReddit, lstGmMediaType, intGmLimit, strGmSort, strGmView, bolGmNSFW, strAfter, strTokenType, strToken, strGmApiURL)
+         #dictGmResponse = reddit_getjson(strGmSubReddit, lstGmMediaType, intGmLimit, strGmSort, strGmView, bolGmNSFW, strAfter, strTokenType, strToken, strGmApiURL)
+         #   reddit_getjson(strGjTokenType, strGjToken, strGjURL, strGjSort, strAfter):
+         dictGmResponse = reddit_getjson(strTokenType, strToken, strGmApiURL, strGmSort, strAfter)
          # strGmBaseDestURL - local app url
          # strGmApiURL - reddit api url
          # Dest URL to be handled outside of function
