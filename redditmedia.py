@@ -266,7 +266,7 @@ def reddit_jsontohtml(jsonHtmlContent, lstHtmlMediaType):
 
    return strHtmlOutput
 
-def html_crafturl(strCraftBaseURL, strCraftSub="all", lstCraftMediaType=["images, videos"], intCraftLimit=10, strCraftSort="new", strCraftView="list", bolCraftNSFW=True, strCraftAfter=""):
+def html_crafturl(strCraftBaseURL, strCraftSub="all", lstCraftMediaType=["images", "videos"], intCraftLimit=10, strCraftSort="new", strCraftView="list", bolCraftNSFW=True, strCraftAfter=""):
 
    # May use this function for reddit api calls AND local URL format
    
@@ -295,6 +295,8 @@ def html_crafturl(strCraftBaseURL, strCraftSub="all", lstCraftMediaType=["images
       strCraftSuffix = ""
       if len(strCraftSub) > 0:
          strCraftSuffix += f"sub={strCraftSub}&"
+      else:
+         strCraftSuffix += f"sub=all&"
       if len(lstCraftMediaType) > 0:
          strCraftSuffix += f"mediatype={lstCraftMediaType}&"
       if intCraftLimit > 0:
