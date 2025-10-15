@@ -301,7 +301,7 @@ def html_crafturl(strCraftBaseURL, strCraftSub="all", lstCraftMediaType=["images
          strCraftSuffix += f"sub=all&"
       if len(lstCraftMediaType) > 0:
          strCraftSuffix += f"mediatype={lstCraftMediaType}&"
-      if intCraftLimit > 0:
+      if int(intCraftLimit) > 0:
          strCraftSuffix += f"limit={intCraftLimit}&"
       if len(strCraftSort) > 0:
          strCraftSuffix += f"sort={strCraftSort}&"
@@ -397,8 +397,10 @@ def app_main_getmedia(strGmBaseDestURL, strGmSubReddit="all", lstGmMediaType=["i
       
       # need to CAP intLIMIT to avoid malicious use (perhaps 30?)
       #    intLimit is intended for display limit, not retrieval limit - may not always retrieve media for each thread
-      if intGmLimit > 30:
+      if int(intGmLimit) > 30:
          intGmLimit = 30
+      if int(intGmLimit) < 1:
+         intGmLimit = 1
       
       intGmMediaFound = 0   #m easure found media items against limit desired
       intGmRun = 0   # used to avoid hang/loop cycle for subreddit that may not have any media
