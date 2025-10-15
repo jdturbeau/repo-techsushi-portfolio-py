@@ -516,8 +516,8 @@ def app_main_getmedia(strGmBaseDestURL, strGmSubReddit="all", lstGmMediaType=["i
    
    except Exception as e:
       strGmOutput = html_crafterror("APP MAIN GETMEDIA", e)
-      if not dictGmResponse:
-         strPrettyJson = f"dictGResponse is null"
+      if not 'dictGmResponse' in locals():
+         strPrettyJson = f"dictGmResponse is null"
       else:
          strPrettyJson = json.dumps(dictGmResponse, indent=4)
       strGmOutput += f"<br><br><pre>{strPrettyJson}</pre>"
