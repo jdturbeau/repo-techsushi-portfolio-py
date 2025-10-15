@@ -329,7 +329,7 @@ def html_parseurl(strPuURL):
    
    return
    
-def html_form(strFormDestination, strFormSub="all", lstFormMediaType=["images, videos"], intFormLimit=10, strFormSort="new", strFormView="list", bolFormNSFW=True):
+def html_form(strFormDestination, strFormSub="all", lstFormMediaType=["images", "videos"], intFormLimit=10, strFormSort="new", strFormView="list", bolFormNSFW=True):
    
    # intFormLimit = minimum number of media items to return
    #    not related to results requested from single API call
@@ -377,7 +377,7 @@ def html_form(strFormDestination, strFormSub="all", lstFormMediaType=["images, v
   
    return strFormOutput
 
-def app_main_getmedia(strGmBaseDestURL, strGmSubReddit="all", lstGmMediaType=["images, videos"], intGmLimit=10, strGmSort="new", strGmView="list", bolGmNSFW=True, strAfter=""):
+def app_main_getmedia(strGmBaseDestURL, strGmSubReddit="all", lstGmMediaType=["images", "videos"], intGmLimit=10, strGmSort="new", strGmView="list", bolGmNSFW=True, strAfter=""):
 
    #
    # future: Use DICT object instead of multiple variables for parameters
@@ -440,14 +440,14 @@ def app_main_getmedia(strGmBaseDestURL, strGmSubReddit="all", lstGmMediaType=["i
       strTokenType = kv_get(strVault, strTokenType)
       strToken = app_dictionary("kv_token")
       strToken = kv_get(strVault, strToken)
-      #strURL = app_dictionary("url_oauth")
+
       strGmURL = app_dictionary("url_oauth")
       
-      # Use function to craft URL to pass to API
-      #    strGmApiURL is API URL with subreddit, sort, after params
-      strGmApiURL = html_crafturl(strGmURL, strGmSubReddit, lstGmMediaType, intGmLimit, strGmSort, strGmView, bolGmNSFW, strAfter)
-      
       while True:
+         
+         # Use function to craft URL to pass to API
+         #    strGmApiURL is API URL with subreddit, sort, after params
+         strGmApiURL = html_crafturl(strGmURL, strGmSubReddit, lstGmMediaType, intGmLimit, strGmSort, strGmView, bolGmNSFW, strAfter)
          
          #dictGmResponse = reddit_getjson(strGmSubReddit, lstGmMediaType, intGmLimit, strGmSort, strGmView, bolGmNSFW, strAfter, strTokenType, strToken, strGmApiURL)
          #   reddit_getjson(strGjTokenType, strGjToken, strGjURL, strGjSort, strAfter):
@@ -468,6 +468,8 @@ def app_main_getmedia(strGmBaseDestURL, strGmSubReddit="all", lstGmMediaType=["i
          strGmOutput += strGmBody
             
          strAfter = dictGmResponse["data"]["after"]
+
+
          '''
          if not strAfter:
             strAfter = ""
@@ -514,7 +516,10 @@ def app_main_getmedia(strGmBaseDestURL, strGmSubReddit="all", lstGmMediaType=["i
    
    except Exception as e:
       strGmOutput = html_crafterror("APP MAIN GETMEDIA", e)
-      strPrettyJson = json.dumps(dictGmResponse, indent=4)
+      if not dictGmResponse:
+         strPrettyJson = f"dictGResponse is null"
+      else:
+         strPrettyJson = json.dumps(dictGmResponse, indent=4)
       strGmOutput += f"<br><br><pre>{strPrettyJson}</pre>"
       return strGmOutput
    return strGmOutput
