@@ -395,26 +395,25 @@ def app_main_getmedia(strGmBaseDestURL, strGmSubReddit="all", lstGmMediaType=["i
    '''
    {
    invalid subreddit
- "kind": "Listing",
- "data": {
-     "after": null,
-     "dist": 0,
-     "modhash": "",
-     "geo_filter": "",
-     "children": [],
-     "before": null
-    }
-   }
-   '''
-   '''
+    "kind": "Listing",
+    "data": {
+        "after": null,
+        "dist": 0,
+        "modhash": "",
+        "geo_filter": "",
+        "children": [],
+        "before": null
+       }
+      }
+   
    valid subreddit
-       "kind": "Listing",
-       "data": {
-     "after": "t3_1o1cnhp",
-     "dist": 25,
-     "modhash": "",
-     "geo_filter": "",
-     "children": [
+      "kind": "Listing",
+          "data": {
+        "after": "t3_1o1cnhp",
+        "dist": 25,
+        "modhash": "",
+        "geo_filter": "",
+        "children": [
    '''
    
    strTokenType = app_dictionary("kv_tokentype")
