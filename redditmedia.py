@@ -183,7 +183,8 @@ def reddit_jsontohtml(jsonHtmlContent, lstHtmlMediaType):
       if not jsonHtmlContent:
          strHtmlOutput = html_crafterror("JSONtoHTML", f"JSON response provided is null!")
          return strHtmlOutput
-      
+
+      # Check if json looks like empty response or subreddit invalid
       
       '''
       #perhaps handle AFTER crafting in a separate function after this function
@@ -266,7 +267,7 @@ def reddit_jsontohtml(jsonHtmlContent, lstHtmlMediaType):
 
    return strHtmlOutput
 
-def html_crafturl(strCraftBaseURL, strCraftSub="all", lstCraftMediaType=["images", "videos"], intCraftLimit=10, strCraftSort="new", strCraftView="list", bolCraftNSFW=True, strCraftAfter=""):
+def html_crafturl(strCraftBaseURL, strCraftSub="all", lstCraftMediaType="iv", intCraftLimit=10, strCraftSort="new", strCraftView="list", bolCraftNSFW=True, strCraftAfter=""):
 
    # May use this function for reddit api calls AND local URL format
    
@@ -329,7 +330,7 @@ def html_parseurl(strPuURL):
    
    return
    
-def html_form(strFormDestination, strFormSub="all", lstFormMediaType=["images", "videos"], intFormLimit=10, strFormSort="new", strFormView="list", bolFormNSFW=True):
+def html_form(strFormDestination, strFormSub="all", lstFormMediaType="iv", intFormLimit=10, strFormSort="new", strFormView="list", bolFormNSFW=True):
    
    # intFormLimit = minimum number of media items to return
    #    not related to results requested from single API call
@@ -377,7 +378,7 @@ def html_form(strFormDestination, strFormSub="all", lstFormMediaType=["images", 
   
    return strFormOutput
 
-def app_main_getmedia(strGmBaseDestURL, strGmSubReddit="all", lstGmMediaType=["images", "videos"], intGmLimit=10, strGmSort="new", strGmView="list", bolGmNSFW=True, strAfter=""):
+def app_main_getmedia(strGmBaseDestURL, strGmSubReddit="all", lstGmMediaType="iv", intGmLimit=10, strGmSort="new", strGmView="list", bolGmNSFW=True, strAfter=""):
 
    #
    # future: Use DICT object instead of multiple variables for parameters
@@ -459,7 +460,7 @@ def app_main_getmedia(strGmBaseDestURL, strGmSubReddit="all", lstGmMediaType=["i
          # Dest URL to be handled outside of function
    
          # is dictGmResponse empty / null / data.dist = 0 / data.before==data.after
-         if not dictGmResponse:
+         if not 'dictGmResponse' in locals():
             strGmOutput = html_crafterror("APP MAIN GETMEDIA", f"{e}<br>URL: {strGjURL}<br>Status Code: {strGjReqStatus}<br>Token type: {strGjTokenType}")
             return strGmOutput
          
