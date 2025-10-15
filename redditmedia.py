@@ -369,126 +369,125 @@ def app_main_getmedia(strGmBaseDestURL, strGmSubReddit="all", lstGmMediaType=["i
    #table with
    #   overview, what, technologies involved,
    
-   try:
-      strGmOutput = app_dictionary("html_header")
-      
-      # ensure distinction between API RESULTS LIMIT and app defined DISPLAY LIMIT
-      #    Example - 50 results returned may not equal 50 displayed media items
-      
-      # need to CAP intLIMIT to avoid malicious use (perhaps 30?)
-      #    intLimit is intended for display limit, not retrieval limit - may not always retrieve media for each thread
-      if intGmLimit > 30:
-         intGmLimit = 30
-      
-      intGmMediaFound = 0   #m easure found media items against limit desired
-      intGmRun = 0   # used to avoid hang/loop cycle for subreddit that may not have any media
-      
-      strGmOutput += html_form(strGmBaseDestURL, strGmSubReddit, lstGmMediaType, intGmLimit, strGmSort, strGmView, bolGmNSFW)
-            
-      #Should - Test if existing token works using known simple api call?
-      
-      strVault = app_dictionary("kv_name")
-      strRedditURL = app_dictionary("url_login")
-      strResult = kv_refreshtoken(strVault, strRedditURL)
-
-      #Should - Test if subreddit exists
-      '''
-      {
-      invalid subreddit
-    "kind": "Listing",
-    "data": {
-        "after": null,
-        "dist": 0,
-        "modhash": "",
-        "geo_filter": "",
-        "children": [],
-        "before": null
-       }
-      }
-      '''
-      '''
-      valid subreddit
-          "kind": "Listing",
-          "data": {
-        "after": "t3_1o1cnhp",
-        "dist": 25,
-        "modhash": "",
-        "geo_filter": "",
-        "children": [
-      '''
-      
-      strTokenType = app_dictionary("kv_tokentype")
-      strTokenType = kv_get(strVault, strTokenType)
-      strToken = app_dictionary("kv_token")
-      strToken = kv_get(strVault, strToken)
-      #strURL = app_dictionary("url_oauth")
-      strGmURL = app_dictionary("url_oauth")
-      
-      # Use function to craft URL to pass to API
-      #    strGmApiURL is API URL with subreddit, sort, after params
-      strGmApiURL = html_crafturl(strGmURL, strGmSubReddit, lstGmMediaType, intGmLimit, strGmSort, strGmView, bolGmNSFW, strAfter)
-      
-      while True:
+   #try:
+   strGmOutput = app_dictionary("html_header")
+   
+   # ensure distinction between API RESULTS LIMIT and app defined DISPLAY LIMIT
+   #    Example - 50 results returned may not equal 50 displayed media items
+   
+   # need to CAP intLIMIT to avoid malicious use (perhaps 30?)
+   #    intLimit is intended for display limit, not retrieval limit - may not always retrieve media for each thread
+   if intGmLimit > 30:
+      intGmLimit = 30
+   
+   intGmMediaFound = 0   #m easure found media items against limit desired
+   intGmRun = 0   # used to avoid hang/loop cycle for subreddit that may not have any media
+   
+   strGmOutput += html_form(strGmBaseDestURL, strGmSubReddit, lstGmMediaType, intGmLimit, strGmSort, strGmView, bolGmNSFW)
          
-         dictGmResponse = reddit_getjson(strGmSubReddit, lstGmMediaType, intGmLimit, strGmSort, strGmView, bolGmNSFW, strAfter, strTokenType, strToken, strGmApiURL)
-         # strGmBaseDestURL - local app url
+   #Should - Test if existing token works using known simple api call?
+   
+   strVault = app_dictionary("kv_name")
+   strRedditURL = app_dictionary("url_login")
+   strResult = kv_refreshtoken(strVault, strRedditURL)
+
+   #Should - Test if subreddit exists
+   '''
+   {
+   invalid subreddit
+ "kind": "Listing",
+ "data": {
+     "after": null,
+     "dist": 0,
+     "modhash": "",
+     "geo_filter": "",
+     "children": [],
+     "before": null
+    }
+   }
+   '''
+   '''
+   valid subreddit
+       "kind": "Listing",
+       "data": {
+     "after": "t3_1o1cnhp",
+     "dist": 25,
+     "modhash": "",
+     "geo_filter": "",
+     "children": [
+   '''
+   
+   strTokenType = app_dictionary("kv_tokentype")
+   strTokenType = kv_get(strVault, strTokenType)
+   strToken = app_dictionary("kv_token")
+   strToken = kv_get(strVault, strToken)
+   #strURL = app_dictionary("url_oauth")
+   strGmURL = app_dictionary("url_oauth")
+   
+   # Use function to craft URL to pass to API
+   #    strGmApiURL is API URL with subreddit, sort, after params
+   strGmApiURL = html_crafturl(strGmURL, strGmSubReddit, lstGmMediaType, intGmLimit, strGmSort, strGmView, bolGmNSFW, strAfter)
+   
+   while True:
+      
+      dictGmResponse = reddit_getjson(strGmSubReddit, lstGmMediaType, intGmLimit, strGmSort, strGmView, bolGmNSFW, strAfter, strTokenType, strToken, strGmApiURL)
+      # strGmBaseDestURL - local app url
+      # strGmApiURL - reddit api url
+      # Dest URL to be handled outside of function
+
+      # is dictGmResponse empty / null / data.dist = 0 / data.before==data.after
+      if not dictGmResponse:
+         strGmOutput = html_crafterror("APP MAIN GETMEDIA", f"{e}<br>URL: {strGjURL}<br>Status Code: {strGjReqStatus}<br>Token type: {strGjTokenType}")
+         return strGmOutput
+      
+      strGmBody = reddit_jsontohtml(dictGmResponse, lstGmMediaType)
+
+      # how to check if strGmBody contains HTML vs error
+      
+      strGmOutput += strGmBody
+         
+      strAfter = dictGmResponse["data"]["after"]
+      if not strAfter:
+         strAfter = ""
+      else:
+         strGmPattern = r"((?<=after\=)(.*?)(?=&))|((?<=after\=).*)"
          # strGmApiURL - reddit api url
-         # Dest URL to be handled outside of function
-
-         # is dictGmResponse empty / null / data.dist = 0 / data.before==data.after
-         if not dictGmResponse:
-            strGmOutput = html_crafterror("APP MAIN GETMEDIA", f"{e}<br>URL: {strGjURL}<br>Status Code: {strGjReqStatus}<br>Token type: {strGjTokenType}")
-            return strGmOutput
+         strGmApiURL = re.sub(strGmPattern, strAfter, strGmApiURL, flags=re.IGNORECASE)
+         # strGmDestURL - local app url
+         strGmBaseDestURL = re.sub(strGmPattern, strAfter, strGmBaseDestURL, flags=re.IGNORECASE)
          
-         strGmBody = reddit_jsontohtml(dictGmResponse, lstGmMediaType)
-
-         # how to check if strGmBody contains HTML vs error
+         #verify if below is necessary
          
-         strGmOutput += strGmBody
-            
-         strAfter = dictGmResponse["data"]["after"]
-         if not strAfter:
-            strAfter = ""
-         else:
-            strGmPattern = r"((?<=after\=)(.*?)(?=&))|((?<=after\=).*)"
-            # strGmApiURL - reddit api url
-            strGmApiURL = re.sub(strGmPattern, strAfter, strGmApiURL, flags=re.IGNORECASE)
-            # strGmDestURL - local app url
-            strGmBaseDestURL = re.sub(strGmPattern, strAfter, strGmBaseDestURL, flags=re.IGNORECASE)
-            
-            #verify if below is necessary
-            
-            if not strAfter in strGmBaseDestURL:
-               #to craft Next Posts link
-               strDestURL += f"&after={strAfter}"
-            if not strAfter in strGmApiURL:
-               #to craft API url for next batch
-               strGmApiURL += f"?after={strAfter}"
-         
-         strGmJSON = str(dictGmResponse)
-         intGmFound = strGmJSON.count("\"post_hint\":")
-         intGmMediaFound += intGmFound
-         intGmRun += 1
-
-         if intGmMediaFound >= intGmLimit:
-            # count media results returned, break out of while loop if equal or over limit
-            break
-         if intRun >= 4:
-            #prevent undesired loop runaway for subreddits that may not have much or any media
-            break
-
-      # should use function to craft internal URL
-      strGmOutput += f"<p align=\"right\"><a href=\"{strGmBaseDestURL}\">Next Posts</a></p>"
+         if not strAfter in strGmBaseDestURL:
+            #to craft Next Posts link
+            strDestURL += f"&after={strAfter}"
+         if not strAfter in strGmApiURL:
+            #to craft API url for next batch
+            strGmApiURL += f"?after={strAfter}"
       
-      # need to remove after= entry
-      strGmPattern = r"(\&after\=)(.*?)(?=&)|(\&after\=).*"
-      strGmReturnURL = re.sub(strGmPattern, "", strGmBaseDestURL, flags=re.IGNORECASE)
-      # should use function to craft internal URL
-      strGmOutput += f"<p align=\"right\"><a href=\"{strGmReturnURL}\">Reload From Beginning</a></p>"
-      
-      strGmOutput += app_dictionary("html_footer")
-   finally:
-      strGMOutput += "testing..."
+      strGmJSON = str(dictGmResponse)
+      intGmFound = strGmJSON.count("\"post_hint\":")
+      intGmMediaFound += intGmFound
+      intGmRun += 1
+
+      if intGmMediaFound >= intGmLimit:
+         # count media results returned, break out of while loop if equal or over limit
+         break
+      if intRun >= 4:
+         #prevent undesired loop runaway for subreddits that may not have much or any media
+         break
+
+   # should use function to craft internal URL
+   strGmOutput += f"<p align=\"right\"><a href=\"{strGmBaseDestURL}\">Next Posts</a></p>"
+   
+   # need to remove after= entry
+   strGmPattern = r"(\&after\=)(.*?)(?=&)|(\&after\=).*"
+   strGmReturnURL = re.sub(strGmPattern, "", strGmBaseDestURL, flags=re.IGNORECASE)
+   # should use function to craft internal URL
+   strGmOutput += f"<p align=\"right\"><a href=\"{strGmReturnURL}\">Reload From Beginning</a></p>"
+   
+   strGmOutput += app_dictionary("html_footer")
+   
    #except Exception as e:
       #strGmOutput = html_crafterror("APP MAIN GETMEDIA", e)
       #return strGmOutput
