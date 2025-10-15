@@ -500,8 +500,8 @@ def app_main_getmedia(strGmBaseDestURL, strGmSubReddit="all", lstGmMediaType=["i
       #strGmPattern = r"(\&after\=)(.*?)(?=&)|(\&after\=).*"
       #strGmReturnURL = re.sub(strGmPattern, "", strGmBaseDestURL, flags=re.IGNORECASE)
       # should use function to craft internal URL
-      strGmNextURL = html_crafturl(strGmBaseDestURL, strGmSubReddit, lstGmMediaType, intGmLimit, strGmSort, strGmView, bolGmNSFW, "")
-      strGmOutput += f"<p align=\"right\"><a href=\"{strGmReturnURL}\">Reload From Beginning</a></p>"
+      strGmRefreshURL = html_crafturl(strGmBaseDestURL, strGmSubReddit, lstGmMediaType, intGmLimit, strGmSort, strGmView, bolGmNSFW, "")
+      strGmOutput += f"<p align=\"right\"><a href=\"{strGmRefreshURL}\">Reload From Beginning</a></p>"
       
       strGmOutput += app_dictionary("html_footer")
    
