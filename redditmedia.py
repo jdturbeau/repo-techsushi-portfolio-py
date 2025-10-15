@@ -488,6 +488,7 @@ def app_main_getmedia(strGmBaseDestURL, strGmSubReddit="all", lstGmMediaType=["i
       
       strGmOutput += app_dictionary("html_footer")
    finally:
+      strGMOutput += "testing..."
    #except Exception as e:
       #strGmOutput = html_crafterror("APP MAIN GETMEDIA", e)
       #return strGmOutput
