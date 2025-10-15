@@ -276,6 +276,8 @@ def html_crafturl(strCraftBaseURL, strCraftSub="all", lstCraftMediaType=["images
 
    strCraftURL = strCraftBaseURL # should end with /
    # check if need to add / in between
+   if not strCraftURL[-1] == "/":
+      strCraftURL += "/"
    # check if url passed has parameters already to strip off first
    
    strCraftContains = ".reddit.com/"
@@ -312,7 +314,7 @@ def html_crafturl(strCraftBaseURL, strCraftSub="all", lstCraftMediaType=["images
       if strCraftSuffix[-1] == "&":
          strCraftSuffix = strCraftSuffix[:-1]
       if len(strCraftSuffix) > 0:
-         strCraftURL += "?{strCraftSuffix}"
+         strCraftURL += f"?{strCraftSuffix}"
          
    return strCraftURL
 
