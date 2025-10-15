@@ -508,4 +508,4 @@ def app_main_getmedia(strGmBaseDestURL, strGmSubReddit="all", lstGmMediaType=["i
       strPrettyJson = json.dumps(dictGmResponse, indent=4)
       strGmOutput += f"<br><br><pre>{strPrettyJson}</pre>"
       return strGmOutput
-   return strWebOutput
+   return strGmOutput
