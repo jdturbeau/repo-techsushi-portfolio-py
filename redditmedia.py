@@ -466,6 +466,7 @@ def app_main_getmedia(strGmBaseDestURL, strGmSubReddit="all", lstGmMediaType=["i
          strGmOutput += strGmBody
             
          strAfter = dictGmResponse["data"]["after"]
+         '''
          if not strAfter:
             strAfter = ""
          else:
@@ -483,7 +484,7 @@ def app_main_getmedia(strGmBaseDestURL, strGmSubReddit="all", lstGmMediaType=["i
             if not strAfter in strGmApiURL:
                #to craft API url for next batch
                strGmApiURL += f"?after={strAfter}"
-         
+         '''
          strGmJSON = str(dictGmResponse)
          intGmFound = strGmJSON.count("\"post_hint\":")
          intGmMediaFound += intGmFound
