@@ -97,7 +97,7 @@ def rmrresults():
    match strMethod:
       case "POST":
          strSubReddit = request.form.get("sub", "all")
-         lstMediaType = request.form.getlist("mediatype")
+         lstMediaType = request.form.get("mediatype", "iv")
          intLimit = request.form.get("limit", 10)
          strSort = request.form.get("sort", "new")
          strView = request.form.get("view", "list")
@@ -106,7 +106,7 @@ def rmrresults():
          
       case "GET":
          strSubReddit = request.args.get("sub", "all")
-         lstMediaType = request.args.getlist("mediatype")
+         lstMediaType = request.args.get("mediatype", "iv")
          intLimit = request.args.get("limit", 10)
          strSort = request.args.get("sort", "new")
          strView = request.args.get("view", "list")
@@ -116,7 +116,7 @@ def rmrresults():
       case _:
          # defaults or unknown 
          strSubReddit = "all"
-         lstMediaType = ["images, videos"]
+         lstMediaType = "iv"
          intLimit = 10
          strSort = "new"
          strView = "list"
@@ -124,8 +124,8 @@ def rmrresults():
          strAfter = ""
 
    #if lstMediaType == []:
-   if not lstMediaType:
-      lstMediaType = ["images, videos"]
+   if not lstMediaType in locals():
+      lstMediaType = "iv"
    
    strWebOutput = redditmedia.app_main_getmedia("rmrresults", strSubReddit, lstMediaType, intLimit, strSort, strView, bolNSFW, strAfter)
    
