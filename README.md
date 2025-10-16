@@ -15,6 +15,7 @@
 > 7. add date / days ago to media entry display
 > 8. handle dist = 0 for end of new > next > next > next (instead of error displayed)
 > 9. name or acronym - reddit media reveal redmedrev ?
+> 10. search subreddit list and category
 >
 
 * Blog
