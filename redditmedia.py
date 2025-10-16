@@ -171,8 +171,9 @@ def reddit_getjson(strGjTokenType, strGjToken, strGjURL, strGjSort, strAfter):
 
    return dictGjJson
 
-def reddit_jsontohtml(jsonHtmlContent, lstHtmlMediaType):
+def reddit_jsontohtml(jsonHtmlContent, lstHtmlMediaType, strHtmlBaseDestURL):
 
+   # strHtmlBaseDestURL - local app destination for links
    #reddit_getjson(strGjSubReddit, lstGjMediaType, intGjLimit, strGjSort, strGjView, bolGjNSFW, strAfter, strGjTokenType, strGjToken, strGjURL):
    
    #consider [], [images], [videos], [images, videos], (other/unknown)
@@ -223,9 +224,9 @@ def reddit_jsontohtml(jsonHtmlContent, lstHtmlMediaType):
          #/r/u_ExampleUser/new
          #   there is likely a different link for POSTED BY vs u_(user) sub
          #      need to explore this
-         strHtmlAuthorLink = f"./redmedia?sub=u_{strThreadAuthor}"
+         strHtmlAuthorLink = f"./{strHtmlBaseDestURL}?sub=u_{strThreadAuthor}"
          #strHtmlThreadOutput += f"<a href=\"{strSubRedLink}\">r/{strSubRed}</a> - <a href=\"{strAuthorLink}\"><b>{strThreadAuthor}</b></a> - {strThreadComments} Comment(s) / Post Type - {strThreadType}<br><p>"
-         strHtmlThreadOutput += f"<a href=\"./redmedia?sub={strSubRed}\">r/{strSubRed}</a> - <a href=\"{strHtmlAuthorLink}\"><b>{strThreadAuthor}</b></a> - {strThreadComments} Comment(s) / Post Type - {strThreadType}<br><p>"
+         strHtmlThreadOutput += f"<a href=\"./{strHtmlBaseDestURL}?sub={strSubRed}\">r/{strSubRed}</a> - <a href=\"{strHtmlAuthorLink}\"><b>{strThreadAuthor}</b></a> - {strThreadComments} Comment(s) / Post Type - {strThreadType}<br><p>"
          
          #ThreadType : link, image, hosted:video, null, (gallery?)
          match strThreadType:
@@ -391,6 +392,14 @@ def app_main_getmedia(strGmBaseDestURL, strGmSubReddit="all", lstGmMediaType="iv
    #   overview, what, technologies involved,
    
    try:
+      # not sanitizing strGmBaseDestURL - assumption that this is app controlled
+      strGmSubReddit = app_sanitize(strGmSubReddit)
+      lstGmMediaType = app_sanitize(lstGmMediaType)
+      strGmSort = app_sanitize(strGmSort)
+      strGmView = app_sanitize(strGmView)
+      strAfter = app_sanitize(strAfter)
+      
+      
       strGmOutput = app_dictionary("html_header")
       
       # ensure distinction between API RESULTS LIMIT and app defined DISPLAY LIMIT
@@ -464,7 +473,7 @@ def app_main_getmedia(strGmBaseDestURL, strGmSubReddit="all", lstGmMediaType="iv
             strGmOutput = html_crafterror("APP MAIN GETMEDIA", f"{e}<br>URL: {strGjURL}<br>Status Code: {strGjReqStatus}<br>Token type: {strGjTokenType}")
             return strGmOutput
          
-         strGmBody = reddit_jsontohtml(dictGmResponse, lstGmMediaType)
+         strGmBody = reddit_jsontohtml(dictGmResponse, lstGmMediaType, strGmBaseDestURL)
    
          # how to check if strGmBody contains HTML vs error
          
