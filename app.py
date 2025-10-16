@@ -127,7 +127,8 @@ def rmrresults():
    if not lstMediaType in locals():
       lstMediaType = "iv"
    
-   strWebOutput = redditmedia.app_main_getmedia("rmrresults", strSubReddit, lstMediaType, intLimit, strSort, strView, bolNSFW, strAfter)
+   strWebOutput = f"[ {strMethod} ] & [ {strSubReddit} ] & [ {lstMediaType} ]<br><br><br>"
+   strWebOutput += redditmedia.app_main_getmedia("rmrresults", strSubReddit, lstMediaType, intLimit, strSort, strView, bolNSFW, strAfter)
    
    return strWebOutput
 
