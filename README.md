@@ -10,6 +10,7 @@
 > 2. An unexpected error occurred in REDDITMEDIA during action [ JSONtoHTML ]: cannot access local variable 'strHtmlThreadEmbed' where it is not associated with a value
 > 8. handle dist = 0 for end of new > next > next > next (instead of error displayed)
 > 14. Add site template surround and sidebar - purpose, scope, etc
+> 15. try...except in app.py functions
 > 3. ~~human? required checkbox to allow clicking browse media~~
 > 4. ~~data regex sanitization of subreddit text field azAZ0-9 and + symbol, underscore etc~~
 > 5. ~~[a-zA-Z0-9]+|[\+\_\-]~~
