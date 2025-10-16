@@ -16,6 +16,7 @@
 > 8. handle dist = 0 for end of new > next > next > next (instead of error displayed)
 > 9. name or acronym - reddit media reveal redmedrev ?
 > 10. search subreddit list and category
+> 11. first POST leaves subreddit field blank. subsequent after links, returns default value to subreddit field
 >
 
 * Blog
