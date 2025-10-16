@@ -12,12 +12,16 @@ def html_crafterror(strCraftSource, strFuncError):
    
    # try...except
    #   or verify variables contain values
+   
    strCraftError = f"An unexpected error occurred in <b><u>REDDITMEDIA</u></b> during action [ <b><u>{strCraftSource}</u></b> ]: <font color=red>{strFuncError}</font><br><br>"
    
    return strCraftError
    
 def app_sanitize(strToSanitize):
 
+   # try...except
+   #   or verify variables contain values
+   
    #[a-zA-Z0-9]+|[\+\_]
    # inverse - [^a-zA-Z0-9\_\+]+
    strPattern = r"[^a-zA-Z0-9\_\+]+"
@@ -27,6 +31,9 @@ def app_sanitize(strToSanitize):
    return strSanitized
 
 def app_dictionary(strDictLabel):
+   
+   # try...except
+   #   or verify variables contain values
    
    match strDictLabel:
       case "kv_name":
@@ -126,26 +133,16 @@ def kv_refreshtoken(strRefVault, strRefRedditURL):
 
 def reddit_getjson(strGjTokenType, strGjToken, strGjURL, strGjSort, strAfter):
 
-   # reddit_getjson(strGjSubReddit, lstGjMediaType, intGjLimit, strGjSort, strGjView, bolGjNSFW, strAfter, strGjTokenType, strGjToken, strGjURL):
-   #    to be handled / used in jsontohtml
-   #      strGjSubReddit
-   #      lstGjMediaType
-   #      intGjLimit
-   #      strGjView
-   #      bolGjNSFW
+   # to be handled by / used in jsontohtml, unneeded here
+   #    strGjSubReddit
+   #    lstGjMediaType
+   #    intGjLimit
+   #    strGjView
+   #    bolGjNSFW
    
-   #add params for:
-   # result count (display limit) - this likely belongs in jsontohtml function
-   # list view / gallery view
-   # over_18 flag
-   #   AFTER attribute? could be built into strURL when passed or have seperate function that accepts params to craft URLs
-   
-   #check if subreddit exists
-   #handle [], [pictures], [videos], [pictures, videos], (gallery?), (other/unknown)
-   #handle new, hot, rising, controversial, top
-   #check POST vs GET (request.method ==
+   # check if subreddit exists
 
-   # function  to craft request URL
+   # function to craft request URL
    
    try:
       strGjUserAgent = app_dictionary("txt_useragent")
@@ -160,7 +157,7 @@ def reddit_getjson(strGjTokenType, strGjToken, strGjURL, strGjSort, strAfter):
             return strGjJsonOutput
          case _:
             dictGjJson = roGjReceived.json()
-      if not dictGjJson:
+      if not 'dictGjJson' in locals():
          strGjJsonOutput = html_crafterror("GETJSON", f"JSON response is null!<br>Status Code: {strGjReqStatus}<br>Token type: {strGjTokenType}")
          return strGjJsonOutput
       
@@ -181,24 +178,21 @@ def reddit_jsontohtml(jsonHtmlContent, lstHtmlMediaType, strHtmlBaseDestURL):
    #consider table view for alignment
 
    try:
-      if not jsonHtmlContent:
+      if not 'jsonHtmlContent' in locals():
          strHtmlOutput = html_crafterror("JSONtoHTML", f"JSON response provided is null!")
          return strHtmlOutput
 
       # Check if json looks like empty response or subreddit invalid
+      intHtmlResults = jsonHtmlContent["data"]["dist"]
+      if int(intHtmlResults) == 0:
+         strHtmlOutput = html_crafterror("JSONtoHTML", f"0 results returned. No further results returned or subreddit may not exist!")
+         # provide a refresh from beginning link here
+         #    in some cases after 5-6 api calls into NEW, no additional results are returned
+         return strHtmlOutput
       
-      '''
-      #perhaps handle AFTER crafting in a separate function after this function
-      #   how to handle or what to expect from strDestURL here then?
-      strAfterURL = jsonContent["data"]["after"]
-      if not strAfterURL:
-         strAfterURL = ""
-      else:
-         strAfterURL = f"&after={strAfterURL}"
-         strDestURL += strAfterURL
-      '''
-      
-      
+      if not 'intHtmlResults' in locals():
+         strHtmlOutput = html_crafterror("JSONtoHTML", f"No results founud. JSON response provided is null!")
+         return strHtmlOutput
       
       dictHtmlThreads = jsonHtmlContent["data"]["children"]
       
@@ -213,6 +207,9 @@ def reddit_jsontohtml(jsonHtmlContent, lstHtmlMediaType, strHtmlBaseDestURL):
          strThreadURL = dictHtmlSingle["data"]["url"]
          strThreadMedia = dictHtmlSingle["data"]["media"]
          strThreadType = dictHtmlSingle.get("data", {}).get("post_hint", "Missing")
+
+         bolThreadNsfw = dictHtmlSingle["data"]["over_18"]
+         
          
          #"over_18": false
          #is_gallery
@@ -225,7 +222,6 @@ def reddit_jsontohtml(jsonHtmlContent, lstHtmlMediaType, strHtmlBaseDestURL):
          #   there is likely a different link for POSTED BY vs u_(user) sub
          #      need to explore this
          strHtmlAuthorLink = f"./{strHtmlBaseDestURL}?sub=u_{strThreadAuthor}"
-         #strHtmlThreadOutput += f"<a href=\"{strSubRedLink}\">r/{strSubRed}</a> - <a href=\"{strAuthorLink}\"><b>{strThreadAuthor}</b></a> - {strThreadComments} Comment(s) / Post Type - {strThreadType}<br><p>"
          strHtmlThreadOutput += f"<a href=\"./{strHtmlBaseDestURL}?sub={strSubRed}\">r/{strSubRed}</a> - <a href=\"{strHtmlAuthorLink}\"><b>{strThreadAuthor}</b></a> - {strThreadComments} Comment(s) / Post Type - {strThreadType}<br><p>"
          
          #ThreadType : link, image, hosted:video, null, (gallery?)
@@ -242,7 +238,10 @@ def reddit_jsontohtml(jsonHtmlContent, lstHtmlMediaType, strHtmlBaseDestURL):
             case "hosted:video":   
                #*********
                strHtmlThreadOutput = ""
-               #strHostedVid = dictSingle["data"]["secure_media"]["fallback_url"]
+               #strHostedVid = dictSingle["data"]["secure_media"]["reddit_video"]["fallback_url"]
+               #   alternatively
+               #strHostedVid = dictSingle["data"]["media"]["reddit_video"]["fallback_url"]
+               strHtmlThreadOutput += f"{strHtmlThreadEmbed}<br><p>"      
                #*********
             #case "link":
                #strHtmlThreadOutput = ""
@@ -252,13 +251,7 @@ def reddit_jsontohtml(jsonHtmlContent, lstHtmlMediaType, strHtmlBaseDestURL):
                #strHtmlThreadOutput += f"<font color=red>unexpected MediaType experienced [ {strThreadType} ]</font><p>"
                strHtmlThreadOutput = ""
          strHtmlOutput += strHtmlThreadOutput
-         
-      '''
-      # consider moving this addition outside of the function
-      #   some cases may require running this function multiple times to meet Display Limit setting
-      strHtmlOutput += f"<p align=\"right\"><a href=\"{strHtmlDestURL}\">Next Posts</a></p>"
-      '''
-
+   
    except Exception as e:
       #could contain sensitive information in error message
       #strHtmlOutput = f"Trouble with <b>JSONtoHTML</b>, review: {e}<br><br>{dictThreads}<br><br>"
@@ -270,6 +263,10 @@ def reddit_jsontohtml(jsonHtmlContent, lstHtmlMediaType, strHtmlBaseDestURL):
 
 def html_crafturl(strCraftBaseURL, strCraftSub="all", lstCraftMediaType="iv", intCraftLimit=10, strCraftSort="new", strCraftView="list", bolCraftNSFW=True, strCraftAfter=""):
 
+   #
+   # try...except loop here
+   #
+   
    # May use this function for reddit api calls AND local URL format
    
    #strBase = app_dictionary("url_oauth")
@@ -325,6 +322,10 @@ def html_crafturl(strCraftBaseURL, strCraftSub="all", lstCraftMediaType="iv", in
    return strCraftURL
 
 def html_parseurl(strPuURL):
+
+   #
+   # try...except loop here
+   #
    
    # input - URL
    # output - dictionary with named parameters
@@ -369,7 +370,6 @@ def html_form(strFormDestination, strFormSub="all", lstFormMediaType="iv", intFo
    #   need to add HUMAN? style checkbox here, required before allowing submit, bot stopper-ish
    #      also likely do not want to show results and "next" link on first load - bot could continue w/o human checkbox
    strFormOutput += "Are you <font color=red>human</font>?<font color=red>*</font>"
-   #strFormOutput += f"<input type=\"checkbox\" id=\"human\" name=\"human\" value=\"human\" required><label for=\"human\">Yes</label><br>"
    strFormOutput += f"<input type=\"checkbox\" id=\"human\" name=\"human\" value=\"human\" required><label for=\"human\">Yes&emsp;</label>"
    strFormOutput += f"<button type=\"submit\">Browse Media</button>"   
    strFormOutput += f"</form><br><br>"
