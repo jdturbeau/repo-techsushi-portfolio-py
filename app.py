@@ -97,6 +97,9 @@ def rmrresults():
    match strMethod:
       case "POST":
          strSubReddit = request.form.get("sub", "all")
+         
+         strSubTest = request.form.get("subreddit", "all")
+         
          lstMediaType = request.form.get("mediatype", "iv")
          intLimit = request.form.get("limit", 10)
          strSort = request.form.get("sort", "new")
@@ -127,7 +130,7 @@ def rmrresults():
    if not lstMediaType in locals():
       lstMediaType = "iv"
    
-   strWebOutput = f"[ {strMethod} ] & [ {strSubReddit} ] & [ {lstMediaType} ]<br><br><br>"
+   strWebOutput = f"[ {strMethod} ] & [ {strSubReddit} ] & [ {lstMediaType} ] & [ {strSubTest} ]<br><br><br>"
    strWebOutput += redditmedia.app_main_getmedia("rmrresults", strSubReddit, lstMediaType, intLimit, strSort, strView, bolNSFW, strAfter)
    
    return strWebOutput
