@@ -14,6 +14,7 @@
 > 6. ~~do not load first page, first time with any results - force-ish toward using Human? checkbox~~
 > 7. add date / days ago to media entry display
 > 8. handle dist = 0 for end of new > next > next > next (instead of error displayed)
+> 9. name or acronym - reddit media reveal redmedrev ?
 >
 
 * Blog
