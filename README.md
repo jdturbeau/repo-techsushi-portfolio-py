@@ -6,17 +6,19 @@
 * Reddit Media Reviewer
 
 >
-> 1. Include "BACK" or "BEFORE" link (opposite of "NEXT" or "AFTER" link)
-> 2. ~~Count image/videos retrieved for display - ensure AT LEAST (limit), over is better than under~~
+> 1. first POST leaves subreddit field blank. subsequent after links, returns default value to subreddit field
+> 2. An unexpected error occurred in REDDITMEDIA during action [ JSONtoHTML ]: cannot access local variable 'strHtmlThreadEmbed' where it is not associated with a value
+> 8. handle dist = 0 for end of new > next > next > next (instead of error displayed)
+> 14. Add site template surround and sidebar - purpose, scope, etc
 > 3. ~~human? required checkbox to allow clicking browse media~~
 > 4. ~~data regex sanitization of subreddit text field azAZ0-9 and + symbol, underscore etc~~
 > 5. ~~[a-zA-Z0-9]+|[\+\_\-]~~
 > 6. ~~do not load first page, first time with any results - force-ish toward using Human? checkbox~~
-> 7. add date / days ago to media entry display
-> 8. handle dist = 0 for end of new > next > next > next (instead of error displayed)
-> 9. name or acronym - reddit media reveal redmedrev ?
-> 10. search subreddit list and category
-> 11. first POST leaves subreddit field blank. subsequent after links, returns default value to subreddit field
+> 7. ~~Count image/videos retrieved for display - ensure AT LEAST (limit), over is better than under~~
+> 9. add date / days ago to media entry display
+> 10. name or acronym - reddit media reveal redmedrev ?
+> 11. search subreddit list and category 
+> 13. Include "BACK" or "BEFORE" link (opposite of "NEXT" or "AFTER" link)
 >
 
 * Blog
