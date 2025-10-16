@@ -34,8 +34,8 @@
 * General Website
 
 >
-> 1. Something
-> 2. Something else
+> 1. IP by page by time
+> 2. Param to determine source - LinkedIn profile, LinkedIn post, Facebook
 >
 
 * LinkedIn Search
@@ -44,3 +44,32 @@
 > 1. Something
 > 2. Something else
 >
+
+* Multicloud vendor for HA
+
+>
+> 1. Something
+> 2. Something else
+>
+
+* Honeypot w/ detection and auto mitigation & alert
+
+>
+> 1. ASA VPN separate device using database for capture
+> 2. Something else
+>
+
+* OIDC OpenID Example (perhaps link to redmedrev tool?)
+
+>
+> 1. Something
+> 2. Something else
+>
+
+* Metrics or (actionable) report similar to SIEM
+
+>
+> 1. Something
+> 2. Something else
+>
+
