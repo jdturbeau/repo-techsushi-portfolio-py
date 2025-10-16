@@ -7,11 +7,11 @@
 
 >
 > 1. Include "BACK" or "BEFORE" link (opposite of "NEXT" or "AFTER" link)
-> 2. Count image/videos retrieved for display - ensure AT LEAST (limit), over is better than under
-> 3. human? required checkbox to allow clicking browse media
-> 4. data regex sanitization of subreddit text field azAZ0-9 and + symbol, underscore etc
-> 5. [a-zA-Z0-9]+|[\+\_\-]
-> 6. do not load first page, first time with any results - force-ish toward using Human? checkbox
+> 2. ~~Count image/videos retrieved for display - ensure AT LEAST (limit), over is better than under~~
+> 3. ~~human? required checkbox to allow clicking browse media~~
+> 4. ~~data regex sanitization of subreddit text field azAZ0-9 and + symbol, underscore etc~~
+> 5. ~~[a-zA-Z0-9]+|[\+\_\-]~~
+> 6. ~~do not load first page, first time with any results - force-ish toward using Human? checkbox~~
 > 7. add date / days ago to media entry display
 > 8. handle dist = 0 for end of new > next > next > next (instead of error displayed)
 >
