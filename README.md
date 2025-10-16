@@ -12,6 +12,8 @@
 > 4. data regex sanitization of subreddit text field azAZ0-9 and + symbol, underscore etc
 > 5. [a-zA-Z0-9]+|[\+\_\-]
 > 6. do not load first page, first time with any results - force-ish toward using Human? checkbox
+> 7. add date / days ago to media entry display
+> 8. handle dist = 0 for end of new > next > next > next (instead of error displayed)
 >
 
 * Blog
@@ -35,7 +37,7 @@
 > 2. Something else
 >
 
-* Project 4
+* LinkedIn Search
 
 >
 > 1. Something
