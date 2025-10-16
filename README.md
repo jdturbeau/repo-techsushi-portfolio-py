@@ -20,7 +20,7 @@
 * Blog
 
 >
-> 1. Something
+> 1. Retrieve LinkedIn Posts for copy or display in river format
 > 2. Something else
 >
 
