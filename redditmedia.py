@@ -183,7 +183,8 @@ def reddit_jsontohtml(jsonHtmlContent, lstHtmlMediaType, strHtmlBaseDestURL):
                strHtmlThreadOutput += f"{strHtmlThreadEmbed}<br><p>"
             case "hosted:video":   
                strHostedVid = dictHtmlSingle["data"]["secure_media"]["reddit_video"]["fallback_url"] # alternatively - strHostedVid = dictHtmlSingle["data"]["media"]["reddit_video"]["fallback_url"]
-               strHtmlThreadOutput += f"<iframe width=\"60%\" src=\"{strHostedVid}\" frameborder=\"0\" allow=\"accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share\" referrerpolicy=\"strict-origin-when-cross-origin\" allowfullscreen title=\"{strThreadTitle}\"></iframe><br><p>"
+               #strHtmlThreadOutput += f"<iframe width=\"60%\" src=\"{strHostedVid}\" frameborder=\"0\" allow=\"accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share\" referrerpolicy=\"strict-origin-when-cross-origin\" allowfullscreen title=\"{strThreadTitle}\"></iframe><br><p>"
+               strHtmlThreadOutput += f"<iframe src=\"{strHostedVid}\" frameborder=\"0\" allow=\"accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share\" referrerpolicy=\"strict-origin-when-cross-origin\" allowfullscreen title=\"{strThreadTitle}\"></iframe><br><p>"
             #case "link":
                #strHtmlThreadOutput = ""
                #"is_video": true
@@ -204,61 +205,60 @@ def reddit_jsontohtml(jsonHtmlContent, lstHtmlMediaType, strHtmlBaseDestURL):
 
 def html_crafturl(strCraftBaseURL, strCraftSub="all", lstCraftMediaType="iv", intCraftLimit=10, strCraftSort="new", strCraftView="list", bolCraftNSFW=True, strCraftAfter=""):
 
-   #
-   # try...except loop here
-   #
-   
    # May use this function for reddit api calls AND local URL format
    
    #strBase = app_dictionary("url_oauth")
    # check if strCraftBaseURL ends with a / or append if necessary
    # confirm variables have values as expected - or if we need try except here
-
-   strCraftURL = strCraftBaseURL # should end with /
-   '''
-   # check if need to add / in between
-   if not strCraftURL[-1] == "/":
-      strCraftURL += "/"
-   '''
-   # check if url passed has parameters already to strip off first
-   
-   strCraftContains = ".reddit.com/"
-   if strCraftContains.lower() in strCraftBaseURL.lower():
-      # oauth or token refresh - can ignore app handled parameters
-      if len(strCraftSub) > 0:
-         strCraftURL += f"{strCraftSub}/{strCraftSort}"
+   try:
+      strCraftURL = strCraftBaseURL # should end with /
+      '''
+      # check if need to add / in between
+      if not strCraftURL[-1] == "/":
+         strCraftURL += "/"
+      '''
+      # check if url passed has parameters already to strip off first
+      
+      strCraftContains = ".reddit.com/"
+      if strCraftContains.lower() in strCraftBaseURL.lower():
+         # oauth or token refresh - can ignore app handled parameters
+         if len(strCraftSub) > 0:
+            strCraftURL += f"{strCraftSub}/{strCraftSort}"
+         else:
+            strCraftURL += f"all/{strCraftSort}"
+         if len(strCraftAfter) > 0:
+            strCraftURL += f"?after={strCraftAfter}"
       else:
-         strCraftURL += f"all/{strCraftSort}"
-      if len(strCraftAfter) > 0:
-         strCraftURL += f"?after={strCraftAfter}"
-   else:
-      # likely local URL - include app handled parameters
-      #strCraftURL += f""
-      strCraftSuffix = ""
-      if len(strCraftSub) > 0:
-         strCraftSuffix += f"sub={strCraftSub}&"
-      else:
-         strCraftSuffix += f"sub=all&"
-      if len(lstCraftMediaType) > 0:
-         strCraftSuffix += f"mediatype={lstCraftMediaType}&"
-      if int(intCraftLimit) > 0:
-         strCraftSuffix += f"limit={intCraftLimit}&"
-      if len(strCraftSort) > 0:
-         strCraftSuffix += f"sort={strCraftSort}&"
-      if len(strCraftView) > 0:
-         strCraftSuffix += f"view={strCraftView}&"
-      if bolCraftNSFW:
-         strCraftSuffix += f"nsfw=True&"
-      else:
-         strCraftSuffix += f"nsfw=False&"
-      if len(strCraftAfter) > 0:
-         strCraftSuffix += f"after={strCraftAfter}"
-         
-      #check if last character is ampersand
-      if strCraftSuffix[-1] == "&":
-         strCraftSuffix = strCraftSuffix[:-1]
-      if len(strCraftSuffix) > 0:
-         strCraftURL += f"?{strCraftSuffix}"
+         # likely local URL - include app handled parameters
+         #strCraftURL += f""
+         strCraftSuffix = ""
+         if len(strCraftSub) > 0:
+            strCraftSuffix += f"sub={strCraftSub}&"
+         else:
+            strCraftSuffix += f"sub=all&"
+         if len(lstCraftMediaType) > 0:
+            strCraftSuffix += f"mediatype={lstCraftMediaType}&"
+         if int(intCraftLimit) > 0:
+            strCraftSuffix += f"limit={intCraftLimit}&"
+         if len(strCraftSort) > 0:
+            strCraftSuffix += f"sort={strCraftSort}&"
+         if len(strCraftView) > 0:
+            strCraftSuffix += f"view={strCraftView}&"
+         if bolCraftNSFW:
+            strCraftSuffix += f"nsfw=True&"
+         else:
+            strCraftSuffix += f"nsfw=False&"
+         if len(strCraftAfter) > 0:
+            strCraftSuffix += f"after={strCraftAfter}"
+            
+         #check if last character is ampersand
+         if strCraftSuffix[-1] == "&":
+            strCraftSuffix = strCraftSuffix[:-1]
+         if len(strCraftSuffix) > 0:
+            strCraftURL += f"?{strCraftSuffix}"
+      except Exception as e:
+         strCraftWebOutput = html_crafterror("HTML CRAFTURL", e)
+         return strCraftWebOutput
          
    return strCraftURL
 
