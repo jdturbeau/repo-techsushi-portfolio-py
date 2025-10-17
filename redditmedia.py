@@ -16,60 +16,7 @@ def html_crafterror(strCraftSource, strFuncError):
    strCraftError = f"An unexpected error occurred in <b><u>REDDITMEDIA</u></b> during action [ <b><u>{strCraftSource}</u></b> ]: <font color=red>{strFuncError}</font><br><br>"
    
    return strCraftError
-   
-def app_sanitize(strToSanitize):
 
-   # try...except
-   #   or verify variables contain values
-   
-   #[a-zA-Z0-9]+|[\+\_]
-   # inverse - [^a-zA-Z0-9\_\+]+
-   strPattern = r"[^a-zA-Z0-9\_\+]+"
-   #strSanitized = re.sub(strPattern, "", strToSanitize, flags=re.IGNORECASE)
-   strSanitized = re.sub(strPattern, "", strToSanitize)
-   
-   return strSanitized
-
-def app_dictionary(strDictLabel):
-   
-   # try...except
-   #   or verify variables contain values
-   
-   match strDictLabel:
-      case "kv_name":
-         strDictValue = "kv-techsushi-site"
-      case "kv_token":
-         strDictValue = "api-reddit-token"
-      case "kv_tokentype":
-         strDictValue = "api-reddit-tokentype"
-      case "kv_id":
-         strDictValue = "api-reddit-id"
-      case "kv_secret":
-         strDictValue = "api-reddit-secret"
-      case "url_login":
-         strDictValue = "https://www.reddit.com/api/v1/access_token"
-      case "url_oauth":
-         #to capture user data, may need to move the /r/ out
-         # /user/username/submitted
-         strDictValue = "https://oauth.reddit.com/r/"
-      case "txt_useragent":
-         strDictValue = "imgdupedetect v0.4 by orbut8888"
-      case "html_header":
-         strDictValue = "<head>"
-         strDictValue += "<title>TechSushi - Portfolio</title>"
-         #strDictValue += "<base href=\"https://www.reddit.com/\" target=\"_blank\">"#
-         strDictValue += "<meta name=\"viewport\" content=\"width=device-width, initial-scale=1\">"
-         strDictValue += "<meta name=\"description\" content=\"A brief description of my webpage for search engines.\">"
-         strDictValue += "</head>"
-         strDictValue += "<body>Welcome to the TechSushi - Portfolio page<br><br><br>"
-      case "html_footer":
-         strDictValue = "Run through version [1.5.0]</body>"
-      case _:
-         #default unknown
-         strDictValue = f"Unrecognized value: [ {strDictLabel} ]"
-   
-   return strDictValue
-   
 def kv_set(strSetVault, strSetName, strSetValue):
    
    #Only expected to be used during initial Reddit API and Azure KeyVault set up
@@ -184,14 +131,13 @@ def reddit_jsontohtml(jsonHtmlContent, lstHtmlMediaType, strHtmlBaseDestURL):
 
       # Check if json looks like empty response or subreddit invalid
       intHtmlResults = jsonHtmlContent["data"]["dist"]
+      if not 'intHtmlResults' in locals():
+         strHtmlOutput = html_crafterror("JSONtoHTML", f"No results founud. JSON response provided is null!")
+         return strHtmlOutput
       if int(intHtmlResults) == 0:
          strHtmlOutput = html_crafterror("JSONtoHTML", f"0 results returned. No further results returned or subreddit may not exist!")
          # provide a refresh from beginning link here
          #    in some cases after 5-6 api calls into NEW, no additional results are returned
-         return strHtmlOutput
-      
-      if not 'intHtmlResults' in locals():
-         strHtmlOutput = html_crafterror("JSONtoHTML", f"No results founud. JSON response provided is null!")
          return strHtmlOutput
       
       dictHtmlThreads = jsonHtmlContent["data"]["children"]
@@ -237,7 +183,7 @@ def reddit_jsontohtml(jsonHtmlContent, lstHtmlMediaType, strHtmlBaseDestURL):
                strHtmlThreadOutput += f"{strHtmlThreadEmbed}<br><p>"
             case "hosted:video":   
                strHostedVid = dictHtmlSingle["data"]["secure_media"]["reddit_video"]["fallback_url"] # alternatively - strHostedVid = dictHtmlSingle["data"]["media"]["reddit_video"]["fallback_url"]
-               strHtmlThreadOutput += f"<iframe width=\"60%\" src=\"{strHostedVid}\" frameborder=\"0\" allow=\"accelerometer; autoplay\" referrerpolicy=\"strict-origin-when-cross-origin\" allowfullscreen title=\"{strThreadTitle}\"></iframe><br><p>"
+               strHtmlThreadOutput += f"<iframe width=\"60%\" src=\"{strHostedVid}\" frameborder=\"0\" allow=\"accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share\" referrerpolicy=\"strict-origin-when-cross-origin\" allowfullscreen title=\"{strThreadTitle}\"></iframe><br><p>"
             #case "link":
                #strHtmlThreadOutput = ""
                #"is_video": true
@@ -388,6 +334,59 @@ def html_form(strFormDestination, strFormSub="all", lstFormMediaType="iv", intFo
    #consider single stream vs gallery view
   
    return strFormOutput
+
+def app_sanitize(strToSanitize):
+
+   # try...except
+   #   or verify variables contain values
+   
+   #[a-zA-Z0-9]+|[\+\_]
+   # inverse - [^a-zA-Z0-9\_\+]+
+   strPattern = r"[^a-zA-Z0-9\_\+]+"
+   #strSanitized = re.sub(strPattern, "", strToSanitize, flags=re.IGNORECASE)
+   strSanitized = re.sub(strPattern, "", strToSanitize)
+   
+   return strSanitized
+
+def app_dictionary(strDictLabel):
+   
+   # try...except
+   #   or verify variables contain values
+   
+   match strDictLabel:
+      case "kv_name":
+         strDictValue = "kv-techsushi-site"
+      case "kv_token":
+         strDictValue = "api-reddit-token"
+      case "kv_tokentype":
+         strDictValue = "api-reddit-tokentype"
+      case "kv_id":
+         strDictValue = "api-reddit-id"
+      case "kv_secret":
+         strDictValue = "api-reddit-secret"
+      case "url_login":
+         strDictValue = "https://www.reddit.com/api/v1/access_token"
+      case "url_oauth":
+         #to capture user data, may need to move the /r/ out
+         # /user/username/submitted
+         strDictValue = "https://oauth.reddit.com/r/"
+      case "txt_useragent":
+         strDictValue = "imgdupedetect v0.4 by orbut8888"
+      case "html_header":
+         strDictValue = "<head>"
+         strDictValue += "<title>TechSushi - Portfolio</title>"
+         #strDictValue += "<base href=\"https://www.reddit.com/\" target=\"_blank\">"#
+         strDictValue += "<meta name=\"viewport\" content=\"width=device-width, initial-scale=1\">"
+         strDictValue += "<meta name=\"description\" content=\"A brief description of my webpage for search engines.\">"
+         strDictValue += "</head>"
+         strDictValue += "<body>Welcome to the TechSushi - Portfolio page<br><br><br>"
+      case "html_footer":
+         strDictValue = "Run through version [1.5.0]</body>"
+      case _:
+         #default unknown
+         strDictValue = f"Unrecognized value: [ {strDictLabel} ]"
+   
+   return strDictValue
 
 def app_main_getmedia(strGmBaseDestURL, strGmSubReddit="all", lstGmMediaType="iv", intGmLimit=10, strGmSort="new", strGmView="list", bolGmNSFW=True, strAfter=""):
 
