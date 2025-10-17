@@ -236,7 +236,7 @@ def reddit_jsontohtml(jsonHtmlContent, lstHtmlMediaType, strHtmlBaseDestURL):
                strHtmlThreadEmbed = strHtmlThreadEmbed.replace("position:absolute;","")
                strHtmlThreadOutput += f"{strHtmlThreadEmbed}<br><p>"
             case "hosted:video":   
-               strHostedVid = dictSingle["data"]["secure_media"]["reddit_video"]["fallback_url"] # alternatively - strHostedVid = dictSingle["data"]["media"]["reddit_video"]["fallback_url"]
+               strHostedVid = dictHtmlSingle["data"]["secure_media"]["reddit_video"]["fallback_url"] # alternatively - strHostedVid = dictHtmlSingle["data"]["media"]["reddit_video"]["fallback_url"]
                strHtmlThreadOutput = f"<iframe width=\"60%\" src=\"{strHostedVid}\" frameborder=\"0\" allow=\"accelerometer; autoplay\" referrerpolicy=\"strict-origin-when-cross-origin\" allowfullscreen title=\"{strThreadTitle}\"></frame><br><p>"
             #case "link":
                #strHtmlThreadOutput = ""
