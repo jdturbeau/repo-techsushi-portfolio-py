@@ -227,7 +227,7 @@ def reddit_jsontohtml(jsonHtmlContent, lstHtmlMediaType, strHtmlBaseDestURL):
          #ThreadType : link, image, hosted:video, null, (gallery?)
          match strThreadType:
             case "image":
-               strHtmlThreadOutput += f"<a href=\"{strThreadURL}\" target=\"_blank\"><img src =\"{strThreadURL}\" width=\"60%\"></img></a><p>"
+               strHtmlThreadOutput += f"<a href=\"{strThreadURL}\" target=\"_blank\"><img src=\"{strThreadURL}\" width=\"60%\"></img></a><p>"
             case "rich:video":
                strHtmlThreadEmbed = strThreadMedia["oembed"]["html"]
                strHtmlThreadEmbed = strHtmlThreadEmbed.replace("&lt;","<")
@@ -237,7 +237,7 @@ def reddit_jsontohtml(jsonHtmlContent, lstHtmlMediaType, strHtmlBaseDestURL):
                strHtmlThreadOutput += f"{strHtmlThreadEmbed}<br><p>"
             case "hosted:video":   
                strHostedVid = dictHtmlSingle["data"]["secure_media"]["reddit_video"]["fallback_url"] # alternatively - strHostedVid = dictHtmlSingle["data"]["media"]["reddit_video"]["fallback_url"]
-               strHtmlThreadOutput = f"<iframe width=\"60%\" src=\"{strHostedVid}\" frameborder=\"0\" allow=\"accelerometer; autoplay\" referrerpolicy=\"strict-origin-when-cross-origin\" allowfullscreen title=\"{strThreadTitle}\"></frame><br><p>"
+               strHtmlThreadOutput += f"<iframe width=\"60%\" src=\"{strHostedVid}\" frameborder=\"0\" allow=\"accelerometer; autoplay\" referrerpolicy=\"strict-origin-when-cross-origin\" allowfullscreen title=\"{strThreadTitle}\"></iframe><br><p>"
             #case "link":
                #strHtmlThreadOutput = ""
                #"is_video": true
