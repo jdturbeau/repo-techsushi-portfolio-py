@@ -12,8 +12,12 @@ def html_crafterror(strCraftSource, strFuncError):
    
    # try...except
    #   or verify variables contain values
-   
-   strCraftError = f"An unexpected error occurred in <b><u>REDDITMEDIA</u></b> during action [ <b><u>{strCraftSource}</u></b> ]: <font color=red>{strFuncError}</font><br><br>"
+   try:
+      strCraftError = f"An unexpected error occurred in <b><u>REDDITMEDIA</u></b> during action [ <b><u>{strCraftSource}</u></b> ]: <font color=red>{strFuncError}</font><br><br>"
+   except Exception as e:
+      #could contain sensitive information in error message
+      strCraftOutput = html_crafterror("html_crafterror", e)
+      return strCraftOutput
    
    return strCraftError
 
