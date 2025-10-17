@@ -260,9 +260,9 @@ def html_crafturl(strCraftBaseURL, strCraftSub="all", lstCraftMediaType="iv", in
             strCraftSuffix = strCraftSuffix[:-1]
          if len(strCraftSuffix) > 0:
             strCraftURL += f"?{strCraftSuffix}"
-      except Exception as e:
-         strCraftWebOutput = html_crafterror("HTML CRAFTURL", e)
-         return strCraftWebOutput
+   except Exception as e:
+      strCraftWebOutput = html_crafterror("HTML CRAFTURL", e)
+      return strCraftWebOutput
          
    return strCraftURL
 
