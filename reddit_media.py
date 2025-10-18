@@ -38,6 +38,7 @@ def app_sanitize(strToSanitize):
 def app_dictionary(strDictAttrib):
   
   #  verify variables contain values
+  
   try:
     match strDictAttrib:
       case "kv_name":
@@ -51,10 +52,12 @@ def app_dictionary(strDictAttrib):
       case "kv_secret":
         strDictValue = "api-reddit-secret"
       case "url_login":
+        # to retrieve or refresh access token
         strDictValue = "https://www.reddit.com/api/v1/access_token"
       case "url_oauth":
-        #to capture user data, may need to move the /r/ out
-        # /user/username/submitted
+        # to retrieve subreddit data
+        # to capture user data, may need to move the /r/ out
+        #   /user/username/submitted
         strDictValue = "https://oauth.reddit.com/r/"
       case "txt_useragent":
         strDictValue = "imgdupedetect v0.5 by orbut8888"
@@ -78,74 +81,90 @@ def app_dictionary(strDictAttrib):
 
 return strDictValue
 
-def kv_set(strSetVault, strSetName, strSetValue):
+def kv_set(strSetName, strSetValue):
    
    # Only expected to be used during initial Reddit API and Azure KeyVault set up
    #  From the Azure WebApp, ensure you have enabled System Identity (WebApp > Settings > Identity > On > Save)
    #  From the Azure KeyVault, ensure you assign (Key Vault Secrets Officer?) role to the Azure WebApp identity named above
   
-   try:
-      objSetCredential = DefaultAzureCredential()
-      objSetSecretClient = SecretClient(vault_url=f"https://{strSetVault}.vault.azure.net/", credential=objSetCredential) #kv-techsushi-site
-      objSetSecret = objSetSecretClient.set_secret(strSetName, strSetValue) #api-reddit-id
-   except Exception as e:
-      #could contain sensitive information in error message
-      strSetError = html_crafterror("REDDIT_MEDIA", "KV_SET", e)
-      return strSetError
-   
+  try:
+    # could add vault as a param
+    #   though objective is to be self contained and leverage app_dictionary
+    strSetVault = app_dictionary("kv_name")
+    
+    objSetCredential = DefaultAzureCredential()
+    objSetSecretClient = SecretClient(vault_url=f"https://{strSetVault}.vault.azure.net/", credential=objSetCredential) #kv-techsushi-site
+    objSetSecret = objSetSecretClient.set_secret(strSetName, strSetValue) #api-reddit-id
+  except Exception as e:
+    #could contain sensitive information in error message
+    strSetError = html_crafterror("REDDIT_MEDIA", "KV_SET", e)
+    return strSetError
+    
   # No value returned... necessary?
   
   return
 
-def kv_get(strGetVault, strGetName):
-   
-   try:
-      objGetCredential = DefaultAzureCredential()
-      objGetSecretClient = SecretClient(vault_url=f"https://{strGetVault}.vault.azure.net/", credential=objGetCredential)
-      objGetSecret = objGetSecretClient.get_secret(strGetName)
-      strGetValue = objGetSecret.value
-   except Exception as e:
-      #could contain sensitive information in error message
-      strGetError = html_crafterror("REDDIT_MEDIA", "KV_GET", e)
-      return strGetError
-      
-   return strGetValue
+def kv_get(strGetName):
+
+  try:
+    # could add vault as a param
+    #   though objective is to be self contained and leverage app_dictionary
+    strGetVault = app_dictionary("kv_name")
+    
+    objGetCredential = DefaultAzureCredential()
+    objGetSecretClient = SecretClient(vault_url=f"https://{strGetVault}.vault.azure.net/", credential=objGetCredential)
+    objGetSecret = objGetSecretClient.get_secret(strGetName)
+    strGetValue = objGetSecret.value
+  except Exception as e:
+    #could contain sensitive information in error message
+    strGetError = html_crafterror("REDDIT_MEDIA", "KV_GET", e)
+    return strGetError
+  
+  return strGetValue
 
 def kv_refreshtoken(strRefVault, strRefRedditURL):
-   
-   #https://www.reddit.com/api/v1/access_token
   
-   try:
-      strRefIDLabel = app_dictionary("kv_id")
-      strRefID = kv_get(strRefVault, strRefIDLabel) #kv-techsushi-site
-      strRefSecretLabel = app_dictionary("kv_secret")
-      strRefSecret = kv_get(strRefVault, strRefSecretLabel)
-      
-      objRefClientAuth = (strRefID, strRefSecret)
-      dictRefPostData = { "grant_type": "client_credentials" }
-      strRefUserAgent = app_dictionary("txt_useragent")
-      dictRefHeader = { "User-Agent": strRefUserAgent }
-      roRefReceived = requests.post(strRefRedditURL, auth=objRefClientAuth, data=dictRefPostData, headers=dictRefHeader)
-      
-      dictRefReceived = roRefReceived.json()      
-      strRefToken = dictRefReceived["access_token"]
-      strRefTokenType = dictRefReceived["token_type"]
+  #https://www.reddit.com/api/v1/access_token
+  
+  try:
+    # could add vault as a param
+    #   though objective is to be self contained and leverage app_dictionary
+    #   vault name retrieved in get / set functions
+    
+    strRefIDLabel = app_dictionary("kv_id")
+    strRefID = kv_get(strRefIDLabel)
+    strRefSecretLabel = app_dictionary("kv_secret")
+    strRefSecret = kv_get(strRefSecretLabel)
+    
+    objRefClientAuth = (strRefID, strRefSecret)
+    dictRefPostData = { "grant_type": "client_credentials" }
+    strRefUserAgent = app_dictionary("txt_useragent")
+    dictRefHeader = { "User-Agent": strRefUserAgent }
 
-      strRefTokenLabel = app_dictionary("kv_token")
-      kv_set(strRefVault, strRefTokenLabel, strRefToken)
-      strRefTokenTypeLabel = app_dictionary("kv_tokentype")
-      kv_set(strRefVault, strRefTokenTypeLabel, strRefTokenType)
-      
-    except Exception as e:
-      #could contain sensitive information in error message
-      strRefGetValue = html_crafterror("KV_REFRESHTOKEN", f"{e}<br><br>{roRefReceived}<br><br>")
-      return strRefreshOutput
-
+    strRefRedditURL = app_dictionary("url_login")
+    
+    roRefReceived = requests.post(strRefRedditURL, auth=objRefClientAuth, data=dictRefPostData, headers=dictRefHeader)
+    
+    dictRefReceived = roRefReceived.json()      
+    strRefToken = dictRefReceived["access_token"]
+    strRefTokenType = dictRefReceived["token_type"]
+    
+    strRefTokenLabel = app_dictionary("kv_token")
+    kv_set(strRefTokenLabel, strRefToken)
+    strRefTokenTypeLabel = app_dictionary("kv_tokentype")
+    kv_set(strRefTokenTypeLabel, strRefTokenType)
+  
+  except Exception as e:
+    #could contain sensitive information in error message
+    strRefError = html_crafterror("REDDIT_MEDIA", "KV_REFRESHTOKEN", e)  # f"{e}<br><br>{roRefReceived}<br><br>")
+    return strRefError
+  
   # No value returned... necessary?
-      
+  
   return
 
-
+# ***************************************
+#  successful review above. continue below...
 # ***************************************
 
 def reddit_jsontohtml(jsonHtmlContent, lstHtmlMediaType, strHtmlBaseDestURL):
