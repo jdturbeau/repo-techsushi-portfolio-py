@@ -88,12 +88,13 @@ def app_dictionary(strDictAttrib):
       case _:
         #default unknown
         strDictValue = f"Unrecognized value: [ {strDictAttrib} ]"
+      
   except Exception as e:
     #could contain sensitive information in error message
     strDictError = html_crafterror("REDDIT_MEDIA", "APP_DICTIONARY", e)
     return strDictError
 
-return strDictValue
+  return strDictValue
 
 def kv_set(strSetName, strSetValue):
    
@@ -109,6 +110,7 @@ def kv_set(strSetName, strSetValue):
     objSetCredential = DefaultAzureCredential()
     objSetSecretClient = SecretClient(vault_url=f"https://{strSetVault}.vault.azure.net/", credential=objSetCredential) #kv-techsushi-site
     objSetSecret = objSetSecretClient.set_secret(strSetName, strSetValue) #api-reddit-id
+  
   except Exception as e:
     #could contain sensitive information in error message
     strSetError = html_crafterror("REDDIT_MEDIA", "KV_SET", e)
@@ -129,6 +131,7 @@ def kv_get(strGetName):
     objGetSecretClient = SecretClient(vault_url=f"https://{strGetVault}.vault.azure.net/", credential=objGetCredential)
     objGetSecret = objGetSecretClient.get_secret(strGetName)
     strGetValue = objGetSecret.value
+  
   except Exception as e:
     #could contain sensitive information in error message
     strGetError = html_crafterror("REDDIT_MEDIA", "KV_GET", e)
