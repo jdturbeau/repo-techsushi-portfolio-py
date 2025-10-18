@@ -218,12 +218,40 @@ def html_crafturl(strCraftBaseURL, strCraftSub="all", lstCraftMediaType="iv", in
    # confirm variables have values as expected - or if we need try except here
    try:
       strCraftURL = strCraftBaseURL # should end with /
-      '''
-      # check if need to add / in between
-      if not strCraftURL[-1] == "/":
-         strCraftURL += "/"
-      '''
+      
       # check if url passed has parameters already to strip off first
+      
+      if not 'strCraftBaseURL' in locals():
+         strCraftWebOutput = html_crafterror("HTML CRAFTURL", f"var strCraftBaseURL does not exist [ {e} ]")
+         return strCraftWebOutput
+      
+      if not 'strCraftSub' in locals():
+         strCraftWebOutput = html_crafterror("HTML CRAFTURL", f"var strCraftSub does not exist [ {e} ]")
+         return strCraftWebOutput
+      
+      if not 'lstCraftMediaType' in locals():
+         strCraftWebOutput = html_crafterror("HTML CRAFTURL", f"var lstCraftMediaType does not exist [ {e} ]")
+         return strCraftWebOutput
+      
+      if not 'intCraftLimit' in locals():
+         strCraftWebOutput = html_crafterror("HTML CRAFTURL", f"var intCraftLimit does not exist [ {e} ]")
+         return strCraftWebOutput
+      
+      if not 'strCraftSort' in locals():
+         strCraftWebOutput = html_crafterror("HTML CRAFTURL", f"var strCraftSort does not exist [ {e} ]")
+         return strCraftWebOutput
+      
+      if not 'strCraftView' in locals():
+         strCraftWebOutput = html_crafterror("HTML CRAFTURL", f"var strCraftView does not exist [ {e} ]")
+         return strCraftWebOutput
+      
+      if not 'bolCraftNSFW' in locals():
+         strCraftWebOutput = html_crafterror("HTML CRAFTURL", f"var bolCraftNSFW does not exist [ {e} ]")
+         return strCraftWebOutput
+      
+      if not 'strCraftAfter' in locals():
+         strCraftWebOutput = html_crafterror("HTML CRAFTURL", f"var strCraftAfter does not exist [ {e} ]")
+         return strCraftWebOutput
       
       strCraftContains = ".reddit.com/"
       if strCraftContains.lower() in strCraftBaseURL.lower():
