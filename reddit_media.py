@@ -59,6 +59,8 @@ def app_dictionary(strDictAttrib):
         # to capture user data, may need to move the /r/ out
         #   /user/username/submitted
         strDictValue = "https://oauth.reddit.com/r/"
+      case "url_appbase":
+        strDictValue = "rmrresults"
       case "txt_useragent":
         strDictValue = "imgdupedetect v0.5 by orbut8888"
       case "html_header":
@@ -71,6 +73,18 @@ def app_dictionary(strDictAttrib):
         strDictValue += "<body>Welcome to the TechSushi - Portfolio page<br><br><br>"
       case "html_footer":
         strDictValue = "Run through version [1.5.0]</body>"
+      case "app_defaultparams":  
+        # technically should be dictDictValue
+        #   reddit_getjson(strGjSubReddit, lstGjMediaType, intGjLimit, strGjSort, strGjView, bolGjNSFW, strAfter, strGjTokenType, strGjToken, strGjURL):
+        strDictValue = { 
+          "sub": "all",
+          "mediatype": "iv",
+          "limit": 10,
+          "sort": "new",
+          "view": "list",
+          "nsfw": True,
+          "after": "",
+        }        
       case _:
         #default unknown
         strDictValue = f"Unrecognized value: [ {strDictAttrib} ]"
@@ -155,7 +169,7 @@ def kv_refreshtoken(strRefVault, strRefRedditURL):
     kv_set(strRefTokenTypeLabel, strRefTokenType)
   
   except Exception as e:
-    #could contain sensitive information in error message
+    # could contain sensitive information in error message
     strRefError = html_crafterror("REDDIT_MEDIA", "KV_REFRESHTOKEN", e)  # f"{e}<br><br>{roRefReceived}<br><br>")
     return strRefError
   
@@ -163,182 +177,217 @@ def kv_refreshtoken(strRefVault, strRefRedditURL):
   
   return
 
-# ***************************************
-#  successful review above. continue below...
-# ***************************************
+def reddit_jsontohtml(jsonHtmlContent, dictHtmlParams):
+  
+  # strHtmlBaseDestURL - local app destination for links
+  # reddit_getjson(strGjSubReddit, lstGjMediaType, intGjLimit, strGjSort, strGjView, bolGjNSFW, strAfter, strGjTokenType, strGjToken, strGjURL):
+  
+  # consider [], [images], [videos], [images, videos], (other/unknown)
+  # consider new, hot, rising, controversial, top
+  # consider table view for alignment
+  #    "sub": "all",
+  #     "mediatype": "iv",
+  #     "limit": 10,
+  #     "sort": "new",
+  #     "view": "list",
+  #     "nsfw": True,
+  #     "after": "",
+  
+  try:
+    
+    # Check if json looks like empty response or subreddit invalid 
+    if not 'jsonHtmlContent' in locals():
+      strHtmlError = html_crafterror("REDDIT_MEDIA", "JSONtoHTML", f"JSON response provided is null!")
+      return strHtmlError
+    
+    intHtmlResults = int(jsonHtmlContent["data"]["dist"])
+    if not 'intHtmlResults' in locals():
+      strHtmlError = html_crafterror("REDDIT_MEDIA", "JSONtoHTML", f"No results founud. JSON response provided is null!")
+      return strHtmlError
+    
+    if intHtmlResults == 0:
+      strHtmlError = html_crafterror("REDDIT_MEDIA", "JSONtoHTML", f"0 results returned. No further results returned or subreddit may not exist!")
+      # provide a refresh from beginning link here
+      #    in some cases after 5-6 api calls into NEW, no additional results are returned
+      return strHtmlError
+    
+    strHtmlBaseDestURL = app_dictionary("url_appbase")
+    strHtmlMediaType = dictHtmlParams["mediatype"] 
+    dictHtmlThreads = jsonHtmlContent["data"]["children"]
+    # should not need to confirm variables exist or are populated here - three if conditions above should cover
+    
+    strHtmlOutput = "<br>"
+    
+    for dictHtmlSingle in dictHtmlThreads:
+      strSubRed = dictHtmlSingle["data"]["subreddit"]
+      strThreadTitle = dictHtmlSingle["data"]["title"]
+      strThreadAuthor = dictHtmlSingle["data"]["author"]
+      strThreadPermalink = dictHtmlSingle["data"]["permalink"]
+      strThreadComments = dictHtmlSingle["data"]["num_comments"]
+      strThreadURL = dictHtmlSingle["data"]["url"]
+      strThreadMedia = dictHtmlSingle["data"]["media"]
+      strThreadType = dictHtmlSingle.get("data", {}).get("post_hint", "missing")
+      bolThreadNsfw = dictHtmlSingle["data"]["over_18"]
+      dtThreadUTC = dictHtmlSingle["data"]["created_utc"]
+      
+      #"over_18": false
+      #is_gallery
+      
+      strHtmlThreadOutput = f"<font size=5><a href=\"https://www.reddit.com{strThreadPermalink}\">{strThreadTitle}</a></font><br>"
+      
+      strHtmlAuthorLink = f"./{strHtmlBaseDestURL}?sub=u_{strThreadAuthor}"
+      strHtmlThreadOutput += f"<a href=\"./{strHtmlBaseDestURL}?sub={strSubRed}\">r/{strSubRed}</a> - <a href=\"{strHtmlAuthorLink}\"><b>{strThreadAuthor}</b></a> - {strThreadComments} Comment(s) / Post Type - {strThreadType}<br><p>"
+      
+      #ThreadType : link, image, hosted:video, null, (gallery?)
+      match strThreadType:
+        case "image":
+          strHtmlThreadOutput += f"<a href=\"{strThreadURL}\" target=\"_blank\"><img src=\"{strThreadURL}\" width=\"60%\"></img></a><p>"
+          case "rich:video":
+          strHtmlThreadEmbed = strThreadMedia["oembed"]["html"]
+          strHtmlThreadEmbed = strHtmlThreadEmbed.replace("&lt;","<")
+          strHtmlThreadEmbed = strHtmlThreadEmbed.replace("&gt;",">")
+          strHtmlThreadEmbed = strHtmlThreadEmbed.replace("\"100%\"","\"60%\"")
+          strHtmlThreadEmbed = strHtmlThreadEmbed.replace("position:absolute;","")
+          strHtmlThreadOutput += f"{strHtmlThreadEmbed}<br><p>"
+        case "hosted:video":   
+          strHostedVid = dictHtmlSingle["data"]["secure_media"]["reddit_video"]["fallback_url"] # alternatively - strHostedVid = dictHtmlSingle["data"]["media"]["reddit_video"]["fallback_url"]
+          #strHtmlThreadOutput += f"<iframe width=\"60%\" src=\"{strHostedVid}\" frameborder=\"0\" allow=\"accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share\" referrerpolicy=\"strict-origin-when-cross-origin\" allowfullscreen title=\"{strThreadTitle}\"></iframe><br><p>"
+          strHtmlThreadOutput += f"<iframe src=\"{strHostedVid}\" frameborder=\"0\" allow=\"accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share\" referrerpolicy=\"strict-origin-when-cross-origin\" allowfullscreen title=\"{strThreadTitle}\"></iframe><br><p>"
+        #case "link":
+          #strHtmlThreadOutput = ""
+          #"is_video": true
+          #"is_gallery": true
+        #case "missing":
+        case _:
+          #strHtmlThreadOutput += f"<font color=red>unexpected MediaType experienced [ {strThreadType} ]</font><p>"
+          strHtmlThreadOutput = ""
+      
+      # check mediatype param for i and or v to determine if should add to output and count
+      
+      strHtmlOutput += strHtmlThreadOutput
+    
+  except Exception as e:
+    #could contain sensitive information in error message
+    strHtmlError = html_crafterror("REDDIT_MEDIA", "JSONtoHTML", e)
+    return strHtmlError
+  
+  return strHtmlOutput
 
-def reddit_jsontohtml(jsonHtmlContent, lstHtmlMediaType, strHtmlBaseDestURL):
+def html_crafturl(strCraftBaseURL, dictCraftParams):
+  
+  # historical - dictCraftAttribsstrCraftSub="all", lstCraftMediaType="iv", intCraftLimit=10, strCraftSort="new", strCraftView="list", bolCraftNSFW=True, strCraftAfter="")
+  #    "sub": "all",
+  #     "mediatype": "iv",
+  #     "limit": 10,
+  #     "sort": "new",
+  #     "view": "list",
+  #     "nsfw": True,
+  #     "after": "",
+  
+  # may use this function for reddit api calls AND local URL format
 
-   # strHtmlBaseDestURL - local app destination for links
-   #reddit_getjson(strGjSubReddit, lstGjMediaType, intGjLimit, strGjSort, strGjView, bolGjNSFW, strAfter, strGjTokenType, strGjToken, strGjURL):
-   
-   #consider [], [images], [videos], [images, videos], (other/unknown)
-   #consider new, hot, rising, controversial, top
-   #consider table view for alignment
+  # could retrieve app_dictionary default settings and substitute any missing values below instead of error
 
-   try:
-      if not 'jsonHtmlContent' in locals():
-         strHtmlOutput = html_crafterror("JSONtoHTML", f"JSON response provided is null!")
-         return strHtmlOutput
-
-      # Check if json looks like empty response or subreddit invalid
-      intHtmlResults = jsonHtmlContent["data"]["dist"]
-      if not 'intHtmlResults' in locals():
-         strHtmlOutput = html_crafterror("JSONtoHTML", f"No results founud. JSON response provided is null!")
-         return strHtmlOutput
-      if int(intHtmlResults) == 0:
-         strHtmlOutput = html_crafterror("JSONtoHTML", f"0 results returned. No further results returned or subreddit may not exist!")
-         # provide a refresh from beginning link here
-         #    in some cases after 5-6 api calls into NEW, no additional results are returned
-         return strHtmlOutput
-      
-      dictHtmlThreads = jsonHtmlContent["data"]["children"]
-      
-      strHtmlOutput = "<br>"
-      
-      for dictHtmlSingle in dictHtmlThreads:
-         strSubRed = dictHtmlSingle["data"]["subreddit"]
-         strThreadTitle = dictHtmlSingle["data"]["title"]
-         strThreadAuthor = dictHtmlSingle["data"]["author"]
-         strThreadPermalink = dictHtmlSingle["data"]["permalink"]
-         strThreadComments = dictHtmlSingle["data"]["num_comments"]
-         strThreadURL = dictHtmlSingle["data"]["url"]
-         strThreadMedia = dictHtmlSingle["data"]["media"]
-         strThreadType = dictHtmlSingle.get("data", {}).get("post_hint", "Missing")
-
-         bolThreadNsfw = dictHtmlSingle["data"]["over_18"]
-         
-         
-         #"over_18": false
-         #is_gallery
-         
-         strHtmlThreadOutput = f"<font size=5><a href=\"https://www.reddit.com{strThreadPermalink}\">{strThreadTitle}</a></font><br>"
-                  
-         strHtmlAuthorLink = f"./{strHtmlBaseDestURL}?sub=u_{strThreadAuthor}"
-         strHtmlThreadOutput += f"<a href=\"./{strHtmlBaseDestURL}?sub={strSubRed}\">r/{strSubRed}</a> - <a href=\"{strHtmlAuthorLink}\"><b>{strThreadAuthor}</b></a> - {strThreadComments} Comment(s) / Post Type - {strThreadType}<br><p>"
-         
-         #ThreadType : link, image, hosted:video, null, (gallery?)
-         match strThreadType:
-            case "image":
-               strHtmlThreadOutput += f"<a href=\"{strThreadURL}\" target=\"_blank\"><img src=\"{strThreadURL}\" width=\"60%\"></img></a><p>"
-            case "rich:video":
-               strHtmlThreadEmbed = strThreadMedia["oembed"]["html"]
-               strHtmlThreadEmbed = strHtmlThreadEmbed.replace("&lt;","<")
-               strHtmlThreadEmbed = strHtmlThreadEmbed.replace("&gt;",">")
-               strHtmlThreadEmbed = strHtmlThreadEmbed.replace("\"100%\"","\"60%\"")
-               strHtmlThreadEmbed = strHtmlThreadEmbed.replace("position:absolute;","")
-               strHtmlThreadOutput += f"{strHtmlThreadEmbed}<br><p>"
-            case "hosted:video":   
-               strHostedVid = dictHtmlSingle["data"]["secure_media"]["reddit_video"]["fallback_url"] # alternatively - strHostedVid = dictHtmlSingle["data"]["media"]["reddit_video"]["fallback_url"]
-               #strHtmlThreadOutput += f"<iframe width=\"60%\" src=\"{strHostedVid}\" frameborder=\"0\" allow=\"accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share\" referrerpolicy=\"strict-origin-when-cross-origin\" allowfullscreen title=\"{strThreadTitle}\"></iframe><br><p>"
-               strHtmlThreadOutput += f"<iframe src=\"{strHostedVid}\" frameborder=\"0\" allow=\"accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share\" referrerpolicy=\"strict-origin-when-cross-origin\" allowfullscreen title=\"{strThreadTitle}\"></iframe><br><p>"
-            #case "link":
-               #strHtmlThreadOutput = ""
-               #"is_video": true
-               #"is_gallery": true
-            case _:
-               #strHtmlThreadOutput += f"<font color=red>unexpected MediaType experienced [ {strThreadType} ]</font><p>"
-               strHtmlThreadOutput = ""
-         strHtmlOutput += strHtmlThreadOutput
-   
-   except Exception as e:
-      #could contain sensitive information in error message
-      strHtmlOutput = html_crafterror("JSONtoHTML", e)
-      return strHtmlOutput
-
-   return strHtmlOutput
-
-# ***************************************
-
-def html_crafturl(strCraftBaseURL, dictCraftAttribsstrCraftSub="all", lstCraftMediaType="iv", intCraftLimit=10, strCraftSort="new", strCraftView="list", bolCraftNSFW=True, strCraftAfter=""):
-
-   # May use this function for reddit api calls AND local URL format
-   
-   #strBase = app_dictionary("url_oauth")
-   # check if strCraftBaseURL ends with a / or append if necessary
-   # confirm variables have values as expected - or if we need try except here
-   try:
-      strCraftURL = strCraftBaseURL # should end with /
-      
-      # check if url passed has parameters already to strip off first
-      
-      if not 'strCraftBaseURL' in locals():
-         strCraftWebOutput = html_crafterror("REDDIT_MEDIA", "HTML CRAFTURL", f"var strCraftBaseURL does not exist [ {e} ]")
-         return strCraftWebOutput
-      
-      if not 'strCraftSub' in locals():
-         strCraftWebOutput = html_crafterror("REDDIT_MEDIA", "HTML CRAFTURL", f"var strCraftSub does not exist [ {e} ]")
-         return strCraftWebOutput
-      
-      if not 'lstCraftMediaType' in locals():
-         strCraftWebOutput = html_crafterror("REDDIT_MEDIA", "HTML CRAFTURL", f"var lstCraftMediaType does not exist [ {e} ]")
-         return strCraftWebOutput
-      
-      if not 'intCraftLimit' in locals():
-         strCraftWebOutput = html_crafterror(""REDDIT_MEDIA", HTML CRAFTURL", f"var intCraftLimit does not exist [ {e} ]")
-         return strCraftWebOutput
-      
-      if not 'strCraftSort' in locals():
-         strCraftWebOutput = html_crafterror("REDDIT_MEDIA", "HTML CRAFTURL", f"var strCraftSort does not exist [ {e} ]")
-         return strCraftWebOutput
-      
-      if not 'strCraftView' in locals():
-         strCraftWebOutput = html_crafterror("REDDIT_MEDIA", "HTML CRAFTURL", f"var strCraftView does not exist [ {e} ]")
-         return strCraftWebOutput
-      
-      if not 'bolCraftNSFW' in locals():
-         strCraftWebOutput = html_crafterror("REDDIT_MEDIA", "HTML CRAFTURL", f"var bolCraftNSFW does not exist [ {e} ]")
-         return strCraftWebOutput
-      
-      if not 'strCraftAfter' in locals():
-         strCraftWebOutput = html_crafterror("REDDIT_MEDIA", "HTML CRAFTURL", f"var strCraftAfter does not exist [ {e} ]")
-         return strCraftWebOutput
-      
-      strCraftContains = ".reddit.com/"
-      if strCraftContains.lower() in strCraftBaseURL.lower():
-         # oauth or token refresh - can ignore app handled parameters
-         if len(strCraftSub) > 0:
-            strCraftURL += f"{strCraftSub}/{strCraftSort}"
-         else:
-            strCraftURL += f"all/{strCraftSort}"
-         if len(strCraftAfter) > 0:
-            strCraftURL += f"?after={strCraftAfter}"
-      else:
-         # likely local URL - include app handled parameters
-         #strCraftURL += f""
-         strCraftSuffix = ""
-         if len(strCraftSub) > 0:
-            strCraftSuffix += f"sub={strCraftSub}&"
-         else:
-            strCraftSuffix += f"sub=all&"
-         if len(lstCraftMediaType) > 0:
-            strCraftSuffix += f"mediatype={lstCraftMediaType}&"
-         if int(intCraftLimit) > 0:
-            strCraftSuffix += f"limit={intCraftLimit}&"
-         if len(strCraftSort) > 0:
-            strCraftSuffix += f"sort={strCraftSort}&"
-         if len(strCraftView) > 0:
-            strCraftSuffix += f"view={strCraftView}&"
-         if bolCraftNSFW:
-            strCraftSuffix += f"nsfw=True&"
-         else:
-            strCraftSuffix += f"nsfw=False&"
-         if len(strCraftAfter) > 0:
-            strCraftSuffix += f"after={strCraftAfter}"
-            
-  #check if last character is ampersand
-  if strCraftSuffix[-1] == "&":
-  strCraftSuffix = strCraftSuffix[:-1]
-  if len(strCraftSuffix) > 0:
-  strCraftURL += f"?{strCraftSuffix}"
-      except Exception as e:
-      #could contain sensitive information in error message 
-      strCraftError = html_crafterror("REDDIT_MEDIA", "HTML CRAFTURL", e)
+  # check if url passed has parameters already to strip off first
+  
+  try:
+    
+    if not 'strCraftBaseURL' in locals():
+      strCraftError = html_crafterror("REDDIT_MEDIA", "HTML CRAFTURL", f"var strCraftBaseURL does not exist [ {e} ]")
       return strCraftError
     
-return strCraftURL
+    strCraftURL = strCraftBaseURL # should end with /
+    
+    strCraftSub = dictCraftParams["sub"]
+    if not 'strCraftSub' in locals():
+      strCraftError = html_crafterror("REDDIT_MEDIA", "HTML CRAFTURL", f"var strCraftSub does not exist [ {e} ]")
+      return strCraftError
 
-# ***************************************
+    strCraftMediaType = dictCraftParams["mediatype"]
+    if not 'strCraftMediaType' in locals():
+      strCraftError = html_crafterror("REDDIT_MEDIA", "HTML CRAFTURL", f"var strCraftMediaType does not exist [ {e} ]")
+      return strCraftError
+    
+    intCraftLimit = int(dictCraftParams["limit"])
+    if not 'intCraftLimit' in locals():
+      strCraftError = html_crafterror(""REDDIT_MEDIA", HTML CRAFTURL", f"var intCraftLimit does not exist [ {e} ]")
+      return strCraftError
+
+    strCraftSort = dictCraftParams["sort"]
+    if not 'strCraftSort' in locals():
+      strCraftError = html_crafterror("REDDIT_MEDIA", "HTML CRAFTURL", f"var strCraftSort does not exist [ {e} ]")
+      return strCraftError
+
+    strCraftView = dictCraftParams["view"]
+    if not 'strCraftView' in locals():
+      strCraftError = html_crafterror("REDDIT_MEDIA", "HTML CRAFTURL", f"var strCraftView does not exist [ {e} ]")
+      return strCraftError
+
+    bolCraftNSFW = dictCraftParams["nsfw"]
+    if not 'bolCraftNSFW' in locals():
+      strCraftError = html_crafterror("REDDIT_MEDIA", "HTML CRAFTURL", f"var bolCraftNSFW does not exist [ {e} ]")
+      return strCraftError
+
+    strCraftAfter = dictCraftParams["after"]  # this may be blank
+    #if not 'strCraftAfter' in locals():
+      #strCraftError = html_crafterror("REDDIT_MEDIA", "HTML CRAFTURL", f"var strCraftAfter does not exist [ {e} ]")
+      #return strCraftError
+    
+    strCraftContains = ".reddit.com/"
+    if strCraftContains.lower() in strCraftURL.lower():
+      
+      # oauth or token refresh - can ignore app handled parameters
+      if len(strCraftSub) > 0:
+        strCraftURL += f"{strCraftSub}/{strCraftSort}"
+      else:
+        strCraftURL += f"all/{strCraftSort}"
+      
+      if len(strCraftAfter) > 0:
+        strCraftURL += f"?after={strCraftAfter}"
+    
+    else:
+      
+      # likely local URL - include app handled parameters
+      
+      strCraftSuffix = "?"  
+      if len(strCraftSub) > 0:
+        strCraftSuffix += f"sub={strCraftSub}&"
+      else:
+        strCraftSuffix += f"sub=all&"
+      
+      if len(strCraftMediaType) > 0:
+        strCraftSuffix += f"mediatype={strCraftMediaType}&"
+      
+      if intCraftLimit > 0:
+        strCraftLimit = str(intCraftLimit)
+        strCraftSuffix += f"limit={strCraftLimit}&"
+      
+      if len(strCraftSort) > 0:
+        strCraftSuffix += f"sort={strCraftSort}&"
+      
+      if len(strCraftView) > 0:
+        strCraftSuffix += f"view={strCraftView}&"
+      
+      if bolCraftNSFW:
+        strCraftSuffix += f"nsfw=True&"
+      else:
+        strCraftSuffix += f"nsfw=False&"
+      
+      if len(strCraftAfter) > 0:
+        strCraftSuffix += f"after={strCraftAfter}"
+    
+    #check if last character is ampersand
+    if strCraftSuffix[-1] == "&":
+      strCraftSuffix = strCraftSuffix[:-1]
+    if len(strCraftSuffix) > 0:
+      strCraftURL += strCraftSuffix
+  
+  except Exception as e:
+    #could contain sensitive information in error message 
+    strCraftError = html_crafterror("REDDIT_MEDIA", "HTML_CRAFTURL", e)
+    return strCraftError
+  
+  return strCraftURL
 
 def html_parseurl(strPuURL):
   
@@ -352,8 +401,11 @@ def html_parseurl(strPuURL):
   return
 
 # ***************************************
+#  successful review above. continue below... 2025-1018
+# ***************************************
 
-def html_form(strFormDestination, strFormSub="all", lstFormMediaType="iv", intFormLimit=10, strFormSort="new", strFormView="list", bolFormNSFW=True):
+def html_form(dictFormParams):
+  #historical - strFormDestination, strFormSub="all", lstFormMediaType="iv", intFormLimit=10, strFormSort="new", strFormView="list", bolFormNSFW=True):
    
    # add try...except here
    
