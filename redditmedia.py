@@ -102,6 +102,10 @@ def reddit_getjson(strGjTokenType, strGjToken, strGjURL, strGjSort, strAfter):
       roGjReceived = requests.get(strGjURL, headers=dictGjHeader)
       
       strGjReqStatus = roGjReceived.status_code
+      if not 'strGjReqStatus' in locals():
+         strGjJsonOutput = html_crafterror("GETJSON", f"Request Status is null!<br>Response: {roGjReceived}")
+         return strGjJsonOutput
+         
       match strGjReqStatus:
          case "403":
             strGjJsonOutput = html_crafterror("GETJSON", f"Unable to proceed!<br>Status Code: {strGjReqStatus}<br>Token type: {strGjTokenType}")
