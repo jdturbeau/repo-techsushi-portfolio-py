@@ -113,12 +113,12 @@ def reddit_getjson(strGjTokenType, strGjToken, strGjURL, strGjSort, strAfter):
          case _:
             dictGjJson = roGjReceived.json()
       if not 'dictGjJson' in locals():
-         strGjJsonOutput = html_crafterror("GETJSON", f"JSON response is null!<br>Status Code: {strGjReqStatus}<br>Token type: {strGjTokenType}")
+         strGjJsonOutput = html_crafterror("GETJSON", f"JSON response is null!<br>Response: {roGjReceived}<br>Token type: {strGjTokenType}")
          return strGjJsonOutput
       
    except Exception as e:
       #could contain sensitive information in error message
-      strGjJsonOutput = html_crafterror("GETJSON", f"{e}<br>URL: {strGjURL}<br>Status Code: {strGjReqStatus}<br>Token type: {strGjTokenType}")
+      strGjJsonOutput = html_crafterror("GETJSON", f"{e}<br>URL: {strGjURL}<br>Response: {roGjReceived}<br>Token type: {strGjTokenType}")
       return strGjJsonOutput
 
    return dictGjJson
@@ -204,8 +204,6 @@ def reddit_jsontohtml(jsonHtmlContent, lstHtmlMediaType, strHtmlBaseDestURL):
    
    except Exception as e:
       #could contain sensitive information in error message
-      #strHtmlOutput = f"Trouble with <b>JSONtoHTML</b>, review: {e}<br><br>{dictThreads}<br><br>"
-      #strHtmlOutput = html_crafterror("JSONtoHTML", f"{e}<br>URL: {strGjURL}<br>Status Code: {strGjReqStatus}<br>Token type: {strGjTokenType}")
       strHtmlOutput = html_crafterror("JSONtoHTML", e)
       return strHtmlOutput
 
