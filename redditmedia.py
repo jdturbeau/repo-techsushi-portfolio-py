@@ -100,11 +100,21 @@ def reddit_getjson(strGjTokenType, strGjToken, strGjURL, strGjSort, strAfter):
       dictGjHeader = { "Authorization": f"{strGjTokenType} {strGjToken}", "User-Agent": strGjUserAgent }
       
       roGjReceived = requests.get(strGjURL, headers=dictGjHeader)
+
+      if not 'roGjReceived' in locals():
+            strGjJsonOutput = html_crafterror("GETJSON", f"Received content is null 1!")
+      else:
+            strGjJsonOutput = html_crafterror("GETJSON", f"Received content is null 1!<br>Response: {roGjReceived}")
+      return strGjJsonOutput
       
       strGjReqStatus = roGjReceived.status_code
+      
       if not 'strGjReqStatus' in locals():
-         strGjJsonOutput = html_crafterror("GETJSON", f"Request Status is null!<br>Response: {roGjReceived}")
-         return strGjJsonOutput
+         if not 'roGjReceived' in locals():
+            strGjJsonOutput = html_crafterror("GETJSON", f"Received content is null 2!")
+         else:
+            strGjJsonOutput = html_crafterror("GETJSON", f"Request Status is null 2!<br>Response: {roGjReceived}")
+      return strGjJsonOutput
          
       match strGjReqStatus:
          case "403":
@@ -113,14 +123,18 @@ def reddit_getjson(strGjTokenType, strGjToken, strGjURL, strGjSort, strAfter):
          case _:
             dictGjJson = roGjReceived.json()
       if not 'dictGjJson' in locals():
-         strGjJsonOutput = html_crafterror("GETJSON", f"JSON response is null!<br>Response: {roGjReceived}<br>Token type: {strGjTokenType}")
+         strGjJsonOutput = html_crafterror("GETJSON", f"JSON response is null (dictGjJson)!<br>Response: {roGjReceived}<br>Token type: {strGjTokenType}")
          return strGjJsonOutput
       
    except Exception as e:
       #could contain sensitive information in error message
-      strGjJsonOutput = html_crafterror("GETJSON", f"{e}<br>URL: {strGjURL}<br>Response: {roGjReceived}<br>Token type: {strGjTokenType}")
+      if not 'roGjReceived' in locals():
+         strGjJsonOutput = html_crafterror("GETJSON", f"Received content is null 3!")
+         #strGjJsonOutput = html_crafterror("GETJSON", f"{e}<br>URL: {strGjURL}<br>Response: {roGjReceived}<br>Token type: {strGjTokenType}")
+      else:
+         strGjJsonOutput = html_crafterror("GETJSON", f"Received content is null 3!<br>Response: {roGjReceived}")
       return strGjJsonOutput
-
+   
    return dictGjJson
 
 def reddit_jsontohtml(jsonHtmlContent, lstHtmlMediaType, strHtmlBaseDestURL):
