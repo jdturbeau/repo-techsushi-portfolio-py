@@ -229,6 +229,8 @@ def reddit_jsontohtml(jsonHtmlContent, lstHtmlMediaType, strHtmlBaseDestURL):
 
    return strHtmlOutput
 
+# ***************************************
+
 def html_crafturl(strCraftBaseURL, dictCraftAttribsstrCraftSub="all", lstCraftMediaType="iv", intCraftLimit=10, strCraftSort="new", strCraftView="list", bolCraftNSFW=True, strCraftAfter=""):
 
    # May use this function for reddit api calls AND local URL format
@@ -305,17 +307,94 @@ def html_crafturl(strCraftBaseURL, dictCraftAttribsstrCraftSub="all", lstCraftMe
          if len(strCraftAfter) > 0:
             strCraftSuffix += f"after={strCraftAfter}"
             
-         #check if last character is ampersand
-         if strCraftSuffix[-1] == "&":
-            strCraftSuffix = strCraftSuffix[:-1]
-         if len(strCraftSuffix) > 0:
-            strCraftURL += f"?{strCraftSuffix}"
-   except Exception as e:
-      strCraftWebOutput = html_crafterror("HTML CRAFTURL", e)
-      return strCraftWebOutput
-         
-   return strCraftURL
-
-  
+  #check if last character is ampersand
+  if strCraftSuffix[-1] == "&":
+  strCraftSuffix = strCraftSuffix[:-1]
+  if len(strCraftSuffix) > 0:
+  strCraftURL += f"?{strCraftSuffix}"
+      except Exception as e:
+      #could contain sensitive information in error message 
+      strCraftError = html_crafterror("REDDIT_MEDIA", "HTML CRAFTURL", e)
+      return strCraftError
+    
+return strCraftURL
 
 # ***************************************
+
+def html_parseurl(strPuURL):
+  
+  #
+  # try...except loop here
+  #
+  
+  # input - URL
+  # output - dictionary with named parameters
+  
+  return
+
+# ***************************************
+
+def html_form(strFormDestination, strFormSub="all", lstFormMediaType="iv", intFormLimit=10, strFormSort="new", strFormView="list", bolFormNSFW=True):
+   
+   # add try...except here
+   
+   # intFormLimit = minimum number of media items to return
+   #    not related to results requested from single API call
+   
+   # possible additions
+   #    option to hide header lines (image only)   
+   strFormOutput = f"<form action=\"/{strFormDestination}\" method=\"post\"><!-- Form elements go here -->"
+   #strFormOutput += f"<label for=\"subreddit\">Subreddit: </label><input type=\"text\" id=\"sub\" name=\"subsubreddit\" placeholder=\"{strFormSub}\" autocomplete=\"off\">"
+   strFormOutput += f"<label for=\"subreddit\">Subreddit: </label><input type=\"text\" id=\"sub\" name=\"subreddit\" placeholder=\"{strFormSub}\" autocomplete=\"off\">"
+   
+   # translate
+   #    strFormOutput += f"<input type=\"checkbox\" id=\"images\" name=\"mediatype\" value=\"images\" checked disabled><label for=\"images\">Images</label>"
+   #    strFormOutput += f"<input type=\"checkbox\" id=\"videos\" name=\"mediatype\" value=\"videos\" checked disabled><label for=\"videos\">Videos</label>"
+   match lstFormMediaType:
+      case "i":
+         strFormOutput += f"<input type=\"checkbox\" id=\"images\" name=\"mediatype\" value=\"images\" checked><label for=\"images\">Images</label>"
+         strFormOutput += f"<input type=\"checkbox\" id=\"videos\" name=\"mediatype\" value=\"videos\"><label for=\"videos\">Videos</label>"
+      case "v":
+         strFormOutput += f"<input type=\"checkbox\" id=\"images\" name=\"mediatype\" value=\"images\"><label for=\"images\">Images</label>"
+         strFormOutput += f"<input type=\"checkbox\" id=\"videos\" name=\"mediatype\" value=\"videos\" checked><label for=\"videos\">Videos</label>"
+      case _:
+         # covers case "iv" and unknowns
+         strFormOutput += f"<input type=\"checkbox\" id=\"images\" name=\"mediatype\" value=\"images\" checked><label for=\"images\">Images</label>"
+         strFormOutput += f"<input type=\"checkbox\" id=\"videos\" name=\"mediatype\" value=\"videos\" checked><label for=\"videos\">Videos</label>"
+         
+   strFormOutput += f"<br><br>"
+   strFormOutput += f"<label for=\"count\">Minimum Display Limit: </label><input type=\"number\" id=\"limit\" name=\"count\" min=\"1\" max=\"30\" step=\"1\" placeholder=\"{intFormLimit}\" autocomplete=\"off\" disabled>"
+
+   # translate strFormSort into drop down selection
+   strFormOutput += f"<label for=\"sort\"> Sort by: </label><select id=\"sort\" name=\"sort\" disabled>"
+   strFormOutput += f"<option value=\"new\" selected=\"true\">New</option>"
+   strFormOutput += f"<option value=\"hot\">Hot</option>"
+   strFormOutput += f"<option value=\"rising\">Rising</option>"
+   strFormOutput += f"<option value=\"controversial\">Controversial</option>"
+   strFormOutput += f"<option value=\"top\">Top</option>"
+   #strFormOutput += f"<option value=\"random\">Random</option>" #invalid option
+   strFormOutput += f"</select>"
+   strFormOutput += f"<br><br>"
+   
+   # translate strFormView by checked radio
+   strFormOutput += f"<input type=\"radio\" id=\"list\" name=\"view\" value=\"list\" checked disabled><label for=\"list\">List View</label>"
+   strFormOutput += f"<input type=\"radio\" id=\"gallery\" name=\"view\" value=\"gallery\" disabled><label for=\"gallery\">Gallery View</label>"
+
+   # translate bolFormNSFW into check
+   strFormOutput += f"<input type=\"checkbox\" id=\"nsfw\" name=\"nsfw\" value=\"nsfw\" checked disabled><label for=\"nsfw\">Allow 18+ Content?</label><br>"
+   
+   strFormOutput += f"<br><br>"
+   #   need to add HUMAN? style checkbox here, required before allowing submit, bot stopper-ish
+   #      also likely do not want to show results and "next" link on first load - bot could continue w/o human checkbox
+   strFormOutput += "Are you <font color=red>human</font>?<font color=red>*</font>"
+   strFormOutput += f"<input type=\"checkbox\" id=\"human\" name=\"human\" value=\"human\" required><label for=\"human\">Yes&emsp;</label>"
+   strFormOutput += f"<button type=\"submit\">Browse Media</button>"   
+   strFormOutput += f"</form><br><br>"
+
+   #add (media by) username
+   #consider single stream vs gallery view
+  
+   return strFormOutput
+
+# ***************************************
+
