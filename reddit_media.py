@@ -514,6 +514,216 @@ def html_form(dictFormParams):
 #  successful review above. continue below... 2025-1018
 # ***************************************
 
+def reddit_getjson(dictGjParams):
+  # historical - strGjTokenType, strGjToken, strGjURL, strGjSort
+
+   # to be handled by / used in jsontohtml, unneeded here
+   #    strGjSubReddit
+   #    lstGjMediaType
+   #    intGjLimit
+   #    strGjView
+   #    bolGjNSFW
+   
+   # check if subreddit exists
+
+   # function to craft request URL
+   
+  try:
+    strGjURL = app_dictionary("url_oauth")
+    
+    strGjUserAgent = app_dictionary("txt_useragent")
+    
+    strGjTokenTypeLabel = app_dictionary("kv_tokentype")
+    strGjTokenType = kv_get(strGjTokenTypeLabel)
+    strGjTokenLabel = app_dictionary("kv_token")
+    strGjToken = kv_get(strGjTokenLabel)
+
+    dictGjHeader = { "Authorization": f"{strGjTokenType} {strGjToken}", "User-Agent": strGjUserAgent }
+    roGjReceived = requests.get(strGjURL, headers=dictGjHeader)
+
+    if not 'roGjReceived' in locals():
+      strGjError = html_crafterror("REDDIT_MEDIA", "GETJSON", f"Response appears null (1): [ {e} ]")
+      return strGjError
+    
+    strGjReqStatus = roGjReceived.status_code
+    dictGjJson = roGjReceived.json()
+
+    if not 'strGjReqStatus' in locals():
+      strGjError = html_crafterror("REDDIT_MEDIA", "GETJSON", f"Response Status Code appears null (2): [ {e} ]")
+      return strGjError
+      
+    if not 'dictGjJson' in locals():
+      strGjError = html_crafterror("REDDIT_MEDIA", "GETJSON", f"Response appears null (3): [ {e} ]")
+      return strGjError
+      
+    '''
+    match strGjReqStatus:
+      case "403":
+        strGjError = html_crafterror("REDDIT_MEDIA", "GETJSON", f"Unable to proceed!<br>Status Code: {strGjReqStatus}")
+        # historical - <br>Token type: {strGjTokenType}
+        return strGjError
+      case _:
+        dictGjJson = roGjReceived.json()
+        if not 'dictGjJson' in locals():
+          strGjError = html_crafterror("REDDIT_MEDIA", "GETJSON", f"JSON response is null (dictGjJson)!<br>Response: {roGjReceived}<br>Token type: {strGjTokenType}")
+          return strGjError
+    '''
+
+  except Exception as e:
+    #could contain sensitive information in error message
+    if not 'roGjReceived' in locals():
+      strGjError = html_crafterror("REDDIT_MEDIA", "GETJSON", f"Received content is null (4): [ {e} ]")
+      return strGjJsonOutput
+    else:
+      strGjError = html_crafterror("REDDIT_MEDIA", "GETJSON", e)
+      return strGjJsonOutput
+  
+  return dictGjJson
+
 
 # ***************************************
 
+
+      strGmSort = app_sanitize(strGmSort)
+      strGmView = app_sanitize(strGmView)
+      strAfter = app_sanitize(strAfter)
+      
+      
+      strGmOutput = app_dictionary("html_header")
+      
+      # ensure distinction between API RESULTS LIMIT and app defined DISPLAY LIMIT
+      #    Example - 50 results returned may not equal 50 displayed media items
+      
+      # need to CAP intLIMIT to avoid malicious use (perhaps 30?)
+      #    intLimit is intended for display limit, not retrieval limit - may not always retrieve media for each thread
+      if int(intGmLimit) > 30:
+         intGmLimit = 30
+      if int(intGmLimit) < 1:
+         intGmLimit = 1
+      
+      intGmMediaFound = 0   #m easure found media items against limit desired
+      intGmRun = 0   # used to avoid hang/loop cycle for subreddit that may not have any media
+      
+      strGmOutput += html_form(strGmBaseDestURL, strGmSubReddit, lstGmMediaType, intGmLimit, strGmSort, strGmView, bolGmNSFW)
+            
+      #Should - Test if existing token works using known simple api call?
+      
+      strVault = app_dictionary("kv_name")
+      strRedditURL = app_dictionary("url_login")
+      strResult = kv_refreshtoken(strVault, strRedditURL)
+   
+      #Should - Test if subreddit exists
+      '''
+      {
+      invalid subreddit
+       "kind": "Listing",
+       "data": {
+           "after": null,
+           "dist": 0,
+           "modhash": "",
+           "geo_filter": "",
+           "children": [],
+           "before": null
+          }
+         }
+      
+      valid subreddit
+         "kind": "Listing",
+             "data": {
+           "after": "t3_1o1cnhp",
+           "dist": 25,
+           "modhash": "",
+           "geo_filter": "",
+           "children": [
+      '''
+      
+      strTokenType = app_dictionary("kv_tokentype")
+      strTokenType = kv_get(strVault, strTokenType)
+      strToken = app_dictionary("kv_token")
+      strToken = kv_get(strVault, strToken)
+
+      strGmURL = app_dictionary("url_oauth")
+      
+      while True:
+         
+         # Use function to craft URL to pass to API
+         #    strGmApiURL is API URL with subreddit, sort, after params
+         strGmApiURL = html_crafturl(strGmURL, strGmSubReddit, lstGmMediaType, intGmLimit, strGmSort, strGmView, bolGmNSFW, strAfter)
+         
+         #dictGmResponse = reddit_getjson(strGmSubReddit, lstGmMediaType, intGmLimit, strGmSort, strGmView, bolGmNSFW, strAfter, strTokenType, strToken, strGmApiURL)
+         #   reddit_getjson(strGjTokenType, strGjToken, strGjURL, strGjSort, strAfter):
+         dictGmResponse = reddit_getjson(strTokenType, strToken, strGmApiURL, strGmSort, strAfter)
+         # strGmBaseDestURL - local app url
+         # strGmApiURL - reddit api url
+         # Dest URL to be handled outside of function
+   
+         # is dictGmResponse empty / null / data.dist = 0 / data.before==data.after
+         if not 'dictGmResponse' in locals():
+            strGmOutput = html_crafterror("APP MAIN GETMEDIA", f"{e}<br>URL: {strGjURL}<br>Token type: {strGjTokenType}")
+            return strGmOutput
+         
+         strGmBody = reddit_jsontohtml(dictGmResponse, lstGmMediaType, strGmBaseDestURL)
+   
+         # how to check if strGmBody contains HTML vs error
+         
+         strGmOutput += strGmBody
+            
+         strAfter = dictGmResponse["data"]["after"]
+
+
+         '''
+         #if not strAfter:
+            #strAfter = ""
+         #else:
+            # re.escape equal sign does not need escape character
+            #strGmPattern = r"((?<=after=)(.*?)(?=&))|((?<=after=).*)"
+            # strGmApiURL - reddit api url
+            strGmApiURL = re.sub(strGmPattern, strAfter, strGmApiURL, flags=re.IGNORECASE)
+            # strGmDestURL - local app url
+            strGmBaseDestURL = re.sub(strGmPattern, strAfter, strGmBaseDestURL, flags=re.IGNORECASE)
+            
+            #verify if below is necessary
+            
+            if not strAfter in strGmBaseDestURL:
+               #to craft Next Posts link
+               strGmBaseDestURL += f"&after={strAfter}"
+            if not strAfter in strGmApiURL:
+               #to craft API url for next batch
+               strGmApiURL += f"?after={strAfter}"
+         '''
+         strGmJSON = str(dictGmResponse)
+         intGmFound = strGmJSON.count("\"post_hint\":")
+         intGmMediaFound += intGmFound
+         intGmRun += 1
+   
+         if intGmMediaFound >= int(intGmLimit):
+            # count media results returned, break out of while loop if equal or over limit
+            break
+         if intGmRun >= 4:
+            #prevent undesired loop runaway for subreddits that may not have much or any media
+            break
+   
+      # should use function to craft internal URL
+      strGmNextURL = html_crafturl(strGmBaseDestURL, strGmSubReddit, lstGmMediaType, intGmLimit, strGmSort, strGmView, bolGmNSFW, strAfter)
+      strGmOutput += f"<p align=\"right\"><a href=\"{strGmNextURL}\">Next Posts</a></p>"
+      
+      # need to remove after= entry
+      #strGmPattern = r"(\&after=)(.*?)(?=&)|(\&after=).*"
+      #strGmReturnURL = re.sub(strGmPattern, "", strGmBaseDestURL, flags=re.IGNORECASE)
+      # should use function to craft internal URL
+      strGmRefreshURL = html_crafturl(strGmBaseDestURL, strGmSubReddit, lstGmMediaType, intGmLimit, strGmSort, strGmView, bolGmNSFW, "")
+      strGmOutput += f"<p align=\"right\"><a href=\"{strGmRefreshURL}\">Reload From Beginning</a></p>"
+      
+      strGmOutput += app_dictionary("html_footer")
+   
+   except Exception as e:
+      strGmOutput = html_crafterror("APP MAIN GETMEDIA", e)
+      if not 'dictGmResponse' in locals():
+         strPrettyJson = f"dictGmResponse is null"
+      else:
+         strPrettyJson = json.dumps(dictGmResponse, indent=4)
+      strGmOutput += f"<br><br><pre>{strPrettyJson}</pre>"
+      return strGmOutput
+   return strGmOutput
+
+def app_main_getmedia(strGmBaseDestURL, strGmSubReddit="all", lstGmMediaType="iv", intGmLimit=10, strGmSort="new", strGmView="list", bolGmNSFW=True, strAfter=""):
