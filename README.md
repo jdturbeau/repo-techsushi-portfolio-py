@@ -19,7 +19,8 @@
 > 9. add date / days ago to media entry display
 > 10. name or acronym - reddit media reveal redmedrev ?
 > 11. search subreddit list and category 
-> 13. Include "BACK" or "BEFORE" link (opposite of "NEXT" or "AFTER" link)
+> 13. include "BACK" or "BEFORE" link (opposite of "NEXT" or "AFTER" link)
+> 14. option to hide header lines (image/video only)
 >
 
 * Blog
