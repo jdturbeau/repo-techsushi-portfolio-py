@@ -395,7 +395,7 @@ def html_crafturl(strCraftBaseURL, dictCraftParams):
 def html_parseurl(strPuURL):
   
   #
-  # try...except loop here
+  # try...except here
   #
   
   # input - URL
@@ -403,28 +403,60 @@ def html_parseurl(strPuURL):
   
   return
 
-# ***************************************
-#  successful review above. continue below... 2025-1018
-# ***************************************
-
 def html_form(dictFormParams):
-  #historical - strFormDestination, strFormSub="all", lstFormMediaType="iv", intFormLimit=10, strFormSort="new", strFormView="list", bolFormNSFW=True):
-   
-   # add try...except here
-   
-   # intFormLimit = minimum number of media items to return
-   #    not related to results requested from single API call
-   
-   # possible additions
-   #    option to hide header lines (image only)   
-   strFormOutput = f"<form action=\"/{strFormDestination}\" method=\"post\"><!-- Form elements go here -->"
-   #strFormOutput += f"<label for=\"subreddit\">Subreddit: </label><input type=\"text\" id=\"sub\" name=\"subsubreddit\" placeholder=\"{strFormSub}\" autocomplete=\"off\">"
-   strFormOutput += f"<label for=\"subreddit\">Subreddit: </label><input type=\"text\" id=\"sub\" name=\"subreddit\" placeholder=\"{strFormSub}\" autocomplete=\"off\">"
+  #historical - strFormDestination, strFormSub="all", lstFormMediaType="iv", intFormLimit=10, strFormSort="new", strFormView="list", bolFormNSFW=True
+  
+  try:
+    strFormBaseURL = app_dictionary("url_appbase")
+    # confirm if baseURL ends with a slash ?
+    
+    if not 'strFormBaseURL' in locals():
+      strFormError = html_crafterror("REDDIT_MEDIA", "HTML FORM", f"var strFormBaseURL does not exist [ {e} ]")
+      return strFormError
+    
+    strFormSub = dictFormParams["sub"]
+    if not 'strFormSub' in locals():
+      strFormError = html_crafterror("REDDIT_MEDIA", "HTML FORM", f"var strFormSub does not exist [ {e} ]")
+      return strFormError
+
+    strFormMediaType = dictFormParams["mediatype"]
+    if not 'strFormMediaType' in locals():
+      strFormError = html_crafterror("REDDIT_MEDIA", "HTML FORM", f"var strFormMediaType does not exist [ {e} ]")
+      return strFormError
+    
+    intFormLimit = int(dictFormParams["limit"])
+    if not 'intFormLimit' in locals():
+      strFormError = html_crafterror(""REDDIT_MEDIA", HTML FORM", f"var intFormLimit does not exist [ {e} ]")
+      return strFormError
+
+    strFormSort = dictFormParams["sort"]
+    if not 'strFormSort' in locals():
+      strFormError = html_crafterror("REDDIT_MEDIA", "HTML FORM", f"var strFormSort does not exist [ {e} ]")
+      return strFormError
+
+    strFormView = dictFormParams["view"]
+    if not 'strFormView' in locals():
+      strFormError = html_crafterror("REDDIT_MEDIA", "HTML FORM", f"var strFormView does not exist [ {e} ]")
+      return strFormError
+
+    bolFormNSFW = dictFormParams["nsfw"]
+    if not 'bolFormNSFW' in locals():
+      strFormError = html_crafterror("REDDIT_MEDIA", "HTML FORM", f"var bolFormNSFW does not exist [ {e} ]")
+      return strFormError
+
+    strFormAfter = dictFormParams["after"]  # this may be blank
+    #if not 'strFormAfter' in locals():
+      #strFormError = html_crafterror("REDDIT_MEDIA", "HTML FORM", f"var strFormAfter does not exist [ {e} ]")
+      #return strFormError
+  
+  
+  strFormOutput = f"<form action=\"/{strFormBaseURL}\" method=\"post\"><!-- Form elements go here -->"
+  strFormOutput += f"<label for=\"subreddit\">Subreddit: </label><input type=\"text\" id=\"sub\" name=\"subreddit\" placeholder=\"{strFormSub}\" autocomplete=\"off\">"
    
    # translate
    #    strFormOutput += f"<input type=\"checkbox\" id=\"images\" name=\"mediatype\" value=\"images\" checked disabled><label for=\"images\">Images</label>"
    #    strFormOutput += f"<input type=\"checkbox\" id=\"videos\" name=\"mediatype\" value=\"videos\" checked disabled><label for=\"videos\">Videos</label>"
-   match lstFormMediaType:
+   match strFormMediaType:
       case "i":
          strFormOutput += f"<input type=\"checkbox\" id=\"images\" name=\"mediatype\" value=\"images\" checked><label for=\"images\">Images</label>"
          strFormOutput += f"<input type=\"checkbox\" id=\"videos\" name=\"mediatype\" value=\"videos\"><label for=\"videos\">Videos</label>"
@@ -439,14 +471,13 @@ def html_form(dictFormParams):
    strFormOutput += f"<br><br>"
    strFormOutput += f"<label for=\"count\">Minimum Display Limit: </label><input type=\"number\" id=\"limit\" name=\"count\" min=\"1\" max=\"30\" step=\"1\" placeholder=\"{intFormLimit}\" autocomplete=\"off\" disabled>"
 
-   # translate strFormSort into drop down selection
+   # translate strFormSort into drop down selection - new is default selected
    strFormOutput += f"<label for=\"sort\"> Sort by: </label><select id=\"sort\" name=\"sort\" disabled>"
    strFormOutput += f"<option value=\"new\" selected=\"true\">New</option>"
    strFormOutput += f"<option value=\"hot\">Hot</option>"
    strFormOutput += f"<option value=\"rising\">Rising</option>"
    strFormOutput += f"<option value=\"controversial\">Controversial</option>"
    strFormOutput += f"<option value=\"top\">Top</option>"
-   #strFormOutput += f"<option value=\"random\">Random</option>" #invalid option
    strFormOutput += f"</select>"
    strFormOutput += f"<br><br>"
    
@@ -455,9 +486,13 @@ def html_form(dictFormParams):
    strFormOutput += f"<input type=\"radio\" id=\"gallery\" name=\"view\" value=\"gallery\" disabled><label for=\"gallery\">Gallery View</label>"
 
    # translate bolFormNSFW into check
-   strFormOutput += f"<input type=\"checkbox\" id=\"nsfw\" name=\"nsfw\" value=\"nsfw\" checked disabled><label for=\"nsfw\">Allow 18+ Content?</label><br>"
+  if bolFormNSFW:
+    strFormOutput += f"<input type=\"checkbox\" id=\"nsfw\" name=\"nsfw\" value=\"nsfw\" checked disabled><label for=\"nsfw\">Allow 18+ Content?</label><br>"
+  else:
+    strFormOutput += f"<input type=\"checkbox\" id=\"nsfw\" name=\"nsfw\" value=\"nsfw\" disabled><label for=\"nsfw\">Allow 18+ Content?</label><br>"
    
    strFormOutput += f"<br><br>"
+
    #   need to add HUMAN? style checkbox here, required before allowing submit, bot stopper-ish
    #      also likely do not want to show results and "next" link on first load - bot could continue w/o human checkbox
    strFormOutput += "Are you <font color=red>human</font>?<font color=red>*</font>"
@@ -467,8 +502,18 @@ def html_form(dictFormParams):
 
    #add (media by) username
    #consider single stream vs gallery view
+
+  except Exception as e:
+    #could contain sensitive information in error message 
+    strFormError = html_crafterror("REDDIT_MEDIA", "HTML FORM", e)
+    return strFormError
   
    return strFormOutput
+
+# ***************************************
+#  successful review above. continue below... 2025-1018
+# ***************************************
+
 
 # ***************************************
 
