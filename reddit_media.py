@@ -526,7 +526,9 @@ def reddit_getjson(dictGjParams):
   # function to craft request URL
   
   try:
-    strGjURL = app_dictionary("url_oauth")
+    strGjBaseURL = app_dictionary("url_oauth")
+
+    strGjURL = html_crafturl(strGjBaseURL, dictGjParams)
     
     strGjUserAgent = app_dictionary("txt_useragent")
     
@@ -562,27 +564,19 @@ def reddit_getjson(dictGjParams):
   
   return dictGjJson
 
-
-
-# ***************************************
-#  successful review above. continue below... 2025-1019
-# ***************************************
-
-# *** need to fix spacing and finish review ***
-
 def app_main_getmedia(dictGmParams):
   
   # historical - strGmBaseDestURL, strGmSubReddit="all", lstGmMediaType="iv", intGmLimit=10, strGmSort="new", strGmView="list", bolGmNSFW=True, strAfter=""
-   #
-   # future: Use DICT object instead of multiple variables for parameters
-   #
-   
-   # strGmBaseDestURL is local app url to craft the NEXT/AFTER link to continue viewing results
-   # do not care about method and using match case
-   
-   #table with
-   #   overview, what, technologies involved,
-   
+  #
+  # future: Use DICT object instead of multiple variables for parameters
+  #
+  
+  # strGmBaseDestURL is local app url to craft the NEXT/AFTER link to continue viewing results
+  # do not care about method and using match case
+  
+  #table with
+  #   overview, what, technologies involved,
+  
   try:
     
     # confirm if want to error on unfound value OR substitute with a default and continue...?
@@ -596,7 +590,7 @@ def app_main_getmedia(dictGmParams):
     if not 'strGmSub' in locals():
       strGmError = html_crafterror("REDDIT_MEDIA", "APP MAIN GETMEDIA", f"var strGmSub does not exist!")
       return strGmError
-
+    
     strGmMediaType = dictGmParams["mediatype"]
     if not 'strGmMediaType' in locals():
       strGmError = html_crafterror("REDDIT_MEDIA", "APP MAIN GETMEDIA", f"var strGmMediaType does not exist!")
@@ -606,44 +600,43 @@ def app_main_getmedia(dictGmParams):
     if not 'intGmLimit' in locals():
       strGmError = html_crafterror(""REDDIT_MEDIA", APP MAIN GETMEDIA", f"var intGmLimit does not exist!")
       return strGmError
-
+    
     strGmSort = dictGmParams["sort"]
     if not 'strGmSort' in locals():
       strGmError = html_crafterror("REDDIT_MEDIA", "APP MAIN GETMEDIA", f"var strGmSort does not exist!")
       return strGmError
-
+    
     strGmView = dictGmParams["view"]
     if not 'strGmView' in locals():
       strGmError = html_crafterror("REDDIT_MEDIA", "APP MAIN GETMEDIA", f"var strGmView does not exist!")
       return strGmError
-
+    
     bolGmNSFW = dictGmParams["nsfw"]
     if not 'bolGmNSFW' in locals():
       strGmError = html_crafterror("REDDIT_MEDIA", "APP MAIN GETMEDIA", f"var bolGmNSFW does not exist!")
       return strGmError
-
+    
     strGmAfter = dictGmParams["after"]  # this may be blank
     #if not 'strGmAfter' in locals():
       #strGmError = html_crafterror("REDDIT_MEDIA", "APP MAIN GETMEDIA", f"var strGmAfter does not exist!")
       #return strGmError 
-     
-     
-     # not sanitizing strGmBaseURL - assumption that this is app controlled
-      strGmSub = app_sanitize(strGmSub)
-      strGmMediaType = app_sanitize(strGmMediaType)
-      
+    
+    # not sanitizing strGmBaseURL - assumption that this is app controlled
+    strGmSub = app_sanitize(strGmSub)
+    strGmMediaType = app_sanitize(strGmMediaType)
+    
     # need to CAP intLIMIT to avoid malicious use (perhaps 30?)
-      #    intLimit is intended for display limit, not retrieval limit - may not always retrieve media for each thread
-      if int(intGmLimit) > 30:
-         intGmLimit = 30
-      if int(intGmLimit) < 1:
-         intGmLimit = 1
+    #    intLimit is intended for display limit, not retrieval limit - may not always retrieve media for each thread
+    if int(intGmLimit) > 30:
+      intGmLimit = 30
+    if int(intGmLimit) < 1:
+      intGmLimit = 1
     
     strGmSort = app_sanitize(strGmSort)
-      strGmView = app_sanitize(strGmView)
+    strGmView = app_sanitize(strGmView)
     # not sanitizing bolGmNSFW  
     strGmAfter = app_sanitize(strGmAfter)
-
+    
     dictGmParams["sub"] = strGmSub
     dictGmParams["mediatype"] = strGmMediaType
     dictGmParams["limit"] = intGmLimit
@@ -651,176 +644,93 @@ def app_main_getmedia(dictGmParams):
     dictGmParams["view"] = strGmView
     dictGmParams["nsfw"] = bolGmNSFW
     dictGmParams["after"] = strGmAfter
-      
+    
     # ensure distinction between API RESULTS LIMIT and app defined DISPLAY LIMIT
     #    Example - 50 results returned may not equal 50 displayed media items
     
     intGmMediaFound = 0   # easure found media items against limit desired
     intGmRun = 0   # used to avoid hang/loop cycle for subreddit that may not have enough, or any, media
-
+    
     strGmOutput = app_dictionary("html_header")
     strGmOutput += html_form(strGmBaseURL, dictGmParams)
-            
-      # should - Test if existing token works using known simple api call?
+    
+    # should - Test if existing token works using known simple api call?
+    
+    strVault = app_dictionary("kv_name")
+    strRedditURL = app_dictionary("url_login")
+    strResult = kv_refreshtoken(strVault, strRedditURL)
+    
+    # should - Test if subreddit exists?
+    
+    strTokenType = app_dictionary("kv_tokentype")
+    strTokenType = kv_get(strVault, strTokenType)
+    strToken = app_dictionary("kv_token")
+    strToken = kv_get(strVault, strToken)
+    
+    #strGmURL = app_dictionary("url_oauth")
+    
+    while True:
       
-      strVault = app_dictionary("kv_name")
-      strRedditURL = app_dictionary("url_login")
-      strResult = kv_refreshtoken(strVault, strRedditURL)
-   
-      # should - Test if subreddit exists?
+      # Use function to craft URL to pass to API
+      #    strGmApiURL is API URL with subreddit, sort, after params
+      #strGmApiURL = html_crafturl(strGmURL, dictGmParams)
+      #   reddit_getjson handles crafting URL for API
       
-      strTokenType = app_dictionary("kv_tokentype")
-      strTokenType = kv_get(strVault, strTokenType)
-      strToken = app_dictionary("kv_token")
-      strToken = kv_get(strVault, strToken)
-
-      strGmURL = app_dictionary("url_oauth")
+      dictGmResponse = reddit_getjson(dictGmParams)
       
-      while True:
-         
-         # Use function to craft URL to pass to API
-         #    strGmApiURL is API URL with subreddit, sort, after params
-         strGmApiURL = html_crafturl(strGmURL, strGmSubReddit, lstGmMediaType, intGmLimit, strGmSort, strGmView, bolGmNSFW, strAfter)
-         
-         #dictGmResponse = reddit_getjson(strGmSubReddit, lstGmMediaType, intGmLimit, strGmSort, strGmView, bolGmNSFW, strAfter, strTokenType, strToken, strGmApiURL)
-         #   reddit_getjson(strGjTokenType, strGjToken, strGjURL, strGjSort, strAfter):
-         dictGmResponse = reddit_getjson(strTokenType, strToken, strGmApiURL, strGmSort, strAfter)
-         # strGmBaseDestURL - local app url
-         # strGmApiURL - reddit api url
-         # Dest URL to be handled outside of function
-   
-         # is dictGmResponse empty / null / data.dist = 0 / data.before==data.after
-         if not 'dictGmResponse' in locals():
-            strGmOutput = html_crafterror("REDDIT_MEDIA", "APP MAIN GETMEDIA", f"{e}<br>URL: {strGjURL}<br>Token type: {strGjTokenType}")
-            return strGmOutput
-         
-         strGmBody = reddit_jsontohtml(dictGmResponse, lstGmMediaType, strGmBaseDestURL)
-   
-         # how to check if strGmBody contains HTML vs error
-         
-         strGmOutput += strGmBody
-            
-         strAfter = dictGmResponse["data"]["after"]
-
-
-         '''
-         #if not strAfter:
-            #strAfter = ""
-         #else:
-            # re.escape equal sign does not need escape character
-            #strGmPattern = r"((?<=after=)(.*?)(?=&))|((?<=after=).*)"
-            # strGmApiURL - reddit api url
-            strGmApiURL = re.sub(strGmPattern, strAfter, strGmApiURL, flags=re.IGNORECASE)
-            # strGmDestURL - local app url
-            strGmBaseDestURL = re.sub(strGmPattern, strAfter, strGmBaseDestURL, flags=re.IGNORECASE)
-            
-            #verify if below is necessary
-            
-            if not strAfter in strGmBaseDestURL:
-               #to craft Next Posts link
-               strGmBaseDestURL += f"&after={strAfter}"
-            if not strAfter in strGmApiURL:
-               #to craft API url for next batch
-               strGmApiURL += f"?after={strAfter}"
-         '''
-         strGmJSON = str(dictGmResponse)
-         intGmFound = strGmJSON.count("\"post_hint\":")
-         intGmMediaFound += intGmFound
-         intGmRun += 1
-   
-         if intGmMediaFound >= int(intGmLimit):
-            # count media results returned, break out of while loop if equal or over limit
-            break
-         if intGmRun >= 4:
-            #prevent undesired loop runaway for subreddits that may not have much or any media
-            break
-   
-      # should use function to craft internal URL
-      strGmNextURL = html_crafturl(strGmBaseDestURL, strGmSubReddit, lstGmMediaType, intGmLimit, strGmSort, strGmView, bolGmNSFW, strAfter)
-      strGmOutput += f"<p align=\"right\"><a href=\"{strGmNextURL}\">Next Posts</a></p>"
-      
-      # need to remove after= entry
-      #strGmPattern = r"(\&after=)(.*?)(?=&)|(\&after=).*"
-      #strGmReturnURL = re.sub(strGmPattern, "", strGmBaseDestURL, flags=re.IGNORECASE)
-      # should use function to craft internal URL
-      strGmRefreshURL = html_crafturl(strGmBaseDestURL, strGmSubReddit, lstGmMediaType, intGmLimit, strGmSort, strGmView, bolGmNSFW, "")
-      strGmOutput += f"<p align=\"right\"><a href=\"{strGmRefreshURL}\">Reload From Beginning</a></p>"
-      
-      strGmOutput += app_dictionary("html_footer")
-   
-   except Exception as e:
-      strGmOutput = html_crafterror("REDDIT_MEDIA", "APP MAIN GETMEDIA", e)
+      # is dictGmResponse empty / null / data.dist = 0 / data.before==data.after
       if not 'dictGmResponse' in locals():
-         strPrettyJson = f"dictGmResponse is null"
-      else:
-         strPrettyJson = json.dumps(dictGmResponse, indent=4)
-      strGmOutput += f"<br><br><pre>{strPrettyJson}</pre>"
-      return strGmOutput
-   return strGmOutput
-
-
-
-#*** need to review and fix spacing ***
-
-def html_form(strFormBaseURL, dictFormParams):
-
-  # historical - strFormSub="all", lstFormMediaType="iv", intFormLimit=10, strFormSort="new", strFormView="list", bolFormNSFW=True
-   # add try...except here
-   
-   # intFormLimit = minimum number of media items to return
-   #    not related to results requested from single API call
-   
-   # possible additions
-   #    option to hide header lines (image only)   
-   strFormOutput = f"<form action=\"/{strFormDestination}\" method=\"post\"><!-- Form elements go here -->"
-   #strFormOutput += f"<label for=\"subreddit\">Subreddit: </label><input type=\"text\" id=\"sub\" name=\"subsubreddit\" placeholder=\"{strFormSub}\" autocomplete=\"off\">"
-   strFormOutput += f"<label for=\"subreddit\">Subreddit: </label><input type=\"text\" id=\"sub\" name=\"subreddit\" placeholder=\"{strFormSub}\" autocomplete=\"off\">"
-   
-   # translate
-   #    strFormOutput += f"<input type=\"checkbox\" id=\"images\" name=\"mediatype\" value=\"images\" checked disabled><label for=\"images\">Images</label>"
-   #    strFormOutput += f"<input type=\"checkbox\" id=\"videos\" name=\"mediatype\" value=\"videos\" checked disabled><label for=\"videos\">Videos</label>"
-   match lstFormMediaType:
-      case "i":
-         strFormOutput += f"<input type=\"checkbox\" id=\"images\" name=\"mediatype\" value=\"images\" checked><label for=\"images\">Images</label>"
-         strFormOutput += f"<input type=\"checkbox\" id=\"videos\" name=\"mediatype\" value=\"videos\"><label for=\"videos\">Videos</label>"
-      case "v":
-         strFormOutput += f"<input type=\"checkbox\" id=\"images\" name=\"mediatype\" value=\"images\"><label for=\"images\">Images</label>"
-         strFormOutput += f"<input type=\"checkbox\" id=\"videos\" name=\"mediatype\" value=\"videos\" checked><label for=\"videos\">Videos</label>"
-      case _:
-         # covers case "iv" and unknowns
-         strFormOutput += f"<input type=\"checkbox\" id=\"images\" name=\"mediatype\" value=\"images\" checked><label for=\"images\">Images</label>"
-         strFormOutput += f"<input type=\"checkbox\" id=\"videos\" name=\"mediatype\" value=\"videos\" checked><label for=\"videos\">Videos</label>"
-         
-   strFormOutput += f"<br><br>"
-   strFormOutput += f"<label for=\"count\">Minimum Display Limit: </label><input type=\"number\" id=\"limit\" name=\"count\" min=\"1\" max=\"30\" step=\"1\" placeholder=\"{intFormLimit}\" autocomplete=\"off\" disabled>"
-
-   # translate strFormSort into drop down selection
-   strFormOutput += f"<label for=\"sort\"> Sort by: </label><select id=\"sort\" name=\"sort\" disabled>"
-   strFormOutput += f"<option value=\"new\" selected=\"true\">New</option>"
-   strFormOutput += f"<option value=\"hot\">Hot</option>"
-   strFormOutput += f"<option value=\"rising\">Rising</option>"
-   strFormOutput += f"<option value=\"controversial\">Controversial</option>"
-   strFormOutput += f"<option value=\"top\">Top</option>"
-   #strFormOutput += f"<option value=\"random\">Random</option>" #invalid option
-   strFormOutput += f"</select>"
-   strFormOutput += f"<br><br>"
-   
-   # translate strFormView by checked radio
-   strFormOutput += f"<input type=\"radio\" id=\"list\" name=\"view\" value=\"list\" checked disabled><label for=\"list\">List View</label>"
-   strFormOutput += f"<input type=\"radio\" id=\"gallery\" name=\"view\" value=\"gallery\" disabled><label for=\"gallery\">Gallery View</label>"
-
-   # translate bolFormNSFW into check
-   strFormOutput += f"<input type=\"checkbox\" id=\"nsfw\" name=\"nsfw\" value=\"nsfw\" checked disabled><label for=\"nsfw\">Allow 18+ Content?</label><br>"
-   
-   strFormOutput += f"<br><br>"
-   #   need to add HUMAN? style checkbox here, required before allowing submit, bot stopper-ish
-   #      also likely do not want to show results and "next" link on first load - bot could continue w/o human checkbox
-   strFormOutput += "Are you <font color=red>human</font>?<font color=red>*</font>"
-   strFormOutput += f"<input type=\"checkbox\" id=\"human\" name=\"human\" value=\"human\" required><label for=\"human\">Yes&emsp;</label>"
-   strFormOutput += f"<button type=\"submit\">Browse Media</button>"   
-   strFormOutput += f"</form><br><br>"
-
-   #add (media by) username
-   #consider single stream vs gallery view
+        strGmError = html_crafterror("REDDIT_MEDIA", "APP MAIN GETMEDIA", f"dictGmResponse returned null!<br>URL: {strGjURL}")
+        return strGmError
+      
+      strGmBody = reddit_jsontohtml(dictGmResponse, dictGmParams)
+      
+      # how to check if strGmBody contains HTML vs error
+      
+      strGmOutput += strGmBody
+      
+      strGmNextAfter = dictGmResponse["data"]["after"]
+      
+      # ************* potential error here at last page of SORT *************
+      dictGmParams["after"] = strGmNextAfter
+      # ************* potential error here at last page of SORT *************
+      
+      # strGmPattern = r"((?<=after=)(.*?)(?=&))|((?<=after=).*)"
+      # strGmApiURL - reddit api url
+      # strGmApiURL = re.sub(strGmPattern, strAfter, strGmApiURL, flags=re.IGNORECASE)
+      
+      strGmJSON = str(dictGmResponse)
+      #  counts post_hints found, but some TYPEs may not translate to displayed media
+      #  alternatively could count " Comment(s) / Post Type - " occurence unless using GALLERY view
+      intGmFound = strGmJSON.count("\"post_hint\":")
+      intGmMediaFound += intGmFound
+      intGmRun += 1
+      
+      if intGmMediaFound >= int(intGmLimit):
+        # count media results returned, break out of while loop if equal or over limit
+        break
+      if intGmRun >= 4:
+        #prevent undesired loop runaway for subreddits that may not have much or any media
+        break
+      
+    strGmNextURL = html_crafturl(strGmBaseURL, dictGmParams)
+    strGmOutput += f"<p align=\"right\"><a href=\"{strGmNextURL}\">Next Posts</a></p>"
+    
+    strGmRefreshURL = html_crafturl(strGmBaseURL, dictGmParams)
+    # need to remove after= entry for refresh link
+    strGmPattern = r"(\&after=)(.*?)(?=&)|(\&after=).*"
+    strGmRefreshURL = re.sub(strGmPattern, "", strGmRefreshURL, flags=re.IGNORECASE)
+    strGmOutput += f"<p align=\"right\"><a href=\"{strGmRefreshURL}\">Reload to Beginning of Sub</a></p>"
+    
+    strGmOutput += app_dictionary("html_footer")
+    
+  except Exception as e:
+    strGmError = html_crafterror("REDDIT_MEDIA", "APP MAIN GETMEDIA", e)
+    if not 'dictGmResponse' in locals():
+      strPrettyJson = f"dictGmResponse is null"
+    else:
+      strPrettyJson = json.dumps(dictGmResponse, indent=4)
+      strGmError += f"<br><br><pre>{strPrettyJson}</pre>"
+    return strGmError
   
-   return strFormOutput
+  return strGmOutput
