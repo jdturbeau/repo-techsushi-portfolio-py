@@ -579,8 +579,9 @@ def reddit_getjson(dictGjParams):
 
 # ***************************************
 
-def app_main_getmedia(strGmBaseDestURL, strGmSubReddit="all", lstGmMediaType="iv", intGmLimit=10, strGmSort="new", strGmView="list", bolGmNSFW=True, strAfter=""):
-
+def app_main_getmedia(dictGmParams):
+  
+  # historical - strGmBaseDestURL, strGmSubReddit="all", lstGmMediaType="iv", intGmLimit=10, strGmSort="new", strGmView="list", bolGmNSFW=True, strAfter=""
    #
    # future: Use DICT object instead of multiple variables for parameters
    #
@@ -591,42 +592,92 @@ def app_main_getmedia(strGmBaseDestURL, strGmSubReddit="all", lstGmMediaType="iv
    #table with
    #   overview, what, technologies involved,
    
-   try:
-      # not sanitizing strGmBaseDestURL - assumption that this is app controlled
-      strGmSubReddit = app_sanitize(strGmSubReddit)
-      lstGmMediaType = app_sanitize(lstGmMediaType)
-      strGmSort = app_sanitize(strGmSort)
-      strGmView = app_sanitize(strGmView)
-      strAfter = app_sanitize(strAfter)
-      strGmSort = app_sanitize(strGmSort)
-      strGmView = app_sanitize(strGmView)
-      strAfter = app_sanitize(strAfter)
+  try:
+    
+    # confirm if want to error on unfound value OR substitute with a default and continue...?
+    
+    strGmBaseURL = app_dictionary("url_appbase") # confirm if baseURL ends with a slash ?    
+    if not 'strGmBaseURL' in locals():
+      strGmError = html_crafterror("REDDIT_MEDIA", "APP MAIN GETMEDIA", f"var strGmBaseURL does not exist!")
+      return strGmError
+    
+    strGmSub = dictGmParams["sub"]
+    if not 'strGmSub' in locals():
+      strGmError = html_crafterror("REDDIT_MEDIA", "APP MAIN GETMEDIA", f"var strGmSub does not exist!")
+      return strGmError
+
+    strGmMediaType = dictGmParams["mediatype"]
+    if not 'strGmMediaType' in locals():
+      strGmError = html_crafterror("REDDIT_MEDIA", "APP MAIN GETMEDIA", f"var strGmMediaType does not exist!")
+      return strGmError
+    
+    intGmLimit = int(dictGmParams["limit"])
+    if not 'intGmLimit' in locals():
+      strGmError = html_crafterror(""REDDIT_MEDIA", APP MAIN GETMEDIA", f"var intGmLimit does not exist!")
+      return strGmError
+
+    strGmSort = dictGmParams["sort"]
+    if not 'strGmSort' in locals():
+      strGmError = html_crafterror("REDDIT_MEDIA", "APP MAIN GETMEDIA", f"var strGmSort does not exist!")
+      return strGmError
+
+    strGmView = dictGmParams["view"]
+    if not 'strGmView' in locals():
+      strGmError = html_crafterror("REDDIT_MEDIA", "APP MAIN GETMEDIA", f"var strGmView does not exist!")
+      return strGmError
+
+    bolGmNSFW = dictGmParams["nsfw"]
+    if not 'bolGmNSFW' in locals():
+      strGmError = html_crafterror("REDDIT_MEDIA", "APP MAIN GETMEDIA", f"var bolGmNSFW does not exist!")
+      return strGmError
+
+    strGmAfter = dictGmParams["after"]  # this may be blank
+    #if not 'strGmAfter' in locals():
+      #strGmError = html_crafterror("REDDIT_MEDIA", "APP MAIN GETMEDIA", f"var strGmAfter does not exist!")
+      #return strGmError 
+     
+     
+     # not sanitizing strGmBaseURL - assumption that this is app controlled
+      strGmSub = app_sanitize(strGmSub)
+      strGmMediaType = app_sanitize(strGmMediaType)
       
-      
-      strGmOutput = app_dictionary("html_header")
-      
-      # ensure distinction between API RESULTS LIMIT and app defined DISPLAY LIMIT
-      #    Example - 50 results returned may not equal 50 displayed media items
-      
-      # need to CAP intLIMIT to avoid malicious use (perhaps 30?)
+    # need to CAP intLIMIT to avoid malicious use (perhaps 30?)
       #    intLimit is intended for display limit, not retrieval limit - may not always retrieve media for each thread
       if int(intGmLimit) > 30:
          intGmLimit = 30
       if int(intGmLimit) < 1:
          intGmLimit = 1
+    
+    strGmSort = app_sanitize(strGmSort)
+      strGmView = app_sanitize(strGmView)
+    # not sanitizing bolGmNSFW  
+    strGmAfter = app_sanitize(strGmAfter)
+
+    dictGmParams["sub"] = strGmSub
+    dictGmParams["mediatype"] = strGmMediaType
+    dictGmParams["limit"] = intGmLimit
+    dictGmParams["sort"] = strGmSort
+    dictGmParams["view"] = strGmView
+    dictGmParams["nsfw"] = bolGmNSFW
+    dictGmParams["after"] = strGmAfter
       
-      intGmMediaFound = 0   #m easure found media items against limit desired
-      intGmRun = 0   # used to avoid hang/loop cycle for subreddit that may not have any media
-      
-      strGmOutput += html_form(strGmBaseDestURL, strGmSubReddit, lstGmMediaType, intGmLimit, strGmSort, strGmView, bolGmNSFW)
+      # ensure distinction between API RESULTS LIMIT and app defined DISPLAY LIMIT
+      #    Example - 50 results returned may not equal 50 displayed media items
+    
+      intGmMediaFound = 0   # easure found media items against limit desired
+      intGmRun = 0   # used to avoid hang/loop cycle for subreddit that may not have enough, or any, media
+    strGmOutput = app_dictionary("html_header")
+
+    
+      strGmOutput += html_form(strGmBaseURL, dictGmParams)
             
-      #Should - Test if existing token works using known simple api call?
+      # should - Test if existing token works using known simple api call?
       
       strVault = app_dictionary("kv_name")
       strRedditURL = app_dictionary("url_login")
       strResult = kv_refreshtoken(strVault, strRedditURL)
    
-      #Should - Test if subreddit exists
+      # should - Test if subreddit exists?
       '''
       {
       invalid subreddit
@@ -673,7 +724,7 @@ def app_main_getmedia(strGmBaseDestURL, strGmSubReddit="all", lstGmMediaType="iv
    
          # is dictGmResponse empty / null / data.dist = 0 / data.before==data.after
          if not 'dictGmResponse' in locals():
-            strGmOutput = html_crafterror("APP MAIN GETMEDIA", f"{e}<br>URL: {strGjURL}<br>Token type: {strGjTokenType}")
+            strGmOutput = html_crafterror("REDDIT_MEDIA", "APP MAIN GETMEDIA", f"{e}<br>URL: {strGjURL}<br>Token type: {strGjTokenType}")
             return strGmOutput
          
          strGmBody = reddit_jsontohtml(dictGmResponse, lstGmMediaType, strGmBaseDestURL)
@@ -731,7 +782,7 @@ def app_main_getmedia(strGmBaseDestURL, strGmSubReddit="all", lstGmMediaType="iv
       strGmOutput += app_dictionary("html_footer")
    
    except Exception as e:
-      strGmOutput = html_crafterror("APP MAIN GETMEDIA", e)
+      strGmOutput = html_crafterror("REDDIT_MEDIA", "APP MAIN GETMEDIA", e)
       if not 'dictGmResponse' in locals():
          strPrettyJson = f"dictGmResponse is null"
       else:
@@ -740,4 +791,65 @@ def app_main_getmedia(strGmBaseDestURL, strGmSubReddit="all", lstGmMediaType="iv
       return strGmOutput
    return strGmOutput
 
-def app_main_getmedia(strGmBaseDestURL, strGmSubReddit="all", lstGmMediaType="iv", intGmLimit=10, strGmSort="new", strGmView="list", bolGmNSFW=True, strAfter=""):
+def html_form(strFormBaseURL, dictGmParams):
+
+  # historical - strFormSub="all", lstFormMediaType="iv", intFormLimit=10, strFormSort="new", strFormView="list", bolFormNSFW=True
+   # add try...except here
+   
+   # intFormLimit = minimum number of media items to return
+   #    not related to results requested from single API call
+   
+   # possible additions
+   #    option to hide header lines (image only)   
+   strFormOutput = f"<form action=\"/{strFormDestination}\" method=\"post\"><!-- Form elements go here -->"
+   #strFormOutput += f"<label for=\"subreddit\">Subreddit: </label><input type=\"text\" id=\"sub\" name=\"subsubreddit\" placeholder=\"{strFormSub}\" autocomplete=\"off\">"
+   strFormOutput += f"<label for=\"subreddit\">Subreddit: </label><input type=\"text\" id=\"sub\" name=\"subreddit\" placeholder=\"{strFormSub}\" autocomplete=\"off\">"
+   
+   # translate
+   #    strFormOutput += f"<input type=\"checkbox\" id=\"images\" name=\"mediatype\" value=\"images\" checked disabled><label for=\"images\">Images</label>"
+   #    strFormOutput += f"<input type=\"checkbox\" id=\"videos\" name=\"mediatype\" value=\"videos\" checked disabled><label for=\"videos\">Videos</label>"
+   match lstFormMediaType:
+      case "i":
+         strFormOutput += f"<input type=\"checkbox\" id=\"images\" name=\"mediatype\" value=\"images\" checked><label for=\"images\">Images</label>"
+         strFormOutput += f"<input type=\"checkbox\" id=\"videos\" name=\"mediatype\" value=\"videos\"><label for=\"videos\">Videos</label>"
+      case "v":
+         strFormOutput += f"<input type=\"checkbox\" id=\"images\" name=\"mediatype\" value=\"images\"><label for=\"images\">Images</label>"
+         strFormOutput += f"<input type=\"checkbox\" id=\"videos\" name=\"mediatype\" value=\"videos\" checked><label for=\"videos\">Videos</label>"
+      case _:
+         # covers case "iv" and unknowns
+         strFormOutput += f"<input type=\"checkbox\" id=\"images\" name=\"mediatype\" value=\"images\" checked><label for=\"images\">Images</label>"
+         strFormOutput += f"<input type=\"checkbox\" id=\"videos\" name=\"mediatype\" value=\"videos\" checked><label for=\"videos\">Videos</label>"
+         
+   strFormOutput += f"<br><br>"
+   strFormOutput += f"<label for=\"count\">Minimum Display Limit: </label><input type=\"number\" id=\"limit\" name=\"count\" min=\"1\" max=\"30\" step=\"1\" placeholder=\"{intFormLimit}\" autocomplete=\"off\" disabled>"
+
+   # translate strFormSort into drop down selection
+   strFormOutput += f"<label for=\"sort\"> Sort by: </label><select id=\"sort\" name=\"sort\" disabled>"
+   strFormOutput += f"<option value=\"new\" selected=\"true\">New</option>"
+   strFormOutput += f"<option value=\"hot\">Hot</option>"
+   strFormOutput += f"<option value=\"rising\">Rising</option>"
+   strFormOutput += f"<option value=\"controversial\">Controversial</option>"
+   strFormOutput += f"<option value=\"top\">Top</option>"
+   #strFormOutput += f"<option value=\"random\">Random</option>" #invalid option
+   strFormOutput += f"</select>"
+   strFormOutput += f"<br><br>"
+   
+   # translate strFormView by checked radio
+   strFormOutput += f"<input type=\"radio\" id=\"list\" name=\"view\" value=\"list\" checked disabled><label for=\"list\">List View</label>"
+   strFormOutput += f"<input type=\"radio\" id=\"gallery\" name=\"view\" value=\"gallery\" disabled><label for=\"gallery\">Gallery View</label>"
+
+   # translate bolFormNSFW into check
+   strFormOutput += f"<input type=\"checkbox\" id=\"nsfw\" name=\"nsfw\" value=\"nsfw\" checked disabled><label for=\"nsfw\">Allow 18+ Content?</label><br>"
+   
+   strFormOutput += f"<br><br>"
+   #   need to add HUMAN? style checkbox here, required before allowing submit, bot stopper-ish
+   #      also likely do not want to show results and "next" link on first load - bot could continue w/o human checkbox
+   strFormOutput += "Are you <font color=red>human</font>?<font color=red>*</font>"
+   strFormOutput += f"<input type=\"checkbox\" id=\"human\" name=\"human\" value=\"human\" required><label for=\"human\">Yes&emsp;</label>"
+   strFormOutput += f"<button type=\"submit\">Browse Media</button>"   
+   strFormOutput += f"</form><br><br>"
+
+   #add (media by) username
+   #consider single stream vs gallery view
+  
+   return strFormOutput
