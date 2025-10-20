@@ -542,18 +542,18 @@ def reddit_getjson(dictGjParams):
     roGjReceived = requests.get(strGjURL, headers=dictGjHeader)
 
     if not 'roGjReceived' in locals():
-      strGjError = html_crafterror("REDDIT_MEDIA", "GETJSON", f"Response appears null (1): [ {e} ]")
+      strGjError = html_crafterror("REDDIT_MEDIA", "GETJSON", f"Response appears null (roGjReceived)")
       return strGjError
     
     strGjReqStatus = roGjReceived.status_code
     dictGjJson = roGjReceived.json()
 
     if not 'strGjReqStatus' in locals():
-      strGjError = html_crafterror("REDDIT_MEDIA", "GETJSON", f"Response Status Code appears null (2): [ {e} ]")
+      strGjError = html_crafterror("REDDIT_MEDIA", "GETJSON", f"Response Status Code appears null (strGjReqStatus)")
       return strGjError
       
     if not 'dictGjJson' in locals():
-      strGjError = html_crafterror("REDDIT_MEDIA", "GETJSON", f"Response appears null (3): [ {e} ]")
+      strGjError = html_crafterror("REDDIT_MEDIA", "GETJSON", f"Response appears null (dictGjJson)")
       return strGjError
       
     '''
@@ -571,19 +571,33 @@ def reddit_getjson(dictGjParams):
 
   except Exception as e:
     #could contain sensitive information in error message
-    if not 'roGjReceived' in locals():
-      strGjError = html_crafterror("REDDIT_MEDIA", "GETJSON", f"Received content is null (4): [ {e} ]")
-      return strGjJsonOutput
-    else:
-      strGjError = html_crafterror("REDDIT_MEDIA", "GETJSON", e)
-      return strGjJsonOutput
+    strGjError = html_crafterror("REDDIT_MEDIA", "GETJSON", e)
+    return strGjError
   
   return dictGjJson
 
 
 # ***************************************
 
+def app_main_getmedia(strGmBaseDestURL, strGmSubReddit="all", lstGmMediaType="iv", intGmLimit=10, strGmSort="new", strGmView="list", bolGmNSFW=True, strAfter=""):
 
+   #
+   # future: Use DICT object instead of multiple variables for parameters
+   #
+   
+   # strGmBaseDestURL is local app url to craft the NEXT/AFTER link to continue viewing results
+   # do not care about method and using match case
+   
+   #table with
+   #   overview, what, technologies involved,
+   
+   try:
+      # not sanitizing strGmBaseDestURL - assumption that this is app controlled
+      strGmSubReddit = app_sanitize(strGmSubReddit)
+      lstGmMediaType = app_sanitize(lstGmMediaType)
+      strGmSort = app_sanitize(strGmSort)
+      strGmView = app_sanitize(strGmView)
+      strAfter = app_sanitize(strAfter)
       strGmSort = app_sanitize(strGmSort)
       strGmView = app_sanitize(strGmView)
       strAfter = app_sanitize(strAfter)
