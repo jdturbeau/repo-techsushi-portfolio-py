@@ -510,24 +510,21 @@ def html_form(dictFormParams):
   
    return strFormOutput
 
-# ***************************************
-#  successful review above. continue below... 2025-1018
-# ***************************************
-
 def reddit_getjson(dictGjParams):
+
   # historical - strGjTokenType, strGjToken, strGjURL, strGjSort
-
-   # to be handled by / used in jsontohtml, unneeded here
-   #    strGjSubReddit
-   #    lstGjMediaType
-   #    intGjLimit
-   #    strGjView
-   #    bolGjNSFW
-   
-   # check if subreddit exists
-
-   # function to craft request URL
-   
+  
+  # to be handled by / used in jsontohtml, unneeded here
+  #    strGjSubReddit
+  #    lstGjMediaType
+  #    intGjLimit
+  #    strGjView
+  #    bolGjNSFW
+  
+  # check if subreddit exists
+  
+  # function to craft request URL
+  
   try:
     strGjURL = app_dictionary("url_oauth")
     
@@ -537,38 +534,27 @@ def reddit_getjson(dictGjParams):
     strGjTokenType = kv_get(strGjTokenTypeLabel)
     strGjTokenLabel = app_dictionary("kv_token")
     strGjToken = kv_get(strGjTokenLabel)
-
+    
     dictGjHeader = { "Authorization": f"{strGjTokenType} {strGjToken}", "User-Agent": strGjUserAgent }
     roGjReceived = requests.get(strGjURL, headers=dictGjHeader)
 
+    # do not care about roGjReceived request status - match strGjReqStatus, case "403", _
+    
     if not 'roGjReceived' in locals():
       strGjError = html_crafterror("REDDIT_MEDIA", "GETJSON", f"Response appears null (roGjReceived)")
       return strGjError
     
     strGjReqStatus = roGjReceived.status_code
     dictGjJson = roGjReceived.json()
-
+    
     if not 'strGjReqStatus' in locals():
       strGjError = html_crafterror("REDDIT_MEDIA", "GETJSON", f"Response Status Code appears null (strGjReqStatus)")
       return strGjError
-      
+    
     if not 'dictGjJson' in locals():
       strGjError = html_crafterror("REDDIT_MEDIA", "GETJSON", f"Response appears null (dictGjJson)")
       return strGjError
-      
-    '''
-    match strGjReqStatus:
-      case "403":
-        strGjError = html_crafterror("REDDIT_MEDIA", "GETJSON", f"Unable to proceed!<br>Status Code: {strGjReqStatus}")
-        # historical - <br>Token type: {strGjTokenType}
-        return strGjError
-      case _:
-        dictGjJson = roGjReceived.json()
-        if not 'dictGjJson' in locals():
-          strGjError = html_crafterror("REDDIT_MEDIA", "GETJSON", f"JSON response is null (dictGjJson)!<br>Response: {roGjReceived}<br>Token type: {strGjTokenType}")
-          return strGjError
-    '''
-
+    
   except Exception as e:
     #could contain sensitive information in error message
     strGjError = html_crafterror("REDDIT_MEDIA", "GETJSON", e)
@@ -577,7 +563,12 @@ def reddit_getjson(dictGjParams):
   return dictGjJson
 
 
+
 # ***************************************
+#  successful review above. continue below... 2025-1019
+# ***************************************
+
+# *** need to fix spacing and finish review ***
 
 def app_main_getmedia(dictGmParams):
   
@@ -661,15 +652,14 @@ def app_main_getmedia(dictGmParams):
     dictGmParams["nsfw"] = bolGmNSFW
     dictGmParams["after"] = strGmAfter
       
-      # ensure distinction between API RESULTS LIMIT and app defined DISPLAY LIMIT
-      #    Example - 50 results returned may not equal 50 displayed media items
+    # ensure distinction between API RESULTS LIMIT and app defined DISPLAY LIMIT
+    #    Example - 50 results returned may not equal 50 displayed media items
     
-      intGmMediaFound = 0   # easure found media items against limit desired
-      intGmRun = 0   # used to avoid hang/loop cycle for subreddit that may not have enough, or any, media
-    strGmOutput = app_dictionary("html_header")
+    intGmMediaFound = 0   # easure found media items against limit desired
+    intGmRun = 0   # used to avoid hang/loop cycle for subreddit that may not have enough, or any, media
 
-    
-      strGmOutput += html_form(strGmBaseURL, dictGmParams)
+    strGmOutput = app_dictionary("html_header")
+    strGmOutput += html_form(strGmBaseURL, dictGmParams)
             
       # should - Test if existing token works using known simple api call?
       
@@ -678,29 +668,6 @@ def app_main_getmedia(dictGmParams):
       strResult = kv_refreshtoken(strVault, strRedditURL)
    
       # should - Test if subreddit exists?
-      '''
-      {
-      invalid subreddit
-       "kind": "Listing",
-       "data": {
-           "after": null,
-           "dist": 0,
-           "modhash": "",
-           "geo_filter": "",
-           "children": [],
-           "before": null
-          }
-         }
-      
-      valid subreddit
-         "kind": "Listing",
-             "data": {
-           "after": "t3_1o1cnhp",
-           "dist": 25,
-           "modhash": "",
-           "geo_filter": "",
-           "children": [
-      '''
       
       strTokenType = app_dictionary("kv_tokentype")
       strTokenType = kv_get(strVault, strTokenType)
@@ -791,7 +758,11 @@ def app_main_getmedia(dictGmParams):
       return strGmOutput
    return strGmOutput
 
-def html_form(strFormBaseURL, dictGmParams):
+
+
+#*** need to review and fix spacing ***
+
+def html_form(strFormBaseURL, dictFormParams):
 
   # historical - strFormSub="all", lstFormMediaType="iv", intFormLimit=10, strFormSort="new", strFormView="list", bolFormNSFW=True
    # add try...except here
