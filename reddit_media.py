@@ -334,7 +334,8 @@ def html_crafturl(strCraftBaseURL, dictCraftParams):
       return strCraftError
 
     strCraftAfter = dictCraftParams["after"]  # this may be blank
-    #if not 'strCraftAfter' in locals():
+    if not 'strCraftAfter' in locals():
+      strCraftAfter = ""
       #strCraftError = html_crafterror("REDDIT_MEDIA", "HTML CRAFTURL", f"var strCraftAfter does not exist [ {e} ]")
       #return strCraftError
     
