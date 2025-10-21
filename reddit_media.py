@@ -390,6 +390,10 @@ def html_crafturl(strCraftBaseURL, dictCraftParams):
   except Exception as e:
     #could contain sensitive information in error message 
     strCraftError = html_crafterror("REDDIT_MEDIA", "HTML_CRAFTURL", e)
+
+    tb_list = traceback.extract_tb(sys.exc_info()[2])
+    line_number = tb_list[-1][1]
+    strCraftError += f"error occurring on line [{line_number}]"
     return strCraftError
   
   return strCraftURL
