@@ -661,7 +661,7 @@ def app_main_getmedia(dictGmParams):
     intGmRun = 0   # used to avoid hang/loop cycle for subreddit that may not have enough, or any, media
     
     strGmOutput = app_dictionary("html_header")
-    strGmOutput += html_form(strGmBaseURL, dictGmParams)
+    strGmOutput += html_form(dictGmParams)
     
     # should - Test if existing token works using known simple api call?
     
