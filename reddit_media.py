@@ -348,8 +348,8 @@ def html_crafturl(strCraftBaseURL, dictCraftParams):
       else:
         strCraftURL += f"all/{strCraftSort}"
       
-      if not len(strCraftAfter) == 0:
-      #if not type(strCraftAfter) is None:
+      #if not len(strCraftAfter) == 0:
+      if type(strCraftAfter) is not None:
         strCraftURL += f"?after={strCraftAfter}"
     
     else:
@@ -380,8 +380,8 @@ def html_crafturl(strCraftBaseURL, dictCraftParams):
       else:
         strCraftSuffix += f"nsfw=False&"
       
-      if not len(strCraftAfter) == 0:
-      #if not type(strCraftAfter) is None:
+      #if not len(strCraftAfter) == 0:
+      if type(strCraftAfter) is not None:
         strCraftSuffix += f"after={strCraftAfter}"
     
       #check if last character is ampersand
