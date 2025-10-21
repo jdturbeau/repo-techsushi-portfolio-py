@@ -4,6 +4,8 @@ from azure.identity import DefaultAzureCredential
 from azure.keyvault.secrets import SecretClient
 #import json
 import re
+import traceback
+import sys
 
 # https://www.reddit.com/dev/api/
 # POST /api/search_subreddits
@@ -506,6 +508,13 @@ def html_form(dictFormParams):
   except Exception as e:
     # could contain sensitive information in error message 
     strFormError = html_crafterror("REDDIT_MEDIA", "HTML FORM", e)
+    
+    
+    #traceback.print_exc()
+    tb_list = traceback.extract_tb(sys.exc_info()[2])
+    line_number = tb_list[-1][1]
+    strFormError += f"error occurring on line [{line_number}]"
+    
     return strFormError
   
   return strFormOutput
