@@ -2,7 +2,7 @@
 import requests
 from azure.identity import DefaultAzureCredential
 from azure.keyvault.secrets import SecretClient
-#import json
+import json
 import re
 import traceback
 import sys
