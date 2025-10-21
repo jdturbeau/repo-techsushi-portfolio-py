@@ -4,6 +4,7 @@ from azure.identity import DefaultAzureCredential
 from azure.keyvault.secrets import SecretClient
 import os
 import redditmedia
+import reddit_media
 import blog
 import json
 import re  #import but no need to be in requirements.txt
@@ -79,10 +80,10 @@ def rmrhome():
    # Home call, display search criteria, header/navbar/footer
    # Would not expect any POST here
 
-   strWebOutput = redditmedia.app_dictionary("html_header")
+   strWebOutput = reddit_media.app_dictionary("html_header")
    # (strGmBaseDestURL, strGmSubReddit="all", lstGmMediaType=["images, videos"], intGmLimit=10, strGmSort="new", strGmView="list", bolNSFW=True, strAfter="")
-   strWebOutput += redditmedia.html_form("rmrout") # other defaults auto populate in function
-   strWebOutput += redditmedia.app_dictionary("html_footer")
+   strWebOutput += reddit_media.html_form("rmrout") # other defaults auto populate in function
+   strWebOutput += reddit_media.app_dictionary("html_footer")
    
    return strWebOutput
 
@@ -93,7 +94,7 @@ def rmrout():
    try:
       strRmrMethod = request.method
       
-      match strMethod:
+      match strRmrMethod:
          case "POST":
             strSub = request.form.get("sub", "all")
             strMediaType = request.form.get("mediatype", "iv")
@@ -139,10 +140,10 @@ def rmrout():
       dictRmrParams["nsfw"] = bolNSFW
       dictRmrParams["after"] = reddit_media.app_sanitize(strAfter)
       
-      strWebOutput = redditmedia.app_main_getmedia("rmrout", dictRmrParams)
+      strWebOutput = reddit_media.app_main_getmedia("rmrout", dictRmrParams)
       
    except Exception as e:
-      strRmrError = html_crafterror("APP", "RMROUT", e)
+      strRmrError = reddit_media.html_crafterror("APP", "RMROUT", e)
       #if not 'dictRmrParams' in locals():
          #strPrettyJson = f"dictGmResponse is null - [ {e} ]"
       #else:
