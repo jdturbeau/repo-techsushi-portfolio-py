@@ -133,6 +133,7 @@ def rmrout():
       if int(intLimit) < 1:
          intLimit = 1
       
+      dictRmrParams = {}
       dictRmrParams["sub"] = reddit_media.app_sanitize(strSub)
       dictRmrParams["mediatype"] = reddit_media.app_sanitize(strMediaType)
       dictRmrParams["limit"] = intLimit
@@ -141,6 +142,7 @@ def rmrout():
       dictRmrParams["nsfw"] = bolNSFW
       dictRmrParams["after"] = reddit_media.app_sanitize(strAfter)
       
+      # likely could use app_dictionary for app baseurl inside the app_main_getmedia function instead of passing as the first parameter here
       strWebOutput = reddit_media.app_main_getmedia("rmrout", dictRmrParams)
       
    except Exception as e:
