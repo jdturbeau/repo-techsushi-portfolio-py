@@ -313,7 +313,7 @@ def html_crafturl(strCraftBaseURL, dictCraftParams):
     
     intCraftLimit = int(dictCraftParams["limit"])
     if not 'intCraftLimit' in locals():
-      strCraftError = html_crafterror(""REDDIT_MEDIA", HTML CRAFTURL", f"var intCraftLimit does not exist [ {e} ]")
+      strCraftError = html_crafterror("REDDIT_MEDIA", "HTML CRAFTURL", f"var intCraftLimit does not exist [ {e} ]")
       return strCraftError
 
     strCraftSort = dictCraftParams["sort"]
