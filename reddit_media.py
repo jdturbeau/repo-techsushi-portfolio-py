@@ -450,8 +450,8 @@ def html_form(dictFormParams):
       #return strFormError
   
   
-  strFormOutput = f"<form action=\"/{strFormBaseURL}\" method=\"post\"><!-- Form elements go here -->"
-  strFormOutput += f"<label for=\"subreddit\">Subreddit: </label><input type=\"text\" id=\"sub\" name=\"subreddit\" placeholder=\"{strFormSub}\" autocomplete=\"off\">"
+    strFormOutput = f"<form action=\"/{strFormBaseURL}\" method=\"post\"><!-- Form elements go here -->"
+    strFormOutput += f"<label for=\"subreddit\">Subreddit: </label><input type=\"text\" id=\"sub\" name=\"subreddit\" placeholder=\"{strFormSub}\" autocomplete=\"off\">"
    
    # translate
    #    strFormOutput += f"<input type=\"checkbox\" id=\"images\" name=\"mediatype\" value=\"images\" checked disabled><label for=\"images\">Images</label>"
