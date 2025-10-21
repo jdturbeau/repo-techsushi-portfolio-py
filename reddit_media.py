@@ -426,7 +426,7 @@ def html_form(dictFormParams):
     
     intFormLimit = int(dictFormParams["limit"])
     if not 'intFormLimit' in locals():
-      strFormError = html_crafterror(""REDDIT_MEDIA", HTML FORM", f"var intFormLimit does not exist [ {e} ]")
+      strFormError = html_crafterror("REDDIT_MEDIA", "HTML FORM", f"var intFormLimit does not exist [ {e} ]")
       return strFormError
 
     strFormSort = dictFormParams["sort"]
@@ -598,7 +598,7 @@ def app_main_getmedia(dictGmParams):
     
     intGmLimit = int(dictGmParams["limit"])
     if not 'intGmLimit' in locals():
-      strGmError = html_crafterror(""REDDIT_MEDIA", APP MAIN GETMEDIA", f"var intGmLimit does not exist!")
+      strGmError = html_crafterror("REDDIT_MEDIA", "APP MAIN GETMEDIA", f"var intGmLimit does not exist!")
       return strGmError
     
     strGmSort = dictGmParams["sort"]
