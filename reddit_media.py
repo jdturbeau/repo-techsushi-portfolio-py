@@ -381,12 +381,12 @@ def html_crafturl(strCraftBaseURL, dictCraftParams):
       if len(strCraftAfter) > 0:
         strCraftSuffix += f"after={strCraftAfter}"
     
-    #check if last character is ampersand
-    if strCraftSuffix[-1] == "&":
-      strCraftSuffix = strCraftSuffix[:-1]
-    if len(strCraftSuffix) > 0:
-      strCraftURL += strCraftSuffix
-  
+      #check if last character is ampersand
+      if strCraftSuffix[-1] == "&":
+        strCraftSuffix = strCraftSuffix[:-1]
+      if len(strCraftSuffix) > 0:
+        strCraftURL += strCraftSuffix
+    
   except Exception as e:
     #could contain sensitive information in error message 
     strCraftError = html_crafterror("REDDIT_MEDIA", "HTML_CRAFTURL", e)
