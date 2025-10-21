@@ -672,9 +672,9 @@ def app_main_getmedia(dictGmParams):
     # should - Test if subreddit exists?
     
     strTokenType = app_dictionary("kv_tokentype")
-    strTokenType = kv_get(strVault, strTokenType)
+    strTokenType = kv_get(strTokenType)
     strToken = app_dictionary("kv_token")
-    strToken = kv_get(strVault, strToken)
+    strToken = kv_get(strToken)
     
     #strGmURL = app_dictionary("url_oauth")
     
