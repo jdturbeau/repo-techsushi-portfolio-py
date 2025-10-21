@@ -128,10 +128,10 @@ def rmrout():
       if not strMediaType in locals():
          strMediaType = "iv"
    
-      if int(intGmLimit) > 30:
-         intGmLimit = 30
-      if int(intGmLimit) < 1:
-         intGmLimit = 1
+      if int(intLimit) > 30:
+         intLimit = 30
+      if int(intLimit) < 1:
+         intLimit = 1
       
       dictRmrParams["sub"] = reddit_media.app_sanitize(strSub)
       dictRmrParams["mediatype"] = reddit_media.app_sanitize(strMediaType)
