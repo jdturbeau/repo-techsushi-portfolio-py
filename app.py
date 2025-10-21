@@ -142,8 +142,7 @@ def rmrout():
       dictRmrParams["nsfw"] = bolNSFW
       dictRmrParams["after"] = reddit_media.app_sanitize(strAfter)
       
-      # likely could use app_dictionary for app baseurl inside the app_main_getmedia function instead of passing as the first parameter here
-      strWebOutput = reddit_media.app_main_getmedia("rmrout", dictRmrParams)
+      strWebOutput = reddit_media.app_main_getmedia(dictRmrParams)
       
    except Exception as e:
       strRmrError = reddit_media.html_crafterror("APP", "RMROUT", e)
