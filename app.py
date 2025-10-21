@@ -81,10 +81,78 @@ def rmrhome():
 
    strWebOutput = redditmedia.app_dictionary("html_header")
    # (strGmBaseDestURL, strGmSubReddit="all", lstGmMediaType=["images, videos"], intGmLimit=10, strGmSort="new", strGmView="list", bolNSFW=True, strAfter="")
-   strWebOutput += redditmedia.html_form("rmrresults") # other defaults auto populate in function
+   strWebOutput += redditmedia.html_form("rmrout") # other defaults auto populate in function
    strWebOutput += redditmedia.app_dictionary("html_footer")
    
    return strWebOutput
+
+
+@app.route("/rmrout", methods=['GET', 'POST'])
+def rmrout():
+
+   try:
+      strRmrMethod = request.method
+      
+      match strMethod:
+         case "POST":
+            strSub = request.form.get("sub", "all")
+            strMediaType = request.form.get("mediatype", "iv")
+            intLimit = request.form.get("limit", 10)
+            strSort = request.form.get("sort", "new")
+            strView = request.form.get("view", "list")
+            bolNSFW = request.form.get("nsfw", True)
+            strAfter = request.args.get("after", "")
+            
+         case "GET":
+            strSub = request.args.get("sub", "all")
+            strMediaType = request.args.get("mediatype", "iv")
+            intLimit = request.args.get("limit", 10)
+            strSort = request.args.get("sort", "new")
+            strView = request.args.get("view", "list")
+            bolNSFW = request.args.get("nsfw", True)
+            strAfter = request.args.get("after", "")
+   
+         case _:
+            # defaults or unknown 
+            strSubReddit = "all"
+            strMediaType = "iv"
+            intLimit = 10
+            strSort = "new"
+            strView = "list"
+            bolNSFW = True
+            strAfter = ""
+   
+      #if lstMediaType == []:
+      if not strMediaType in locals():
+         strMediaType = "iv"
+   
+      if int(intGmLimit) > 30:
+         intGmLimit = 30
+      if int(intGmLimit) < 1:
+         intGmLimit = 1
+      
+      dictRmrParams["sub"] = reddit_media.app_sanitize(strSub)
+      dictRmrParams["mediatype"] = reddit_media.app_sanitize(strMediaType)
+      dictRmrParams["limit"] = intLimit
+      dictRmrParams["sort"] = reddit_media.app_sanitize(strSort)
+      dictRmrParams["view"] = reddit_media.app_sanitize(strView)
+      dictRmrParams["nsfw"] = bolNSFW
+      dictRmrParams["after"] = reddit_media.app_sanitize(strAfter)
+      
+      strWebOutput = redditmedia.app_main_getmedia("rmrout", dictRmrParams)
+      
+   except Exception as e:
+      strRmrError = html_crafterror("APP", "RMROUT", e)
+      #if not 'dictRmrParams' in locals():
+         #strPrettyJson = f"dictGmResponse is null - [ {e} ]"
+      #else:
+         #strPrettyJson = "[ {e} ]<br><br>"
+         #strPrettyJson += json.dumps(dictGmResponse, indent=4)
+         #strRmrError += f"<br><br><pre>{strPrettyJson}</pre>"
+      return strRmrError
+   
+   return strWebOutput
+
 
 @app.route("/rmrresults", methods=['GET', 'POST'])
 def rmrresults():
