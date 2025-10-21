@@ -245,7 +245,7 @@ def reddit_jsontohtml(jsonHtmlContent, dictHtmlParams):
       match strThreadType:
         case "image":
           strHtmlThreadOutput += f"<a href=\"{strThreadURL}\" target=\"_blank\"><img src=\"{strThreadURL}\" width=\"60%\"></img></a><p>"
-          case "rich:video":
+        case "rich:video":
           strHtmlThreadEmbed = strThreadMedia["oembed"]["html"]
           strHtmlThreadEmbed = strHtmlThreadEmbed.replace("&lt;","<")
           strHtmlThreadEmbed = strHtmlThreadEmbed.replace("&gt;",">")
