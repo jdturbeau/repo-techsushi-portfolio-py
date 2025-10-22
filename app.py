@@ -53,7 +53,7 @@ def rmrwrap():
    
    return render_template("proj_body.html", projname="Reddit Media Retriever", realusecase="Attempt to identify bots or duplicate acounts by hashing images and comparing to database of user and media hash", purpose="", skilltech="Azure Web App<br>Azure DevOps<br>Python<br>REST API with JSON result parse", projbody=strWebOutput)
 
-@app.route("/rmrwrapout", methods=['GET', 'POST']))
+@app.route("/rmrwrapout", methods=['GET', 'POST'])
 def rmrwrapout():
 
    try:
