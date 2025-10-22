@@ -51,7 +51,7 @@ def rmrwrap():
    strWebOutput += reddit_media.html_form(dictFormParams)
    strWebOutput += reddit_media.app_dictionary("html_footer")
    
-   return render_template("proj_index.html", projname="Reddit Media Retriever", realusecase="Attempt to identify bots or duplicate acounts by hashing images and comparing to database of user and media hash", purpose="", skilltech="Azure Web App<br>Azure DevOps<br>Python<br>REST API with JSON result parse", projbody=strWebOutput)
+   return render_template("proj_index.html", strProjOverview="Testing text", strProjName="Reddit Media Retriever", strProjUseCase="Attempt to identify bots or duplicate acounts by hashing images and comparing to database of user and media hash", strProjPurpose="Testing Text", strProjSkillTech="Azure Web App<br>Azure DevOps<br>Python<br>REST API with JSON result parse", strProjBody=strWebOutput)
 
 @app.route("/rmrwrapout", methods=['GET', 'POST'])
 def rmrwrapout():
