@@ -23,7 +23,7 @@ strBlogDirectory = os.path.join(strBlogDirectory, "_posts")
 @app.route("/")
 def index():
    #return render_template("index.html")
-   strWebOutput = redditmedia.app_dictionary("html_header")
+   strWebOutput = reddit_media.app_dictionary("html_header")
    strWebOutput += "Would you like to visit:<br><br>"
 
    strWebOutput += "<a href=\"/rmrhome\">Reddit Media Retreiver - Home</a><br><br>"
@@ -34,7 +34,7 @@ def index():
    strWebOutput += "<a href=\"/home\">Home CSS Template Test</a><br><br>"
    strWebOutput += "<a href=\"/career\">Career Path Suggestions</a><br><br>"
    
-   strWebOutput += redditmedia.app_dictionary("html_footer")
+   strWebOutput += reddit_media.app_dictionary("html_footer")
    
    return strWebOutput
 
