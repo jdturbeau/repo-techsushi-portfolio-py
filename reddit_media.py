@@ -62,7 +62,7 @@ def app_dictionary(strDictAttrib):
         #   /user/username/submitted
         strDictValue = "https://oauth.reddit.com/r/"
       case "url_appbase":
-        strDictValue = "rmrout"
+        strDictValue = "rmrwrapout"
       case "txt_useragent":
         strDictValue = "imgdupedetect v0.5 by orbut8888"
       case "html_header":
