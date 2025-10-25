@@ -8,6 +8,7 @@ import reddit_media
 import blog
 import json
 import re  #import but no need to be in requirements.txt
+import markupsafe import Markup
 
 app = Flask(__name__)
 
@@ -110,6 +111,7 @@ def rmrwrapout():
       dictRmrParams["after"] = reddit_media.app_sanitize(strAfter)
       
       strWebOutput = reddit_media.app_main_getmedia(dictRmrParams)
+      strWebOutput = Markup(strWebOutput)
       
    except Exception as e:
       strRmrError = reddit_media.html_crafterror("APP", "RMROUT", e)
