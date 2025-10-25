@@ -8,7 +8,7 @@ import reddit_media
 import blog
 import json
 import re  #import but no need to be in requirements.txt
-import markupsafe import Markup
+from markupsafe import Markup
 
 app = Flask(__name__)
 
