@@ -1,4 +1,4 @@
-from flask import (Flask, redirect, render_template, request, send_from_directory, url_for, Markup)
+from flask import (Flask, redirect, render_template, request, send_from_directory, url_for)
 import requests
 from azure.identity import DefaultAzureCredential
 from azure.keyvault.secrets import SecretClient
