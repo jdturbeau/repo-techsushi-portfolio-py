@@ -54,8 +54,13 @@ def rmrwrap():
    #strWebOutput += reddit_media.app_dictionary("html_footer")
 
    strWebOutput = Markup(strWebOutput)
+   strProjName = "Reddit Media Retriever"
+   strProjOverview = "Testing text"
+   strProjUseCase = "Attempt to identify bots or duplicate acounts by hashing images and comparing to database of user and media hash"
+   strProjPurpose = Markup("Testing Text")
+   strProjSkillTech = Markup("Azure Web App<br>Azure DevOps<br>Python<br>REST API with JSON result parse")
    
-   return render_template("proj_index.html", strProjOverview="Testing text", strProjName="Reddit Media Retriever", strProjUseCase="Attempt to identify bots or duplicate acounts by hashing images and comparing to database of user and media hash", strProjPurpose="Testing Text", strProjSkillTech="Azure Web App<br>Azure DevOps<br>Python<br>REST API with JSON result parse", strProjBody=strWebOutput)
+   return render_template("proj_index.html", strProjOverview=strProjOverview, strProjName=strProjName, strProjUseCase=strProjUseCase, strProjPurpose=strProjPurpose, strProjSkillTech=strProjSkillTech, strProjBody=strWebOutput)
 
 @app.route("/rmrwrapout", methods=['GET', 'POST'])
 def rmrwrapout():
@@ -112,6 +117,11 @@ def rmrwrapout():
       
       strWebOutput = reddit_media.app_main_getmedia(dictRmrParams)
       strWebOutput = Markup(strWebOutput)
+      strProjName = "Reddit Media Retriever"
+      strProjOverview = "Testing text"
+      strProjUseCase = "Attempt to identify bots or duplicate acounts by hashing images and comparing to database of user and media hash"
+      strProjPurpose = Markup("Testing Text")
+      strProjSkillTech = Markup("Azure Web App<br>Azure DevOps<br>Python<br>REST API with JSON result parse")
       
    except Exception as e:
       strRmrError = reddit_media.html_crafterror("APP", "RMROUT", e)
@@ -123,7 +133,7 @@ def rmrwrapout():
          #strRmrError += f"<br><br><pre>{strPrettyJson}</pre>"
       return strRmrError
       
-   return render_template("proj_index.html", strProjOverview="Testing text", strProjName="Reddit Media Retriever", strProjUseCase="Attempt to identify bots or duplicate acounts by hashing images and comparing to database of user and media hash", strProjPurpose="Testing Text", strProjSkillTech="Azure Web App<br>Azure DevOps<br>Python<br>REST API with JSON result parse", strProjBody=strWebOutput)
+   return render_template("proj_index.html", strProjOverview=strProjOverview, strProjName=strProjName, strProjUseCase=strProjUseCase, strProjPurpose=strProjPurpose, strProjSkillTech=strProjSkillTech, strProjBody=strWebOutput)
    
 
 @app.route("/rmrhome")
