@@ -6,10 +6,10 @@
 * Reddit Media Reviewer
 
 >
-> 0. handle dist = 0 for end of new > next > next > next (instead of error displayed)
-> 0. Add site template surround and sidebar - purpose, scope, etc
-> 0. ~~try...except in app.py functions~~
-> 0. if JSON TO HTML is 0 and AFTER is not populated, stop. if it is, try second attempt. 4 may be excessive
+> 1. handle dist = 0 for end of new > next > next > next (instead of error displayed)
+> 1. if JSON TO HTML is 0 and AFTER is not populated, stop. if it is, try second attempt. 4 may be excessive
+> 1. Add site template surround and sidebar - purpose, scope, etc
+> 1. ~~try...except in app.py functions~~
 > 3. ~~human? required checkbox to allow clicking browse media~~
 > 4. ~~data regex sanitization of subreddit text field azAZ0-9 and + symbol, underscore etc~~
 > 5. ~~[a-zA-Z0-9]+|[\+\_\-]~~
@@ -21,7 +21,7 @@
 > 10. name or acronym - reddit media reveal redmedrev ?
 > 11. search subreddit list and category 
 > 13. include "BACK" or "BEFORE" link (opposite of "NEXT" or "AFTER" link)
-> 14. option to hide header lines (image/video only)
+> 14. option to hide header lines (image/video only) (view type?)
 >
 
 * Blog
