@@ -496,15 +496,15 @@ def html_form(dictFormParams):
     
     # translate bolFormNSFW into check
     if bolFormNSFW:
-      strFormOutput += f"<input type=\"checkbox\" id=\"nsfw\" name=\"nsfw\" value=\"nsfw\" checked disabled><label for=\"nsfw\">Allow 18+ Content?</label><br>"
+      strFormOutput += f"<input type=\"checkbox\" id=\"nsfw\" name=\"nsfw\" value=\"nsfw\" checked disabled><label for=\"nsfw\">Allow 18+ Content?</label>"
     else:
-      strFormOutput += f"<input type=\"checkbox\" id=\"nsfw\" name=\"nsfw\" value=\"nsfw\" disabled><label for=\"nsfw\">Allow 18+ Content?</label><br>"
+      strFormOutput += f"<input type=\"checkbox\" id=\"nsfw\" name=\"nsfw\" value=\"nsfw\" disabled><label for=\"nsfw\">Allow 18+ Content?</label>"
     
     strFormOutput += f"<br><br>"
     
     #   need to add HUMAN? style checkbox here, required before allowing submit, bot stopper-ish
     #      also likely do not want to show results and "next" link on first load - bot could continue w/o human checkbox
-    strFormOutput += "Are you <font color=red>human</font>?<font color=red>*</font>"
+    strFormOutput += "Are you <font color=red>human</font>?<font color=red>*</font>&emsp;"
     strFormOutput += f"<input type=\"checkbox\" id=\"human\" name=\"human\" value=\"human\" required><label for=\"human\">Yes&emsp;</label>"
     strFormOutput += f"<button type=\"submit\">Browse Media</button>"   
     strFormOutput += f"</form><br><br>"
