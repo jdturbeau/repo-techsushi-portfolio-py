@@ -17,7 +17,7 @@
             <center><img src="{{ url_for('static', filename='img/techsushi-logo-nobg.png') }}" width="80%"></img></center>
               <ul id="tmMainNav" class="nav flex-column text-uppercase text-right tm-main-nav">
                 <li class="nav-item">
-                  <a href="{{ url_for('home') }}" class="nav-link">
+                  <a href="{{ url_for('home') }}" class="nav-link active">
                     <span class="d-inline-block mr-3">Home</span>
                     <span class="d-inline-block tm-white-rect"></span>
                   </a>
@@ -32,14 +32,14 @@
                 <li class="nav-item">
                     <span class="d-inline-block mr-3">Project Name:</span>
                       <span class="text-white small">
-                <p class="mb--0 mb-2">{{ strProjName }}</p>
+                <font align="left"><p class="mb--0 mb-2">{{ strProjName }}</p></font>
                       </span>
                       
                 </li>
                 <li class="nav-item">
                     <span class="d-inline-block mr-3">Use Case:</span>
                         <span class="text-white small">
-                <p class="mb--0 mb-2">{{ strProjUseCase }}</p>
+                <font align="left"><p class="mb--0 mb-2">{{ strProjUseCase }}</p></font>
                       </span>
                 </li>
                 <li class="nav-item">
