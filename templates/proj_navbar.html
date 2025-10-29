@@ -4,16 +4,6 @@
             <button class="navbar-toggler" type="button" aria-label="Toggle navigation">
               <i class="fas fa-bars"></i>
             </button>
-            <!--
-            <div class="tm-sidebar-sticky">
-              <div class="tm-brand-box">
-                <div class="tm-double-border-1">
-                  <div class="tm-double-border-2">
-                    <h1 class="tm-brand"><b>TechSushi</b></h1>
-                  </div>
-                </div>
-              </div>
-            -->
             <center><img src="{{ url_for('static', filename='img/techsushi-logo-nobg.png') }}" width="80%"></img></center>
               <!-- <ul id="tmMainNav" class="nav flex-column text-uppercase text-right tm-main-nav"> -->
               <ul id="tmMainNav" class="nav flex-column text-right tm-main-nav">
@@ -43,17 +33,18 @@
                 <p class="mb--0 mb-2">{{ strProjUseCase }}</p>
                       </span>
                 </li>
-                <li class="nav-item">
+                <!--
+                    <li class="nav-item">
                     <span class="d-inline-block mr-3 text-uppercase">Purpose:</span>
                       <span class="text-white small text-left">
                 <p class="mb--0 mb-2">{{ strProjPurpose }}</p>
                       </span>
                 </li>
+                    -->
                 <li class="nav-item">
                     <span class="d-inline-block mr-3 text-uppercase">Skills & Technology:</span>
                       <span class="text-white small text-left">
                 <p class="mb--0 mb-2">{{ strProjSkillTech }}</p>
-                            <p>{{ strProjSkillTech }}</p>
                       </span>
                 </li>
               </ul>
