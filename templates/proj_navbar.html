@@ -15,44 +15,44 @@
               </div>
             -->
             <center><img src="{{ url_for('static', filename='img/techsushi-logo-nobg.png') }}" width="80%"></img></center>
-              <ul id="tmMainNav" class="nav flex-column text-uppercase text-right tm-main-nav">
+              <!-- <ul id="tmMainNav" class="nav flex-column text-uppercase text-right tm-main-nav"> -->
+              <ul id="tmMainNav" class="nav flex-column text-right tm-main-nav">
                 <li class="nav-item">
                   <a href="{{ url_for('home') }}" class="nav-link active">
-                    <span class="d-inline-block mr-3">Home</span>
+                    <span class="d-inline-block mr-3 text-uppercase">Home</span>
                     <span class="d-inline-block tm-white-rect"></span>
                   </a>
                 </li>
                 <li class="nav-item">
-                  <a href="#portfolio" class="nav-link active">
-                    <span class="d-inline-block mr-3">Portfolio</span>
+                  <a href="#portfolio" class="nav-link">
+                    <span class="d-inline-block mr-3 text-uppercase">Portfolio</span>
                     <span class="d-inline-block tm-white-rect"></span>
                   </a>
                 </li>
             <br><br>
                 <li class="nav-item">
-                    <span class="d-inline-block mr-3">Project Name:</span>
+                    <span class="d-inline-block mr-3 text-uppercase">Project Name:</span>
                       <span class="text-white small text-left">
                 <p class="mb--0 mb-2">{{ strProjName }}</p>
                       </span>
                       
                 </li>
                 <li class="nav-item">
-                    <span class="d-inline-block mr-3">Use Case:</span>
-                        <!-- <span class="text-white small text-reset"> -->
-                      <span class="text-reset">
+                    <span class="d-inline-block mr-3 text-uppercase">Use Case:</span>
+                        <span class="text-white small text-left">
                 <p class="mb--0 mb-2">{{ strProjUseCase }}</p>
                       </span>
                 </li>
                 <li class="nav-item">
-                    <span class="d-inline-block mr-3">Purpose:</span>
-                      <span class="text-decoration-none">
+                    <span class="d-inline-block mr-3 text-uppercase">Purpose:</span>
+                      <span class="text-white small text-left">
                 <p class="mb--0 mb-2">{{ strProjPurpose }}</p>
                       </span>
                 </li>
                 <li class="nav-item">
-                    <span class="d-inline-block mr-3">Skills & Technology:</span>
+                    <span class="d-inline-block mr-3 text-uppercase">Skills & Technology:</span>
                       <span class="text-white small text-left">
-                <!-- <p class="mb--0 mb-2">{{ strProjSkillTech }}</p> -->
+                <p class="mb--0 mb-2">{{ strProjSkillTech }}</p>
                             <p>{{ strProjSkillTech }}</p>
                       </span>
                 </li>
