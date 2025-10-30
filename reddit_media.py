@@ -246,17 +246,17 @@ def reddit_jsontohtml(jsonHtmlContent, dictHtmlParams):
       #ThreadType : link, image, hosted:video, null, (gallery?)
       match strThreadType:
         case "image":
-          strHtmlThreadOutput += f"<a href=\"{strThreadURL}\" target=\"_blank\"><img src=\"{strThreadURL}\" width=\"60%\"></img></a><p>"
+          strHtmlThreadOutput += f"<a href=\"{strThreadURL}\" target=\"_blank\"><img src=\"{strThreadURL}\" width=\"80%\"></img></a><p>"
         case "rich:video":
           strHtmlThreadEmbed = strThreadMedia["oembed"]["html"]
           strHtmlThreadEmbed = strHtmlThreadEmbed.replace("&lt;","<")
           strHtmlThreadEmbed = strHtmlThreadEmbed.replace("&gt;",">")
-          strHtmlThreadEmbed = strHtmlThreadEmbed.replace("\"100%\"","\"60%\"")
+          strHtmlThreadEmbed = strHtmlThreadEmbed.replace("\"100%\"","\"80%\"")
           strHtmlThreadEmbed = strHtmlThreadEmbed.replace("position:absolute;","")
           strHtmlThreadOutput += f"{strHtmlThreadEmbed}<br><p>"
         case "hosted:video":   
           strHostedVid = dictHtmlSingle["data"]["secure_media"]["reddit_video"]["fallback_url"] # alternatively - strHostedVid = dictHtmlSingle["data"]["media"]["reddit_video"]["fallback_url"]
-          #strHtmlThreadOutput += f"<iframe width=\"60%\" src=\"{strHostedVid}\" frameborder=\"0\" allow=\"accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share\" referrerpolicy=\"strict-origin-when-cross-origin\" allowfullscreen title=\"{strThreadTitle}\"></iframe><br><p>"
+          #strHtmlThreadOutput += f"<iframe width=\"80%\" src=\"{strHostedVid}\" frameborder=\"0\" allow=\"accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share\" referrerpolicy=\"strict-origin-when-cross-origin\" allowfullscreen title=\"{strThreadTitle}\"></iframe><br><p>"
           strHtmlThreadOutput += f"<iframe src=\"{strHostedVid}\" frameborder=\"0\" allow=\"accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share\" referrerpolicy=\"strict-origin-when-cross-origin\" allowfullscreen title=\"{strThreadTitle}\"></iframe><br><p>"
         #case "link":
           #strHtmlThreadOutput = ""
