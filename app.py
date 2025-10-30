@@ -54,9 +54,9 @@ def rmrwrap():
    #strWebOutput += reddit_media.app_dictionary("html_footer")
 
    strWebOutput = Markup(strWebOutput)
-   strProjName = "Reddit Media Retriever"
+   strProjName = "Reddit Media Reviewer"
    strProjOverview = "Testing text"
-   strProjUseCase = "Attempt to identify bots or duplicate acounts by hashing images and comparing to database of user and media hash"
+   strProjUseCase = "Use image hashing to identify bots or duplicate accounts"
    strProjPurpose = Markup("Testing Text")
    strProjSkillTech = Markup("Azure Web App<br>Azure DevOps<br>Python<br>REST API with JSON result parse")
    
