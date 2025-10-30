@@ -251,7 +251,7 @@ def reddit_jsontohtml(jsonHtmlContent, dictHtmlParams):
           strHtmlThreadEmbed = strThreadMedia["oembed"]["html"]
           strHtmlThreadEmbed = strHtmlThreadEmbed.replace("&lt;","<")
           strHtmlThreadEmbed = strHtmlThreadEmbed.replace("&gt;",">")
-          strHtmlThreadEmbed = strHtmlThreadEmbed.replace("\"100%\"","\"80%\"")
+          #strHtmlThreadEmbed = strHtmlThreadEmbed.replace("\"100%\"","\"80%\"")
           strHtmlThreadEmbed = strHtmlThreadEmbed.replace("position:absolute;","")
           strHtmlThreadOutput += f"{strHtmlThreadEmbed}<br><p>"
         case "hosted:video":   
