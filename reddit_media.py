@@ -467,21 +467,21 @@ def html_form(dictFormParams):
     #    strFormOutput += f"<input type=\"checkbox\" id=\"videos\" name=\"mediatype\" value=\"videos\" checked disabled><label for=\"videos\">Videos</label>"
     match strFormMediaType:
       case "i":
-        strFormOutput += f"<input type=\"checkbox\" id=\"images\" name=\"mediatype\" value=\"images\" checked><label for=\"images\">Images</label>"
-        strFormOutput += f"<input type=\"checkbox\" id=\"videos\" name=\"mediatype\" value=\"videos\"><label for=\"videos\">Videos</label>"
+        strFormOutput += f" <input type=\"checkbox\" id=\"images\" name=\"mediatype\" value=\"images\" checked><label for=\"images\"> Images</label>"
+        strFormOutput += f" <input type=\"checkbox\" id=\"videos\" name=\"mediatype\" value=\"videos\"><label for=\"videos\"> Videos</label>"
       case "v":
-        strFormOutput += f"<input type=\"checkbox\" id=\"images\" name=\"mediatype\" value=\"images\"><label for=\"images\">Images</label>"
-        strFormOutput += f"<input type=\"checkbox\" id=\"videos\" name=\"mediatype\" value=\"videos\" checked><label for=\"videos\">Videos</label>"
+        strFormOutput += f" <input type=\"checkbox\" id=\"images\" name=\"mediatype\" value=\"images\"><label for=\"images\"> Images</label>"
+        strFormOutput += f" <input type=\"checkbox\" id=\"videos\" name=\"mediatype\" value=\"videos\" checked><label for=\"videos\"> Videos</label>"
       case _:
         # covers case "iv" and unknowns
-        strFormOutput += f"<input type=\"checkbox\" id=\"images\" name=\"mediatype\" value=\"images\" checked><label for=\"images\">Images</label>"
-        strFormOutput += f"<input type=\"checkbox\" id=\"videos\" name=\"mediatype\" value=\"videos\" checked><label for=\"videos\">Videos</label>"
+        strFormOutput += f" <input type=\"checkbox\" id=\"images\" name=\"mediatype\" value=\"images\" checked><label for=\"images\"> Images</label>"
+        strFormOutput += f" <input type=\"checkbox\" id=\"videos\" name=\"mediatype\" value=\"videos\" checked><label for=\"videos\"> Videos</label>"
     
     strFormOutput += f"<br><br>"
     strFormOutput += f"<label for=\"count\">Minimum Display Limit: </label><input type=\"number\" id=\"limit\" name=\"count\" min=\"1\" max=\"30\" step=\"1\" placeholder=\"{intFormLimit}\" autocomplete=\"off\" disabled>"
     
     # translate strFormSort into drop down selection - new is default selected
-    strFormOutput += f"<label for=\"sort\"> Sort by: </label><select id=\"sort\" name=\"sort\" disabled>"
+    strFormOutput += f"<label for=\"sort\">&nbsp;Sort by:&nbsp;</label><select id=\"sort\" name=\"sort\" disabled>"
     strFormOutput += f"<option value=\"new\" selected=\"true\">New</option>"
     strFormOutput += f"<option value=\"hot\">Hot</option>"
     strFormOutput += f"<option value=\"rising\">Rising</option>"
@@ -491,21 +491,21 @@ def html_form(dictFormParams):
     strFormOutput += f"<br><br>"
    
     # translate strFormView by checked radio
-    strFormOutput += f"<input type=\"radio\" id=\"list\" name=\"view\" value=\"list\" checked disabled><label for=\"list\">List View</label>"
-    strFormOutput += f"<input type=\"radio\" id=\"gallery\" name=\"view\" value=\"gallery\" disabled><label for=\"gallery\">Gallery View</label>"
+    strFormOutput += f"<input type=\"radio\" id=\"list\" name=\"view\" value=\"list\" checked disabled><label for=\"list\">&nbsp;List View</label>"
+    strFormOutput += f"&nbsp;<input type=\"radio\" id=\"gallery\" name=\"view\" value=\"gallery\" disabled><label for=\"gallery\">&nbsp;Gallery View</label>"
     
     # translate bolFormNSFW into check
     if bolFormNSFW:
-      strFormOutput += f"<input type=\"checkbox\" id=\"nsfw\" name=\"nsfw\" value=\"nsfw\" checked disabled><label for=\"nsfw\">Allow 18+ Content?</label>"
+      strFormOutput += f"&nbsp;<input type=\"checkbox\" id=\"nsfw\" name=\"nsfw\" value=\"nsfw\" checked disabled><label for=\"nsfw\">&nbsp;Allow 18+ Content?</label>"
     else:
-      strFormOutput += f"<input type=\"checkbox\" id=\"nsfw\" name=\"nsfw\" value=\"nsfw\" disabled><label for=\"nsfw\">Allow 18+ Content?</label>"
+      strFormOutput += &nbsp;f"<input type=\"checkbox\" id=\"nsfw\" name=\"nsfw\" value=\"nsfw\" disabled><label for=\"nsfw\">&nbsp;Allow 18+ Content?</label>"
     
     strFormOutput += f"<br><br>"
     
     #   need to add HUMAN? style checkbox here, required before allowing submit, bot stopper-ish
     #      also likely do not want to show results and "next" link on first load - bot could continue w/o human checkbox
     strFormOutput += "Are you <font color=red>human</font>?<font color=red>*</font>&emsp;"
-    strFormOutput += f"<input type=\"checkbox\" id=\"human\" name=\"human\" value=\"human\" required><label for=\"human\">Yes&emsp;</label>"
+    strFormOutput += f"<input type=\"checkbox\" id=\"human\" name=\"human\" value=\"human\" required><label for=\"human\">&nbsp;Yes&emsp;</label>"
     strFormOutput += f"<button type=\"submit\">Browse Media</button>"   
     strFormOutput += f"</form><br><br>"
     
