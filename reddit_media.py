@@ -460,15 +460,15 @@ def html_form(dictFormParams):
   
   
     strFormOutput = f"<form action=\"/{strFormBaseURL}\" method=\"post\"><!-- Form elements go here -->"
-    strFormOutput += f"<label for=\"subreddit\">Subreddit: </label><input type=\"text\" id=\"sub\" name=\"subreddit\" placeholder=\"{strFormSub}\" autocomplete=\"off\">"
+    strFormOutput += f"<label for=\"subreddit\">Subreddit:&nbsp;</label><input type=\"text\" id=\"sub\" name=\"subreddit\" placeholder=\"{strFormSub}\" autocomplete=\"off\">"
     
     # translate
     #    strFormOutput += f"<input type=\"checkbox\" id=\"images\" name=\"mediatype\" value=\"images\" checked disabled><label for=\"images\">Images</label>"
     #    strFormOutput += f"<input type=\"checkbox\" id=\"videos\" name=\"mediatype\" value=\"videos\" checked disabled><label for=\"videos\">Videos</label>"
     match strFormMediaType:
       case "i":
-        strFormOutput += f" <input type=\"checkbox\" id=\"images\" name=\"mediatype\" value=\"images\" checked><label for=\"images\"> Images</label>"
-        strFormOutput += f" <input type=\"checkbox\" id=\"videos\" name=\"mediatype\" value=\"videos\"><label for=\"videos\"> Videos</label>"
+        strFormOutput += f"&nbsp;<input type=\"checkbox\" id=\"images\" name=\"mediatype\" value=\"images\" checked><label for=\"images\">&nbsp;Images</label>"
+        strFormOutput += f"&nbsp;<input type=\"checkbox\" id=\"videos\" name=\"mediatype\" value=\"videos\"><label for=\"videos\">&nbsp;Videos</label>"
       case "v":
         strFormOutput += f" <input type=\"checkbox\" id=\"images\" name=\"mediatype\" value=\"images\"><label for=\"images\"> Images</label>"
         strFormOutput += f" <input type=\"checkbox\" id=\"videos\" name=\"mediatype\" value=\"videos\" checked><label for=\"videos\"> Videos</label>"
@@ -498,7 +498,7 @@ def html_form(dictFormParams):
     if bolFormNSFW:
       strFormOutput += f"&nbsp;<input type=\"checkbox\" id=\"nsfw\" name=\"nsfw\" value=\"nsfw\" checked disabled><label for=\"nsfw\">&nbsp;Allow 18+ Content?</label>"
     else:
-      strFormOutput += &nbsp;f"<input type=\"checkbox\" id=\"nsfw\" name=\"nsfw\" value=\"nsfw\" disabled><label for=\"nsfw\">&nbsp;Allow 18+ Content?</label>"
+      strFormOutput += f"&nbsp;<input type=\"checkbox\" id=\"nsfw\" name=\"nsfw\" value=\"nsfw\" disabled><label for=\"nsfw\">&nbsp;Allow 18+ Content?</label>"
     
     strFormOutput += f"<br><br>"
     
