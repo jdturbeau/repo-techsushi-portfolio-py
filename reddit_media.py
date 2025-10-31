@@ -470,15 +470,15 @@ def html_form(dictFormParams):
         strFormOutput += f"&nbsp;<input type=\"checkbox\" id=\"images\" name=\"mediatype\" value=\"images\" checked><label for=\"images\">&nbsp;Images</label>"
         strFormOutput += f"&nbsp;<input type=\"checkbox\" id=\"videos\" name=\"mediatype\" value=\"videos\"><label for=\"videos\">&nbsp;Videos</label>"
       case "v":
-        strFormOutput += f" <input type=\"checkbox\" id=\"images\" name=\"mediatype\" value=\"images\"><label for=\"images\"> Images</label>"
-        strFormOutput += f" <input type=\"checkbox\" id=\"videos\" name=\"mediatype\" value=\"videos\" checked><label for=\"videos\"> Videos</label>"
+        strFormOutput += f"&nbsp;<input type=\"checkbox\" id=\"images\" name=\"mediatype\" value=\"images\"><label for=\"images\">&nbsp;Images</label>"
+        strFormOutput += f"&nbsp;<input type=\"checkbox\" id=\"videos\" name=\"mediatype\" value=\"videos\" checked><label for=\"videos\">&nbsp;Videos</label>"
       case _:
         # covers case "iv" and unknowns
-        strFormOutput += f" <input type=\"checkbox\" id=\"images\" name=\"mediatype\" value=\"images\" checked><label for=\"images\"> Images</label>"
-        strFormOutput += f" <input type=\"checkbox\" id=\"videos\" name=\"mediatype\" value=\"videos\" checked><label for=\"videos\"> Videos</label>"
+        strFormOutput += f"&nbsp;<input type=\"checkbox\" id=\"images\" name=\"mediatype\" value=\"images\" checked><label for=\"images\">&nbsp;Images</label>"
+        strFormOutput += f"&nbsp;<input type=\"checkbox\" id=\"videos\" name=\"mediatype\" value=\"videos\" checked><label for=\"videos\">&nbsp;Videos</label>"
     
     strFormOutput += f"<br><br>"
-    strFormOutput += f"<label for=\"count\">Minimum Display Limit: </label><input type=\"number\" id=\"limit\" name=\"count\" min=\"1\" max=\"30\" step=\"1\" placeholder=\"{intFormLimit}\" autocomplete=\"off\" disabled>"
+    strFormOutput += f"<label for=\"count\">Minimum Display Limit:&nbsp;</label><input type=\"number\" id=\"limit\" name=\"count\" min=\"1\" max=\"30\" step=\"1\" placeholder=\"{intFormLimit}\" autocomplete=\"off\" disabled>"
     
     # translate strFormSort into drop down selection - new is default selected
     strFormOutput += f"<label for=\"sort\">&nbsp;Sort by:&nbsp;</label><select id=\"sort\" name=\"sort\" disabled>"
@@ -507,7 +507,8 @@ def html_form(dictFormParams):
     strFormOutput += "Are you <font color=red>human</font>?<font color=red>*</font>&emsp;"
     strFormOutput += f"<input type=\"checkbox\" id=\"human\" name=\"human\" value=\"human\" required><label for=\"human\">&nbsp;Yes&emsp;</label>"
     strFormOutput += f"<button type=\"submit\">Browse Media</button>"   
-    strFormOutput += f"</form><br><br>"
+    #strFormOutput += f"</form><br><br>"
+    strFormOutput += f"</form>"
     
     #add (media by) username
     #consider single stream vs gallery view
