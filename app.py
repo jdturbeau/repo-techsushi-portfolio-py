@@ -112,6 +112,7 @@ def rmrwrapout():
       dictRmrParams["after"] = reddit_media.app_sanitize(strAfter)
       
       strProjTopBubble = reddit_media.html_form(dictRmrParams)
+      strProjTopBubble = Markup(strProjTopBubble)
       strWebOutput = reddit_media.app_main_getmedia(dictRmrParams)
       strWebOutput = Markup(strWebOutput)
       strProjName = "Reddit Media Retriever"
