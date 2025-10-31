@@ -46,22 +46,17 @@ def rmrwrap():
    # Home call, display search criteria, header/navbar/footer
    # Would not expect any POST here
    
-   strWebOutput = " "
-   #strWebOutput = reddit_media.app_dictionary("html_header")
    # (strGmBaseDestURL, strGmSubReddit="all", lstGmMediaType=["images, videos"], intGmLimit=10, strGmSort="new", strGmView="list", bolNSFW=True, strAfter="")
    dictFormParams = reddit_media.app_dictionary("app_defaultparams")
-   strWebOutput += reddit_media.html_form(dictFormParams)
-   #strWebOutput += reddit_media.app_dictionary("html_footer")
+   strProjTopBubble = reddit_media.html_form(dictFormParams)
 
-   strWebOutput = Markup(strWebOutput)
+   strProjTopBubble = Markup(strProjTopBubble)
+   strWebOutput = ""
    strProjName = "Reddit Media Reviewer"
-   #strProjOverview = "Testing text"
-   strProjUseCase = "Use image hashing to identify bots or duplicate accounts. Or allow doom-scrolling for entertainment."
-   #strProjPurpose = Markup("Testing Text")
+   strProjUseCase = "Use image hashing to identify bots and duplicate accounts. Or allow doom-scrolling for entertainment."
    strProjSkillTech = Markup("Azure Web App<br>Azure DevOps<br>Azure KeyVault<br>GitHub Actions<br>Python<br>REST API with JSON parsing")
    
-   #return render_template("proj_index.html", strProjOverview=strProjOverview, strProjName=strProjName, strProjUseCase=strProjUseCase, strProjPurpose=strProjPurpose, strProjSkillTech=strProjSkillTech, strProjBody=strWebOutput)
-   return render_template("proj_index.html", strProjName=strProjName, strProjUseCase=strProjUseCase, strProjSkillTech=strProjSkillTech, strProjBody=strWebOutput)
+   return render_template("proj_index.html", strProjName=strProjName, strProjUseCase=strProjUseCase, strProjSkillTech=strProjSkillTech, strProjTopBubble=strProjTopBubble, strProjBody=strWebOutput)
 
 @app.route("/rmrwrapout", methods=['GET', 'POST'])
 def rmrwrapout():
@@ -116,14 +111,13 @@ def rmrwrapout():
       dictRmrParams["nsfw"] = bolNSFW
       dictRmrParams["after"] = reddit_media.app_sanitize(strAfter)
       
+      strProjTopBubble = reddit_media.html_form(dictRmrParams)
       strWebOutput = reddit_media.app_main_getmedia(dictRmrParams)
       strWebOutput = Markup(strWebOutput)
       strProjName = "Reddit Media Retriever"
-      #strProjOverview = "Testing text"
-      strProjUseCase = "Use image hashing to identify bots or duplicate accounts. Or allow doom-scrolling for entertainment."
-      #strProjPurpose = Markup("Testing Text")
-      strProjSkillTech = Markup("Azure Web App<br>Azure DevOps<br>Python<br>REST API with JSON result parse")
-      
+      strProjUseCase = "Use image hashing to identify bots and duplicate accounts. Or allow doom-scrolling for entertainment."
+      strProjSkillTech = Markup("Azure Web App<br>Azure DevOps<br>Azure KeyVault<br>GitHub Actions<br>Python<br>REST API with JSON parsing")
+   
    except Exception as e:
       strRmrError = reddit_media.html_crafterror("APP", "RMROUT", e)
       #if not 'dictRmrParams' in locals():
@@ -134,8 +128,7 @@ def rmrwrapout():
          #strRmrError += f"<br><br><pre>{strPrettyJson}</pre>"
       return strRmrError
       
-   #return render_template("proj_index.html", strProjOverview=strProjOverview, strProjName=strProjName, strProjUseCase=strProjUseCase, strProjPurpose=strProjPurpose, strProjSkillTech=strProjSkillTech, strProjBody=strWebOutput)
-   return render_template("proj_index.html", strProjName=strProjName, strProjUseCase=strProjUseCase, strProjSkillTech=strProjSkillTech, strProjBody=strWebOutput)
+   return render_template("proj_index.html", strProjName=strProjName, strProjUseCase=strProjUseCase, strProjSkillTech=strProjSkillTech, strProjTopBubble=strProjTopBubble, strProjBody=strWebOutput)
    
 
 @app.route("/rmrhome")
