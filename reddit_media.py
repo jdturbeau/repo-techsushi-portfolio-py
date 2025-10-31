@@ -664,11 +664,12 @@ def app_main_getmedia(dictGmParams):
     # ensure distinction between API RESULTS LIMIT and app defined DISPLAY LIMIT
     #    Example - 50 results returned may not equal 50 displayed media items
     
-    intGmMediaFound = 0   # easure found media items against limit desired
+    intGmMediaFound = 0   # ensure found media items against limit desired
     intGmRun = 0   # used to avoid hang/loop cycle for subreddit that may not have enough, or any, media
     
-    strGmOutput = app_dictionary("html_header")
-    strGmOutput += html_form(dictGmParams)
+    strGmOutput = " "
+    #strGmOutput = app_dictionary("html_header")
+    #strGmOutput += html_form(dictGmParams)
     
     # should - Test if existing token works using known simple api call?
     
