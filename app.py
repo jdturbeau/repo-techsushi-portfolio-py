@@ -27,13 +27,13 @@ def index():
    strWebOutput = reddit_media.app_dictionary("html_header")
    strWebOutput += "Would you like to visit:<br><br>"
 
-   strWebOutput += "<a href=\"/rmrhome\">Reddit Media Retreiver - Home</a><br><br>"
+   #strWebOutput += "<a href=\"/rmrhome\">Reddit Media Retreiver - Home</a><br><br>"
    strWebOutput += "<a href=\"/rmrwrap\">Reddit Media Retreiver - CSS Wrapped</a><br><br>"
    strWebOutput += "<a href=\"/display\">MarkDown Blog landing page</a><br><br>"
-   strWebOutput += "<a href=\"/displayblog\">MarkDown Blog - single article</a><br><br>"
-   strWebOutput += "<a href=\"/displaytop\">Display Most Recent Blog Articles</a><br><br>"
+   #strWebOutput += "<a href=\"/displayblog\">MarkDown Blog - single article</a><br><br>"
+   #strWebOutput += "<a href=\"/displaytop\">Display Most Recent Blog Articles</a><br><br>"
    strWebOutput += "<a href=\"/home\">Home CSS Template Test</a><br><br>"
-   strWebOutput += "<a href=\"/career\">Career Path Suggestions</a><br><br>"
+   #strWebOutput += "<a href=\"/career\">Career Path Suggestions</a><br><br>"
    
    strWebOutput += reddit_media.app_dictionary("html_footer")
    
@@ -55,12 +55,13 @@ def rmrwrap():
 
    strWebOutput = Markup(strWebOutput)
    strProjName = "Reddit Media Reviewer"
-   strProjOverview = "Testing text"
-   strProjUseCase = "Use image hashing to identify bots or duplicate accounts"
-   strProjPurpose = Markup("Testing Text")
-   strProjSkillTech = Markup("Azure Web App<br>Azure DevOps<br>Python<br>REST API with JSON result parse")
+   #strProjOverview = "Testing text"
+   strProjUseCase = "Use image hashing to identify bots or duplicate accounts. Or allow doom-scrolling for entertainment."
+   #strProjPurpose = Markup("Testing Text")
+   strProjSkillTech = Markup("Azure Web App<br>Azure DevOps<br>Azure KeyVault<br>GitHub Actions<br>Python<br>REST API with JSON parsing")
    
-   return render_template("proj_index.html", strProjOverview=strProjOverview, strProjName=strProjName, strProjUseCase=strProjUseCase, strProjPurpose=strProjPurpose, strProjSkillTech=strProjSkillTech, strProjBody=strWebOutput)
+   #return render_template("proj_index.html", strProjOverview=strProjOverview, strProjName=strProjName, strProjUseCase=strProjUseCase, strProjPurpose=strProjPurpose, strProjSkillTech=strProjSkillTech, strProjBody=strWebOutput)
+   return render_template("proj_index.html", strProjName=strProjName, strProjUseCase=strProjUseCase, strProjSkillTech=strProjSkillTech, strProjBody=strWebOutput)
 
 @app.route("/rmrwrapout", methods=['GET', 'POST'])
 def rmrwrapout():
@@ -118,9 +119,9 @@ def rmrwrapout():
       strWebOutput = reddit_media.app_main_getmedia(dictRmrParams)
       strWebOutput = Markup(strWebOutput)
       strProjName = "Reddit Media Retriever"
-      strProjOverview = "Testing text"
-      strProjUseCase = "Attempt to identify bots or duplicate acounts by hashing images and comparing to database of user and media hash"
-      strProjPurpose = Markup("Testing Text")
+      #strProjOverview = "Testing text"
+      strProjUseCase = "Use image hashing to identify bots or duplicate accounts. Or allow doom-scrolling for entertainment."
+      #strProjPurpose = Markup("Testing Text")
       strProjSkillTech = Markup("Azure Web App<br>Azure DevOps<br>Python<br>REST API with JSON result parse")
       
    except Exception as e:
@@ -133,7 +134,8 @@ def rmrwrapout():
          #strRmrError += f"<br><br><pre>{strPrettyJson}</pre>"
       return strRmrError
       
-   return render_template("proj_index.html", strProjOverview=strProjOverview, strProjName=strProjName, strProjUseCase=strProjUseCase, strProjPurpose=strProjPurpose, strProjSkillTech=strProjSkillTech, strProjBody=strWebOutput)
+   #return render_template("proj_index.html", strProjOverview=strProjOverview, strProjName=strProjName, strProjUseCase=strProjUseCase, strProjPurpose=strProjPurpose, strProjSkillTech=strProjSkillTech, strProjBody=strWebOutput)
+   return render_template("proj_index.html", strProjName=strProjName, strProjUseCase=strProjUseCase, strProjSkillTech=strProjSkillTech, strProjBody=strWebOutput)
    
 
 @app.route("/rmrhome")
