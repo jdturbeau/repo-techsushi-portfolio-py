@@ -53,7 +53,7 @@ def rmrwrap():
    strProjTopBubble = Markup(strProjTopBubble)
    strWebOutput = ""
    strProjName = "Reddit Media Reviewer"
-   strProjUseCase = "Use image hashing to identify bots and duplicate accounts. Or allow doom-scrolling for entertainment."
+   strProjUseCase = "Use image hashing to identify bots and duplicate content. Or for doom-scrolling entertainment."
    strProjSkillTech = Markup("Azure Web App<br>Azure DevOps<br>Azure KeyVault<br>GitHub Actions<br>Python<br>REST API with JSON parsing")
    
    return render_template("proj_index.html", strProjName=strProjName, strProjUseCase=strProjUseCase, strProjSkillTech=strProjSkillTech, strProjTopBubble=strProjTopBubble, strProjBody=strWebOutput)
