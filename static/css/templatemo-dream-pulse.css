@@ -159,8 +159,9 @@ a {
   color: white;
 }
 
+/* navbar margin space between last link and social media icons. original was 160 (jdc) */
 .tm-main-nav {
-  margin-bottom: 160px;
+  margin-bottom: 80px;
 }
 
 .tm-white-rect {
@@ -675,6 +676,7 @@ figure.effect-bubba:hover p {
     padding: 50px 30px;
   }
 }
+
 
 
 
