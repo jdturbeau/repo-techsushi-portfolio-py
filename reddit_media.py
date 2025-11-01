@@ -485,27 +485,27 @@ def html_form(dictFormParams):
     
     if strFormSort == "new":
       strFormOutput += f"<option value=\"new\" selected=\"true\">New</option>"
-    else
+    else:
       strFormOutput += f"<option value=\"new\">New</option>"
     
     if strFormSort == "hot":
       strFormOutput += f"<option value=\"hot\" selected=\"true\">Hot</option>"
-    else
+    else:
       strFormOutput += f"<option value=\"hot\">Hot</option>"
     
     if strFormSort == "rising":
       strFormOutput += f"<option value=\"rising\" selected=\"true\">Rising</option>"
-    else
+    else:
       strFormOutput += f"<option value=\"rising\">Rising</option>"
     
     if strFormSort == "controversial":
       strFormOutput += f"<option value=\"controversial\" selected=\"true\">Controversial</option>"
-    else
+    else:
       strFormOutput += f"<option value=\"controversial\">Controversial</option>"
     
     if strFormSort == "top":
       strFormOutput += f"<option value=\"top\" selected=\"true\">Top</option>"
-    else
+    else:
       strFormOutput += f"<option value=\"top\">Top</option>"
     
     strFormOutput += f"</select>"
