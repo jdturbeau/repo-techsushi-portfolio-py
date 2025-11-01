@@ -467,21 +467,21 @@ def html_form(dictFormParams):
     #    strFormOutput += f"<input type=\"checkbox\" id=\"videos\" name=\"mediatype\" value=\"videos\" checked disabled><label for=\"videos\">Videos</label>"
     match strFormMediaType:
       case "i":
-        strFormOutput += f"&nbsp;<input type=\"checkbox\" id=\"images\" name=\"mediatype\" value=\"images\" checked><label for=\"images\">&nbsp;Images</label>"
-        strFormOutput += f"&nbsp;<input type=\"checkbox\" id=\"videos\" name=\"mediatype\" value=\"videos\"><label for=\"videos\">&nbsp;Videos</label>"
+        strFormOutput += f"&nbsp;<input type=\"checkbox\" id=\"images\" name=\"mediatype\" value=\"images\" checked disabled><label for=\"images\">&nbsp;Images</label>"
+        strFormOutput += f"&nbsp;<input type=\"checkbox\" id=\"videos\" name=\"mediatype\" value=\"videos\" disabled><label for=\"videos\">&nbsp;Videos</label>"
       case "v":
-        strFormOutput += f"&nbsp;<input type=\"checkbox\" id=\"images\" name=\"mediatype\" value=\"images\"><label for=\"images\">&nbsp;Images</label>"
-        strFormOutput += f"&nbsp;<input type=\"checkbox\" id=\"videos\" name=\"mediatype\" value=\"videos\" checked><label for=\"videos\">&nbsp;Videos</label>"
+        strFormOutput += f"&nbsp;<input type=\"checkbox\" id=\"images\" name=\"mediatype\" value=\"images\" disabled><label for=\"images\">&nbsp;Images</label>"
+        strFormOutput += f"&nbsp;<input type=\"checkbox\" id=\"videos\" name=\"mediatype\" value=\"videos\" checked disabled><label for=\"videos\">&nbsp;Videos</label>"
       case _:
         # covers case "iv" and unknowns
-        strFormOutput += f"&nbsp;<input type=\"checkbox\" id=\"images\" name=\"mediatype\" value=\"images\" checked><label for=\"images\">&nbsp;Images</label>"
-        strFormOutput += f"&nbsp;<input type=\"checkbox\" id=\"videos\" name=\"mediatype\" value=\"videos\" checked><label for=\"videos\">&nbsp;Videos</label>"
+        strFormOutput += f"&nbsp;<input type=\"checkbox\" id=\"images\" name=\"mediatype\" value=\"images\" checked disabled><label for=\"images\">&nbsp;Images</label>"
+        strFormOutput += f"&nbsp;<input type=\"checkbox\" id=\"videos\" name=\"mediatype\" value=\"videos\" checked disabled><label for=\"videos\">&nbsp;Videos</label>"
     
     strFormOutput += f"<br><br>"
     strFormOutput += f"<label for=\"count\">Minimum Display Limit:&nbsp;</label><input type=\"number\" id=\"limit\" name=\"count\" min=\"1\" max=\"30\" step=\"1\" placeholder=\"{intFormLimit}\" autocomplete=\"off\" disabled>"
     
     # translate strFormSort into drop down selection - new is default selected
-    strFormOutput += f"<label for=\"sort\">&nbsp;Sort by:&nbsp;</label><select id=\"sort\" name=\"sort\" disabled>"
+    strFormOutput += f"<label for=\"sort\">&nbsp;Sort by:&nbsp;</label><select id=\"sort\" name=\"sort\">"
     strFormOutput += f"<option value=\"new\" selected=\"true\">New</option>"
     strFormOutput += f"<option value=\"hot\">Hot</option>"
     strFormOutput += f"<option value=\"rising\">Rising</option>"
