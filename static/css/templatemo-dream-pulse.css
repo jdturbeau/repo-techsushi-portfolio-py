@@ -50,7 +50,7 @@ a {
 }
 
 .tm-intro {
-  max-width: 850px;
+  max-width: 800px;
   width: 100%;
   padding: 55px;
   margin-right: 0;
@@ -673,6 +673,7 @@ figure.effect-bubba:hover p {
     padding: 50px 30px;
   }
 }
+
 
 
 
