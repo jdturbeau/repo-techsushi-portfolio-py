@@ -483,27 +483,27 @@ def html_form(dictFormParams):
     # translate strFormSort into drop down selection - new is default selected
     strFormOutput += f"<label for=\"sort\">&nbsp;Sort by:&nbsp;</label><select id=\"sort\" name=\"sort\">"
     
-    if strFormSort = "new":
+    if strFormSort == "new":
       strFormOutput += f"<option value=\"new\" selected=\"true\">New</option>"
     else
       strFormOutput += f"<option value=\"new\">New</option>"
     
-    if strFormSort = "hot":
+    if strFormSort == "hot":
       strFormOutput += f"<option value=\"hot\" selected=\"true\">Hot</option>"
     else
       strFormOutput += f"<option value=\"hot\">Hot</option>"
     
-    if strFormSort = "rising":
+    if strFormSort == "rising":
       strFormOutput += f"<option value=\"rising\" selected=\"true\">Rising</option>"
     else
       strFormOutput += f"<option value=\"rising\">Rising</option>"
     
-    if strFormSort = "controversial":
+    if strFormSort == "controversial":
       strFormOutput += f"<option value=\"controversial\" selected=\"true\">Controversial</option>"
     else
       strFormOutput += f"<option value=\"controversial\">Controversial</option>"
     
-    if strFormSort = "top":
+    if strFormSort == "top":
       strFormOutput += f"<option value=\"top\" selected=\"true\">Top</option>"
     else
       strFormOutput += f"<option value=\"top\">Top</option>"
