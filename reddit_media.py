@@ -749,7 +749,7 @@ def app_main_getmedia(dictGmParams):
       if intGmMediaFound >= int(intGmLimit):
         # count media results returned, break out of while loop if equal or over limit
         break
-      if intGmRun >= 4:
+      if intGmRun >= 2:
         #prevent undesired loop runaway for subreddits that may not have much or any media
         break
       
