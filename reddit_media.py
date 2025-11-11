@@ -238,7 +238,8 @@ def reddit_jsontohtml(jsonHtmlContent, dictHtmlParams):
       #"over_18": false
       #is_gallery
       
-      strHtmlThreadOutput = f"<font size=5><a href=\"https://www.reddit.com{strThreadPermalink}\">{strThreadTitle}</a></font><br>"
+      #strHtmlThreadOutput = f"<font size=5><a href=\"https://www.reddit.com{strThreadPermalink}\">{strThreadTitle}</a></font><br>"
+      strHtmlThreadOutput = f"<a href=\"https://www.reddit.com{strThreadPermalink}\">{strThreadTitle}</a><br>"
       
       strHtmlAuthorLink = f"./{strHtmlBaseDestURL}?sub=u_{strThreadAuthor}"
       strHtmlThreadOutput += f"<a href=\"./{strHtmlBaseDestURL}?sub={strSubRed}\">r/{strSubRed}</a> - <a href=\"{strHtmlAuthorLink}\"><b>{strThreadAuthor}</b></a> - {strThreadComments} Comment(s) / Post Type - {strThreadType}<br><p>"
