@@ -217,7 +217,7 @@ def reddit_jsontohtml(jsonHtmlContent, dictHtmlParams):
       return strHtmlError
     
     strHtmlBaseDestURL = app_dictionary("url_appbase")
-    strHtmlMediaType = dictHtmlParams["mediatype"] 
+    strHtmlMediaType = dictHtmlParams["mediatype"]
     dictHtmlThreads = jsonHtmlContent["data"]["children"]
     # should not need to confirm variables exist or are populated here - three if conditions above should cover
     
@@ -238,21 +238,25 @@ def reddit_jsontohtml(jsonHtmlContent, dictHtmlParams):
       #"over_18": false
       #is_gallery
       
-      #strHtmlThreadOutput = f"<font size=5><a href=\"https://www.reddit.com{strThreadPermalink}\">{strThreadTitle}</a></font><br>"
-      strHtmlThreadOutput = f"<a href=\"https://www.reddit.com{strThreadPermalink}\">{strThreadTitle}</a><br>"
-      
-      strHtmlAuthorLink = f"./{strHtmlBaseDestURL}?sub=u_{strThreadAuthor}"
-      strHtmlThreadOutput += f"<a href=\"./{strHtmlBaseDestURL}?sub={strSubRed}\">r/{strSubRed}</a> - <a href=\"{strHtmlAuthorLink}\"><b>{strThreadAuthor}</b></a> - {strThreadComments} Comment(s) / Post Type - {strThreadType}<br><p>"
+      if dictHtmlParams["view"] == "list":
+        #strHtmlThreadOutput = f"<font size=5><a href=\"https://www.reddit.com{strThreadPermalink}\">{strThreadTitle}</a></font><br>"
+        strHtmlThreadOutput = f"<a href=\"https://www.reddit.com{strThreadPermalink}\">{strThreadTitle}</a><br>"
+        strHtmlAuthorLink = f"./{strHtmlBaseDestURL}?sub=u_{strThreadAuthor}"
+        strHtmlThreadOutput += f"<a href=\"./{strHtmlBaseDestURL}?sub={strSubRed}\">r/{strSubRed}</a> - <a href=\"{strHtmlAuthorLink}\"><b>{strThreadAuthor}</b></a> - {strThreadComments} Comment(s) / Post Type - {strThreadType}<br><p>"
       
       #ThreadType : link, image, hosted:video, null, (gallery?)
       match strThreadType:
         case "image":
           strHtmlThreadOutput += f"<a href=\"{strThreadURL}\" target=\"_blank\"><img src=\"{strThreadURL}\" width=\"80%\"></img></a><p>"
         case "rich:video":
+          intRichVidHeight = int(int(dictHtmlSingle["data"]["secure_media"]["oembed"]["height"]) / 2)
+          intRichVidWidth = int(int(dictHtmlSingle["data"]["secure_media"]["oembed"]["width"]) / 2)
           strHtmlThreadEmbed = strThreadMedia["oembed"]["html"]
           strHtmlThreadEmbed = strHtmlThreadEmbed.replace("&lt;","<")
           strHtmlThreadEmbed = strHtmlThreadEmbed.replace("&gt;",">")
           #strHtmlThreadEmbed = strHtmlThreadEmbed.replace("\"100%\"","\"80%\"")
+          strHtmlThreadEmbed = strHtmlThreadEmbed.replace("width=\"100%\"","width=\"{intRichVidWidth}\"")
+          strHtmlThreadEmbed = strHtmlThreadEmbed.replace("height=\"100%\"","width=\"{intRichVidHeight}\"")
           strHtmlThreadEmbed = strHtmlThreadEmbed.replace("position:absolute;","")
           strHtmlThreadOutput += f"{strHtmlThreadEmbed}<br><p>"
         case "hosted:video":   
@@ -518,8 +522,10 @@ def html_form(dictFormParams):
     strFormOutput += f"<br><br>"
    
     # translate strFormView by checked radio
-    strFormOutput += f"<input type=\"radio\" id=\"list\" name=\"view\" value=\"list\" checked disabled><label for=\"list\">&nbsp;List View</label>"
-    strFormOutput += f"&nbsp;<input type=\"radio\" id=\"gallery\" name=\"view\" value=\"gallery\" disabled><label for=\"gallery\">&nbsp;Gallery View</label>"
+    #strFormOutput += f"<input type=\"radio\" id=\"list\" name=\"view\" value=\"list\" checked disabled><label for=\"list\">&nbsp;List View</label>"
+    strFormOutput += f"<input type=\"radio\" id=\"list\" name=\"view\" value=\"list\" checked><label for=\"list\">&nbsp;List View</label>"
+    #strFormOutput += f"&nbsp;<input type=\"radio\" id=\"gallery\" name=\"view\" value=\"gallery\" disabled><label for=\"gallery\">&nbsp;Gallery View</label>"
+    strFormOutput += f"&nbsp;<input type=\"radio\" id=\"gallery\" name=\"view\" value=\"gallery\"><label for=\"gallery\">&nbsp;Gallery View</label>"
     
     # translate bolFormNSFW into check
     if bolFormNSFW:
