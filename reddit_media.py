@@ -243,6 +243,11 @@ def reddit_jsontohtml(jsonHtmlContent, dictHtmlParams):
         strHtmlThreadOutput = f"<a href=\"https://www.reddit.com{strThreadPermalink}\">{strThreadTitle}</a><br>"
         strHtmlAuthorLink = f"./{strHtmlBaseDestURL}?sub=u_{strThreadAuthor}"
         strHtmlThreadOutput += f"<a href=\"./{strHtmlBaseDestURL}?sub={strSubRed}\">r/{strSubRed}</a> - <a href=\"{strHtmlAuthorLink}\"><b>{strThreadAuthor}</b></a> - {strThreadComments} Comment(s) / Post Type - {strThreadType}<br><p>"
+      else:
+        strHtmlAuthorLink = f"./{strHtmlBaseDestURL}?sub=u_{strThreadAuthor}"
+        strHtmlThreadOutput = f"<a href=\"./{strHtmlBaseDestURL}?sub={strSubRed}\">r/{strSubRed}</a> - <a href=\"{strHtmlAuthorLink}\"><b>{strThreadAuthor}</b></a><br><p>"
+        #strHtmlThreadOutput = " "
+
       
       #ThreadType : link, image, hosted:video, null, (gallery?)
       match strThreadType:
