@@ -260,7 +260,8 @@ def reddit_jsontohtml(jsonHtmlContent, dictHtmlParams):
           intHostedVidHeight = int(int(dictHtmlSingle["data"]["secure_media"]["reddit_video"]["height"]) / 2)
           #strHtmlThreadOutput += f"<iframe width=\"80%\" src=\"{strHostedVid}\" frameborder=\"0\" allow=\"accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share\" referrerpolicy=\"strict-origin-when-cross-origin\" allowfullscreen title=\"{strThreadTitle}\"></iframe><br><p>"
           #strHtmlThreadOutput += f"<iframe src=\"{strHostedVid}\" frameborder=\"0\" allow=\"accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share\" referrerpolicy=\"strict-origin-when-cross-origin\" allowfullscreen title=\"{strThreadTitle}\"></iframe><br><p>"
-          strHtmlThreadOutput += f"<iframe src=\"{strHostedVid}\" height=\"{intHostedVidHeight}\" frameborder=\"0\" allow=\"accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share\" referrerpolicy=\"strict-origin-when-cross-origin\" allowfullscreen title=\"{strThreadTitle}\"></iframe><br><p>"
+          #strHtmlThreadOutput += f"<iframe src=\"{strHostedVid}\" height=\"{intHostedVidHeight}\" frameborder=\"0\" allow=\"accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share\" referrerpolicy=\"strict-origin-when-cross-origin\" allowfullscreen title=\"{strThreadTitle}\"></iframe><br><p>"
+          strHtmlThreadOutput += f"<iframe src=\"{strHostedVid}\" height=\"60%\" width=\"60%\" frameborder=\"0\" allow=\"accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share\" referrerpolicy=\"strict-origin-when-cross-origin\" allowfullscreen title=\"{strThreadTitle}\"></iframe><br><p>"
         #case "link":
           #strHtmlThreadOutput = ""
           #"is_video": true
