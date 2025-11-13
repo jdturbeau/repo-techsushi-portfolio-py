@@ -61,6 +61,10 @@ def app_dictionary(strDictAttrib):
         # to capture user data, may need to move the /r/ out
         #   /user/username/submitted
         strDictValue = "https://oauth.reddit.com/r/"
+      case "url_oauth_user":
+        # /user/(user)/submitted
+        # /user/(user)/comments
+        strDictValue = "https://oauth.reddit.com/user/"
       case "url_appbase":
         strDictValue = "rmrwrapout"
       case "txt_useragent":
@@ -585,7 +589,10 @@ def reddit_getjson(dictGjParams):
   # function to craft request URL
   
   try:
-    strGjBaseURL = app_dictionary("url_oauth")
+    if dictGjParams["sub"].startswith("u_"):
+      strGjBaseURL = app_dictionary("url_oauth_user")
+    else:
+      strGjBaseURL = app_dictionary("url_oauth")
 
     strGjURL = html_crafturl(strGjBaseURL, dictGjParams)
     
