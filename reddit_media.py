@@ -554,8 +554,10 @@ def html_form(dictFormParams):
     
     #   need to add HUMAN? style checkbox here, required before allowing submit, bot stopper-ish
     #      also likely do not want to show results and "next" link on first load - bot could continue w/o human checkbox
-    strFormOutput += "Are you <font color=red>human</font>?<font color=red>*</font>&emsp;"
-    strFormOutput += f"<input type=\"checkbox\" id=\"human\" name=\"human\" value=\"human\" required><label for=\"human\">&nbsp;Yes&emsp;</label>"
+    #strFormOutput += "Are you <font color=red>human</font>?<font color=red>*</font>&emsp;"
+    strFormOutput += "Are you a <font color=red>bot</font>?<font color=red>*</font>&emsp;"
+    #strFormOutput += f"<input type=\"checkbox\" id=\"human\" name=\"human\" value=\"human\" required><label for=\"human\">&nbsp;Yes&emsp;</label>"
+    strFormOutput += f"<input type=\"checkbox\" id=\"human\" name=\"human\" value=\"human\" required><label for=\"human\">&nbsp;No&emsp;</label>"
     strFormOutput += f"<button type=\"submit\">Browse Media</button>"   
     #strFormOutput += f"</form><br><br>"
     strFormOutput += f"</form>"
