@@ -793,7 +793,7 @@ def app_main_getmedia(dictGmParams):
     # need to remove after= entry for refresh link
     strGmPattern = r"(\&after=)(.*?)(?=&)|(\&after=).*"
     strGmRefreshURL = re.sub(strGmPattern, "", strGmRefreshURL, flags=re.IGNORECASE)
-    strGmOutput += f"<p align=\"right\"><a href=\"{strGmRefreshURL}\">Reload to Beginning of Sub</a></p>"
+    strGmOutput += f"<p align=\"right\"><a href=\"{strGmRefreshURL}\">Go to Beginning</a></p>"
     
     strGmOutput += app_dictionary("html_footer")
     
