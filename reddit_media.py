@@ -362,7 +362,11 @@ def html_crafturl(strCraftBaseURL, dictCraftParams):
       
       # oauth or token refresh - can ignore app handled parameters
       if len(strCraftSub) > 0:
-        strCraftURL += f"{strCraftSub}/{strCraftSort}"
+        if strCraftSub.startswith("u_"):
+          strCraftSubMod = strCraftSub[1:]
+          strCraftURL += f"{strCraftSubMod}/submitted"
+        else:
+          strCraftURL += f"{strCraftSub}/{strCraftSort}"
       else:
         strCraftURL += f"all/{strCraftSort}"
       
