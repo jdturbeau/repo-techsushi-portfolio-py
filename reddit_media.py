@@ -372,9 +372,8 @@ def html_crafturl(strCraftBaseURL, dictCraftParams):
       
       #if not len(strCraftAfter) == 0:
       #if type(strCraftAfter) is not None:
-      if 'strCraftAfter' in locals():
-        if len(strCraftAfter) > 0:
-          strCraftURL += f"?after={strCraftAfter}"
+      if type(strCraftAfter) is not NoneType:
+        strCraftURL += f"?after={strCraftAfter}"
     
     else:
       
