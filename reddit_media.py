@@ -798,12 +798,19 @@ def app_main_getmedia(dictGmParams):
     strGmOutput += app_dictionary("html_footer")
     
   except Exception as e:
+    if dictGmParams["sub"].startswith("u_"):
+      strGmBaseURL = app_dictionary("url_oauth_user")
+    else:
+      strGmBaseURL = app_dictionary("url_oauth")
+
+    strGmURL = html_crafturl(strGmBaseURL, dictGmParams)
+    
     strGmError = html_crafterror("REDDIT_MEDIA", "APP MAIN GETMEDIA", e)
     if not 'dictGmResponse' in locals():
       strPrettyJson = f"dictGmResponse is null"
     else:
       strPrettyJson = json.dumps(dictGmResponse, indent=4)
-      strGmError += f"<br><br><pre>{strPrettyJson}</pre>"
+      strGmError += f"<br><br><pre>{strPrettyJson}</pre><br>{strGmURL}"
     return strGmError
   
   return strGmOutput
