@@ -546,9 +546,9 @@ def html_form(dictFormParams):
     
     # translate bolFormNSFW into check
     if bolFormNSFW:
-      strFormOutput += f"&nbsp;<input type=\"checkbox\" id=\"nsfw\" name=\"nsfw\" value=\"nsfw\" checked disabled><label for=\"nsfw\">&nbsp;Allow 18+ Content?</label>"
+      strFormOutput += f"&nbsp;<input type=\"checkbox\" id=\"nsfw\" name=\"nsfw\" value=\"nsfw\" checked disabled><label for=\"nsfw\">&nbsp;Include 18+ Content?</label>"
     else:
-      strFormOutput += f"&nbsp;<input type=\"checkbox\" id=\"nsfw\" name=\"nsfw\" value=\"nsfw\" disabled><label for=\"nsfw\">&nbsp;Allow 18+ Content?</label>"
+      strFormOutput += f"&nbsp;<input type=\"checkbox\" id=\"nsfw\" name=\"nsfw\" value=\"nsfw\" disabled><label for=\"nsfw\">&nbsp;Include 18+ Content?</label>"
     
     strFormOutput += f"<br><br>"
     
