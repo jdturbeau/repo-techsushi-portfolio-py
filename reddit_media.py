@@ -539,7 +539,7 @@ def html_form(dictFormParams):
     #strFormOutput += f"<input type=\"radio\" id=\"list\" name=\"view\" value=\"list\" checked disabled><label for=\"list\">&nbsp;List View</label>"
 
     # __________
-    if strFormView="list":
+    if strFormView == "list":
       strFormOutput += f"<input type=\"radio\" id=\"list\" name=\"view\" value=\"list\" checked><label for=\"list\">&nbsp;List View</label>"
       #strFormOutput += f"&nbsp;<input type=\"radio\" id=\"gallery\" name=\"view\" value=\"gallery\" disabled><label for=\"gallery\">&nbsp;Gallery View</label>"
       strFormOutput += f"&nbsp;<input type=\"radio\" id=\"gallery\" name=\"view\" value=\"gallery\"><label for=\"gallery\">&nbsp;Gallery View</label>"
