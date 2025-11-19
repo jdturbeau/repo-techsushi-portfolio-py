@@ -265,7 +265,7 @@ def reddit_jsontohtml(jsonHtmlContent, dictHtmlParams):
           strHtmlThreadEmbed = strHtmlThreadEmbed.replace("&gt;",">")
           #strHtmlThreadEmbed = strHtmlThreadEmbed.replace("\"100%\"","\"80%\"")
           strWidthChange = "width=\"{intRichVidWidth}\""
-          strHtmlThreadEmbed = strHtmlThreadEmbed.replace("width=\"100%\"", strWidthChage)
+          strHtmlThreadEmbed = strHtmlThreadEmbed.replace("width=\"100%\"", strWidthChange)
           strHeightChange = "height=\"{intRichVidHeight}\""
           strHtmlThreadEmbed = strHtmlThreadEmbed.replace("height=\"100%\"",strHeightChange)
           strHtmlThreadEmbed = strHtmlThreadEmbed.replace("position:absolute;","")
