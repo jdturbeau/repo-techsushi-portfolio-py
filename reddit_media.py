@@ -264,9 +264,9 @@ def reddit_jsontohtml(jsonHtmlContent, dictHtmlParams):
           strHtmlThreadEmbed = strHtmlThreadEmbed.replace("&lt;","<")
           strHtmlThreadEmbed = strHtmlThreadEmbed.replace("&gt;",">")
           #strHtmlThreadEmbed = strHtmlThreadEmbed.replace("\"100%\"","\"80%\"")
-          strWidthChange = "width=\"{intRichVidWidth}\""
+          strWidthChange = f"width=\"{intRichVidWidth}\""
           strHtmlThreadEmbed = strHtmlThreadEmbed.replace("width=\"100%\"", strWidthChange)
-          strHeightChange = "height=\"{intRichVidHeight}\""
+          strHeightChange = f"height=\"{intRichVidHeight}\""
           strHtmlThreadEmbed = strHtmlThreadEmbed.replace("height=\"100%\"",strHeightChange)
           strHtmlThreadEmbed = strHtmlThreadEmbed.replace("position:absolute;","")
           strHtmlThreadOutput += f"{strHtmlThreadEmbed}<br><p>"
@@ -277,9 +277,9 @@ def reddit_jsontohtml(jsonHtmlContent, dictHtmlParams):
           #strHtmlThreadOutput += f"<iframe width=\"80%\" src=\"{strHostedVid}\" frameborder=\"0\" allow=\"accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share\" referrerpolicy=\"strict-origin-when-cross-origin\" allowfullscreen title=\"{strThreadTitle}\"></iframe><br><p>"
           #strHtmlThreadOutput += f"<iframe src=\"{strHostedVid}\" frameborder=\"0\" allow=\"accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share\" referrerpolicy=\"strict-origin-when-cross-origin\" allowfullscreen title=\"{strThreadTitle}\"></iframe><br><p>"
           #strHtmlThreadOutput += f"<iframe src=\"{strHostedVid}\" height=\"{intHostedVidHeight}\" frameborder=\"0\" allow=\"accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share\" referrerpolicy=\"strict-origin-when-cross-origin\" allowfullscreen title=\"{strThreadTitle}\"></iframe><br><p>"
-          strHeightChange = "height=\"{intRichVidHeight}\""
-          strWidthChange = "width=\"{intRichVidWidth}\""
-          strHtmlThreadOutput += f"<iframe src=\"{strHostedVid}\" {strHeightChange} strWidthChange frameborder=\"0\" allow=\"accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share\" referrerpolicy=\"strict-origin-when-cross-origin\" allowfullscreen title=\"{strThreadTitle}\"></iframe><br><p>"
+          strHeightChange = f"height=\"{intRichVidHeight}\""
+          strWidthChange = f"width=\"{intRichVidWidth}\""
+          strHtmlThreadOutput += f"<iframe src=\"{strHostedVid}\" {strHeightChange} {strWidthChange} frameborder=\"0\" allow=\"accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share\" referrerpolicy=\"strict-origin-when-cross-origin\" allowfullscreen title=\"{strThreadTitle}\"></iframe><br><p>"
         #case "link":
           #strHtmlThreadOutput = ""
           #"is_video": true
