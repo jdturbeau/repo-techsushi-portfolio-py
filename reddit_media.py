@@ -211,7 +211,7 @@ def reddit_jsontohtml(jsonHtmlContent, dictHtmlParams):
     
     intHtmlResults = int(jsonHtmlContent["data"]["dist"])
     if not 'intHtmlResults' in locals():
-      strHtmlError = html_crafterror("REDDIT_MEDIA", "JSONtoHTML", f"No results founud. JSON response provided is null!")
+      strHtmlError = html_crafterror("REDDIT_MEDIA", "JSONtoHTML", f"No results found. JSON response provided is null!")
       return strHtmlError
     
     if intHtmlResults == 0:
@@ -258,20 +258,25 @@ def reddit_jsontohtml(jsonHtmlContent, dictHtmlParams):
         case "image":
           strHtmlThreadOutput += f"<a href=\"{strThreadURL}\" target=\"_blank\"><img src=\"{strThreadURL}\" width=\"80%\"></img></a><p>"
         case "rich:video":
+          '''
           intRichVidHeight = int(int(dictHtmlSingle["data"]["secure_media"]["oembed"]["height"]) / 2)
           intRichVidWidth = int(int(dictHtmlSingle["data"]["secure_media"]["oembed"]["width"]) / 2)
+          '''
           strHtmlThreadEmbed = strThreadMedia["oembed"]["html"]
           strHtmlThreadEmbed = strHtmlThreadEmbed.replace("&lt;","<")
           strHtmlThreadEmbed = strHtmlThreadEmbed.replace("&gt;",">")
           #strHtmlThreadEmbed = strHtmlThreadEmbed.replace("\"100%\"","\"80%\"")
+          '''
           strWidthChange = f"width=\"{intRichVidWidth}\""
           strHtmlThreadEmbed = strHtmlThreadEmbed.replace("width=\"100%\"", strWidthChange)
           strHeightChange = f"height=\"{intRichVidHeight}\""
           strHtmlThreadEmbed = strHtmlThreadEmbed.replace("height=\"100%\"",strHeightChange)
+          '''
           strHtmlThreadEmbed = strHtmlThreadEmbed.replace("position:absolute;","")
           strHtmlThreadOutput += f"{strHtmlThreadEmbed}<br><p>"
         case "hosted:video":   
           strHostedVid = dictHtmlSingle["data"]["secure_media"]["reddit_video"]["fallback_url"] # alternatively - strHostedVid = dictHtmlSingle["data"]["media"]["reddit_video"]["fallback_url"]
+          '''
           intHostedVidHeight = int(int(dictHtmlSingle["data"]["secure_media"]["reddit_video"]["height"]) / 2)
           intHostedVidWidth = int(int(dictHtmlSingle["data"]["secure_media"]["reddit_video"]["width"]) / 2)
           #strHtmlThreadOutput += f"<iframe width=\"80%\" src=\"{strHostedVid}\" frameborder=\"0\" allow=\"accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share\" referrerpolicy=\"strict-origin-when-cross-origin\" allowfullscreen title=\"{strThreadTitle}\"></iframe><br><p>"
@@ -280,6 +285,8 @@ def reddit_jsontohtml(jsonHtmlContent, dictHtmlParams):
           strHeightChange = f"height=\"{intRichVidHeight}\""
           strWidthChange = f"width=\"{intRichVidWidth}\""
           strHtmlThreadOutput += f"<iframe src=\"{strHostedVid}\" {strHeightChange} {strWidthChange} frameborder=\"0\" allow=\"accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share\" referrerpolicy=\"strict-origin-when-cross-origin\" allowfullscreen title=\"{strThreadTitle}\"></iframe><br><p>"
+          '''
+          strHtmlThreadOutput += f"<iframe src=\"{strHostedVid}\" frameborder=\"0\" allow=\"accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share\" referrerpolicy=\"strict-origin-when-cross-origin\" allowfullscreen title=\"{strThreadTitle}\"></iframe><br><p>"
         #case "link":
           #strHtmlThreadOutput = ""
           #"is_video": true
