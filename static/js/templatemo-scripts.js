@@ -1,6 +1,12 @@
+// modified 2025-1127 jdc
+// allow exclusion for external links
+// github.com/ChrisWojcik/single-page-nav/issues/1#issuecomment-25703044
+
 $(document).ready(function() {
   // Single Page Nav for highlighting nav items
-  $("#tmMainNav").singlePageNav();
+  $("#tmMainNav").singlePageNav({
+        filter: ':not(.external)', // This line excludes links with the 'external' class
+    });
 
   // Carousel in Our Work section
   $(".tm-gallery").slick({
